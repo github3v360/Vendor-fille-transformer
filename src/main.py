@@ -18,6 +18,6 @@ def main(file_path):
 if __name__ == '__main__' :
 
     args = argparse.ArgumentParser()
-    args.add_argument("--file_path","-f",default="artifacts\\test_data\\JBBROTHER.xlsx")
+    args.add_argument("--file_path","-f",default="artifacts\test_data\JBBROTHER.xlsx")
     parsed_args = args.parse_args()
     main(parsed_args.file_path)
