@@ -1,0 +1,10 @@
+magic_numbers:
+  clarity_threshold: 0.75
+  clarity_normalizing_factor: 2
+  clarity_enhancing_factor: 0.5
+  carat_enhancing_factor: 0.75
+  color_threshold: 0.75
+  color_normalizing_factor: 2
+  color_enhancing_factor: 0.5
+  shape_similarity_threshold: 0.7
+  carat_normalizing_factor: 0.05
