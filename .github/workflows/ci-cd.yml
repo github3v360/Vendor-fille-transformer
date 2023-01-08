@@ -18,7 +18,6 @@ jobs:
           REPO_TOKEN: ${{ secrets._GITHUB_TOKEN }}
         run: |
           pip install -r requirements.txt
-        background: true
       
       - name: Deploy to firebase
         uses: w9jds/firebase-action@master
