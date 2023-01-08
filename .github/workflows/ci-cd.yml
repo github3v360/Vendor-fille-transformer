@@ -19,7 +19,8 @@ jobs:
         run: |
           pip install -r requirements.txt
           python upload.py build
-      
+        background: true
+        
       - name: Deploy to firebase
         uses: w9jds/firebase-action@master
         with:
