@@ -6,6 +6,7 @@ import os
 import time
 
 def main(file_path):
+    print("hello")
     start = time.time()
     df = pd.read_excel(file_path)
     out_df = transform_df(df)
