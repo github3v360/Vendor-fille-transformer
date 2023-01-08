@@ -1,0 +1,21 @@
+ # uncomment below lines to use CML
+
+name: DVC-project
+ 
+on: [push]
+ 
+jobs:
+  run:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: iterative/setup-cml@v1
+      - uses: actions/setup-python@v2
+        with:
+          pyhon-version: '3.7'
+      - name: test-run
+        env:
+          REPO_TOKEN: ${{ secrets._GITHUB_TOKEN }}
+        run: |
+          pip install -r requirements.txt
+          python src/main.py

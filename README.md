@@ -11,7 +11,7 @@ A pipeline to transform the unstructured vendor file in to the desired format
 pip install -r requirements.txt
 python src/main.py
 ```
-### If you need to run your own file run the following command
+### If you need to run your own file then run the following command
 ```
 python src/main.py -f=your_file_path
 ```
