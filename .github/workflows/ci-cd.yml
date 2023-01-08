@@ -20,7 +20,7 @@ jobs:
           pip install -r requirements.txt
           python upload.py build
       
-      - name: Deploy to firebse
+      - name: Deploy to firebase
         uses: w9jds/firebase-action@v1
         with:
           args: deploy --only hosting
