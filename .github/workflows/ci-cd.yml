@@ -18,13 +18,12 @@ jobs:
           REPO_TOKEN: ${{ secrets._GITHUB_TOKEN }}
         run: |
           pip install -r requirements.txt
-          python upload.py build
         background: true
-        
+      
       - name: Deploy to firebase
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only hosting
+          args: firebase deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           

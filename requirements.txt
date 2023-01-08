@@ -2,4 +2,5 @@ numpy
 pandas
 openpyxl
 flask
+firebase-admin
 -e .
