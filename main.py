@@ -221,7 +221,7 @@ def uploadToBucket(bucketName, path, filepath):
 def exportDataFrameToExcel(dataframe, path):
         dataframe.to_excel(path)
 
-def hello_firestore(event, context):
+def helloFirestore(event, context):
     """
     Triggered by a change to a Firestore document.
     Args:
