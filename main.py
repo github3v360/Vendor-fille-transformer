@@ -275,7 +275,7 @@ def helloFirestore(event, context):
         exportDataFrameToExcel(out_df, os.path.join(tempdir, 'summary_2.xlsx'))
         summaryFilePath = '/'.join([userId, str(uuid.uuid4()), 'summary_2.xlsx'])
         print("==========user Id and uuid ========")
-        print(userId,uuid)
+        print(userId,str(uuid.uuid4()))
         uploadToBucket(
         summary_bucket,
         summaryFilePath,
