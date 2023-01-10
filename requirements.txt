@@ -31,3 +31,4 @@ DateTime == 4.4
 numpy 
 python-math 
 python-time 
+-e .
