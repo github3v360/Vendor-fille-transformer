@@ -266,3 +266,6 @@ def helloFirestore(event, context):
         filenames.append(os.path.join(tempdir,currentFilePath.split('/')[-1]))
         print("===========Printing global_df =============")
         print(global_df.head())
+        out_df = transform_df()
+        print("===========Printing out df=============")
+        print(out_df.head())
