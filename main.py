@@ -13,7 +13,6 @@ import math
 import time
 import fnmatch
 import pickle
-from Mapping import *
 import yaml
 import pandas as pd
 from all_utils import *
@@ -222,7 +221,7 @@ def uploadToBucket(bucketName, path, filepath):
 def exportDataFrameToExcel(dataframe, path):
         dataframe.to_excel(path)
 
-def helloFirestore(event, context):
+def hello_firestore(event, context):
     """
     Triggered by a change to a Firestore document.
     Args:
@@ -246,47 +245,24 @@ def helloFirestore(event, context):
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
         fileValue=pd.ExcelFile(os.path.join(tempdir, currentFilePath.split('/')[-1]))
         list_of_sheetname=fileValue.sheet_names
+        print("======Listing sheet name =======")
+        print(list_of_sheetname)
         global_df=pd.DataFrame()
         global_df['REPORTNO']=[]
         wb = openpyxl.load_workbook(os.path.join(tempdir, currentFilePath.split('/')[-1]),data_only = True)
         for i in list_of_sheetname:
             fd=pd.read_excel(os.path.join(tempdir, currentFilePath.split('/')[-1]),sheet_name=i,header=None)
-            df=mapping(fd,wb[i])
-            global_df=pd.concat([global_df,df], axis=0)
+            print("=========fd with header None =======")
+            print(fd.columns)
+            print(fd.head())
+            fd=pd.read_excel(os.path.join(tempdir, currentFilePath.split('/')[-1]),sheet_name=i)
+            print("=========fd with header not None =======")
+            print(fd.columns)
+            print(fd.head())
+            global_df=pd.concat([global_df,fd], axis=0)
         global_df=global_df.reset_index()
         global_df = global_df.drop(['index'], axis=1, errors='ignore')
         userId=currentFilePath.split('/')[0]
         filenames.append(os.path.join(tempdir,currentFilePath.split('/')[-1]))
         print("===========Printing global_df =============")
         print(global_df.head())
-        
-        exportDataFrameToExcel(global_df, os.path.join(tempdir, 'inventory.xlsx'))
-        print("path",os.path.join(tempdir, 'inventory.xlsx'))
-        tempuuid=uuid.uuid4()
-        tempuuid=str(tempuuid)
-        
-        assert userId != None
-
-        uploadToBucket('business-inventory-files', '/'.join([userId,tempuuid,'inventory.xlsx']),os.path.join(tempdir,'inventory.xlsx'))
-        metaData={}
-        print("event",event)
-        metaData['bucket']='business-inventory-files'
-        metaData['CREATEDAT']=dt.fromtimestamp(int(event['value']['fields']['CREATEDAT']['integerValue'])/1000.0)
-        print('created at', metaData['CREATEDAT'], type(metaData['CREATEDAT']))
-        metaData['downloadURL']='https://storage.googleapis.com/business-inventory-files/'+userId+'/'+tempuuid+'/inventory.xlsx'
-        # metaData['errorList']=errorList
-        metaData['filePath']=userId+'/'+tempuuid+'/inventory.xlsx'
-        metaData['VENDORNAME'] = event['value']['fields']['VENDORNAME']['stringValue']
-        doc_ref=db.collection('userFiles').document(userId).collection('inventoryFiles').add(metaData)
-        
-        # start data analysis
-
-        CREATEDAT = metaData['CREATEDAT'].strftime("%d/%m/%Y")
-        print('created at 2', CREATEDAT, type(CREATEDAT))
-        print("metaData ",metaData)
-        print("d",doc_ref)
-        
-    onInventoryFileUpload(global_df, userId, metaData['VENDORNAME'], CREATEDAT)
-
-
-
