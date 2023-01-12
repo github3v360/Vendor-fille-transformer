@@ -14,7 +14,6 @@ setup(
     packages=["src"],
     python_requires=">=3.6",
     install_requires=[
-        'dvc',
         'pandas',
         'scikit-learn',
         'numpy'

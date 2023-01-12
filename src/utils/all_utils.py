@@ -157,14 +157,12 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
   
   # Writing logic for string data type considering target data type will always be correct
   if target_data_type[0] == str:
-
-    # If input data type is different the we need to convert it to str
-    if not flag:
-      column_unique_values = list(map(lambda x:str(x),column_unique_values))
-
+ 
     # If one of column_unique_values matches with any of the taget_column_unique_values then we will return 1 else 0
     for value in column_unique_values:
-      if value in taget_column_unique_values:
+      if type(value) != str:
+        value = str(value)
+      if value.lower() in taget_column_unique_values:
         return 1
 
     return 0
@@ -232,7 +230,10 @@ def get_standard_names(target_name):
     
   elif target_name == "carat":
     return ["carat","size" , "cts",  "crtwt"]
- 
+  
+  elif target_name == "fluorescent":
+    return ["fluor","flour","fluorescent"]
+
   else:
     raise Exception("The function could not find other satndard names for this target name")
 
@@ -247,11 +248,15 @@ def get_target_column_unique_values(target_name):
   target_unique_values: List of unique values of the target columns
   """
 
+  # This Flag will become true if the data type of unique values is string
+  flag = False
+
   if target_name == "clarity":
     clarity_file_path = os.path.join(os.path.join("artifacts","pickle_files"),"clarity_list.pkl")
     with open(clarity_file_path,'rb') as f:
       clarity_list = pickle.load(f)
     target_unique_values = clarity_list
+    flag = True
   
   elif target_name == 'carat':
     
@@ -263,16 +268,25 @@ def get_target_column_unique_values(target_name):
     with open(color_file_path,'rb') as f:
       color_list = pickle.load(f)
     target_unique_values = color_list
+    flag = True
   
   elif target_name == "shape":
     shape_file_path = os.path.join(os.path.join("artifacts","pickle_files"),"shape.pkl")
     with open(shape_file_path,'rb') as f:
       shape_dict = pickle.load(f)
     target_unique_values = list(shape_dict.keys())
+    flag = True
+  
+  elif target_name == "fluorescent":
+    target_unique_values = ["faint","medium","none","f","m","n","med","non","fnt"]
+    flag = True
     
   else:
     raise Exception("The function could not find this target name")
   
+  if flag:
+    target_unique_values = [value.lower() for value in target_unique_values]
+
   return target_unique_values
 
 def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
@@ -315,6 +329,13 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
   # For shape (Modification Remaining and will be done in future)
   elif target_name == "shape":
       pass
+  
+  elif target_name == "fluorescent":
+    if sim_score > magic_numbers['fluor_similarity_threshold']:
+      need_to_continue = True
+    else:
+      sim_score /= magic_numbers['fluor_normalizing_factor']
+  
 
   else:
     raise Exception("The function could not find this target name")
@@ -359,6 +380,14 @@ def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbe
   
   # For shape (Modification Remaining and will be done in future)
   elif target_name == "shape":
+      final_similarity_score = sim_score_name
+  
+  elif target_name == "fluorescent":
+
+    if sim_score_val ==  1:
+      final_similarity_score = sim_score_name + magic_numbers['fluor_enhancing_factor']
+    
+    else:
       final_similarity_score = sim_score_name
     
   else:
@@ -466,6 +495,42 @@ def transform_shape_column(cur_shape):
     else:
       return None
 
+def transform_fluor_column(cur_fluor):
+  """
+  This will transform the non-standard fluor name to standard fluor name
+  Example -: It will transform the "MED" to "MEDIUM"
+  """
+
+  # Initializing our fluorescent dictionary
+  fluor_key = ["faint","medium","none","f","m","n","fnt","med","non"]
+  fluor_values = ["FAINT","MEDIUM","NONE","FAINT","MEDIUM","NONE","FAINT","MEDIUM","NONE"]
+  fluor_dict = dict(zip(fluor_key,fluor_values))
+
+  magic_numbers = read_yaml("params.yaml")['magic_numbers']
+
+  try:
+    # Fetching the correct fluor using the fluor_dict
+    transformed = fluor_dict[cur_fluor]
+    return transformed
+
+  # If we are not able to fetch the correct fluor from fluor_dict 
+  # then we will use the similarity calculation concept
+  except:
+    best_key = ''
+    best_sim = -1
+
+    for fluor in fluor_dict.keys():
+      sim = string_similarity(fluor.lower(),cur_fluor.lower())
+      if sim > best_sim:
+        best_sim = sim 
+        best_key = fluor
+    
+    # If the similarity score is higher then threshold then we return the standard fluor accordingly
+    if best_sim  > magic_numbers['fluor_transfor_df_threshold']:
+      return fluor_dict[best_key]
+    else:
+      return None
+
 def correct_df_headers(df):
 
   """
@@ -482,7 +547,7 @@ def correct_df_headers(df):
   """
 
   # Possible Correct names of headers (More can be added in future)
-  col_names = ['srno','color','cut','shape','clarity','purity',"carat","size" , "cts",  "crtwt"]
+  col_names = ['srno','color','cut','shape','clarity','purity',"carat","size" , "cts",  "crtwt","fluor","flour"]
 
   flag = False
 
@@ -541,7 +606,7 @@ def transform_df(df):
   # Initializing the final DataFrame
   final_df = pd.DataFrame()
   # Listing the columns to transform in the Input DataFrame
-  target_columns = ['clarity','carat','color','shape']
+  target_columns = ['clarity','carat','color','shape',"fluorescent"]
 
   for cur_column in target_columns:
 
@@ -551,13 +616,18 @@ def transform_df(df):
     # Getting the column name with highest similarity to cur_column
     predicted_column = get_highest_prob_column(probs, columns_name)
 
-
     # Assigning column name with highest similarity to cur_column t0 final_df
     final_df[cur_column] = df[predicted_column]
+
+    # Dropping the flluorescent 
+    df = df.drop(columns=predicted_column)
 
     # This will transform the shape values in to the standard values.
     # Example "RND" ==> "Round"
     if cur_column  == 'shape':
       final_df[cur_column] = final_df[cur_column].apply(transform_shape_column)
+
+    if cur_column == "fluorescent":
+      final_df[cur_column] = final_df[cur_column].apply(transform_fluor_column)
 
   return final_df

@@ -8,3 +8,7 @@ magic_numbers:
   color_enhancing_factor: 0.5
   shape_similarity_threshold: 0.7
   carat_normalizing_factor: 0.05
+  fluor_similarity_threshold: 0.8
+  fluor_normalizing_factor: 2
+  fluor_enhancing_factor: 0.5
+  fluor_transfor_df_threshold: 0.3

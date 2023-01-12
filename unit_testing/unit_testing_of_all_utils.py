@@ -113,8 +113,8 @@ class TestGetTargetColumnUniqueValues(unittest.TestCase):
         # Test for target column "clarity"
         clarity_unique_values = get_target_column_unique_values("clarity")
         self.assertEqual(len(clarity_unique_values), 12)
-        self.assertIn("SI1 +", clarity_unique_values)
-        self.assertIn("VS1 -", clarity_unique_values)
+        self.assertIn("si1 +", clarity_unique_values)
+        self.assertIn("vs1 -", clarity_unique_values)
         
         # Test for target column "carat"
         carat_unique_values = get_target_column_unique_values("carat")
@@ -124,15 +124,15 @@ class TestGetTargetColumnUniqueValues(unittest.TestCase):
         
         # Test for target column "color"
         color_unique_values = get_target_column_unique_values("color")
-        self.assertEqual(len(color_unique_values), 20)
-        self.assertIn("D", color_unique_values)
-        self.assertIn("G", color_unique_values)
+        self.assertEqual(len(color_unique_values), 17)
+        self.assertIn("d", color_unique_values)
+        self.assertIn("g", color_unique_values)
         
         # Test for target column "shape"
         shape_unique_values = get_target_column_unique_values("shape")
         self.assertEqual(len(shape_unique_values), 148)
-        self.assertIn("Trapezoid", shape_unique_values)
-        self.assertIn("Heart", shape_unique_values)
+        self.assertIn("trapezoid", shape_unique_values)
+        self.assertIn("heart", shape_unique_values)
         
         # Test for invalid target column
         with self.assertRaises(Exception):
