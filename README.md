@@ -8,8 +8,8 @@ A pipeline to transform the unstructured vendor file in to the desired format
 ### Then run following commands
 
 ```
-pip install -r requirements.txt
-python src/main.py
+pip install -r equirements_for_local_machine.txt
+python src/test_pipeline.py
 ```
 ### If you need to run your own file then run the following command
 ```
