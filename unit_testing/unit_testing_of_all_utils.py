@@ -59,33 +59,23 @@ class TestSimilarityScoreFromColValues(unittest.TestCase):
 
         # The logic for traget data type with string is different where 1 indicates that most of the value matches 
         # while 0 imdicated no value matches
-        self.assertEqual(similarity_score_from_col_values(["a", "b", "c", "d", "e"], ["a", "b", "c", "d", "e"]), 1)
-        self.assertEqual(similarity_score_from_col_values(["a", "b", "c", "d", "e"], ["f", "g", "h", "i", "j"]), 0)
-        self.assertEqual(similarity_score_from_col_values([1, 2, 3, 4, 5], ["1", "2", "3", "4", "5"]), 1)
+        self.assertEqual(similarity_score_from_col_values(["a", "b", "c", "d", "e"], ["a", "b", "c", "d", "e"],"target_column_with_str_values"), 1)
+        self.assertEqual(similarity_score_from_col_values(["a", "b", "c", "d", "e"], ["f", "g", "h", "i", "j"],"target_column_with_str_values"), 0)
+        self.assertEqual(similarity_score_from_col_values([1, 2, 3, 4, 5], ["1", "2", "3", "4", "5"],"target_column_with_str_values"), 1)
 
-        # input data type and output data type is same for int and float then
-        self.assertEqual(similarity_score_from_col_values([1, 2, 3,None], [1,4,6]), 3)
-        self.assertEqual(similarity_score_from_col_values([1.4, 2.5, 3.6], [1.5,3.6,7.7]), 3)
+        # If the target data type is float or int but the input data type is str
+        self.assertEqual(similarity_score_from_col_values(["1", "2", "3", "4", "5"],[1, 2, 3, 4, 5],"column_with_int_values"), 0)
+        self.assertEqual(similarity_score_from_col_values(["1", "2", "3", "4", "5"],[1.1, 2.2, 3.3, 4.4, 5],"column_with_float_values"), 0)
 
-        # input_data_type is (int) = [1,2,3] while target(float) [1.5,3.6] 
-        # therefore they definitely not are same column so need to do anything if input_data_type is int
-        self.assertEqual(similarity_score_from_col_values([1, 2, 3], [1.5,3.6,7.7]), 0)
+        # If target column is carat 
+        # In carat value range should be greater than 1 and less than 20
+        self.assertEqual(similarity_score_from_col_values([1.1,2.1,6.8,3.1,4.2],[1.1, 2.2, 3.3, 4.4, 5],"carat"), 1)
+        self.assertEqual(similarity_score_from_col_values([1.1,2.1,6.8,30,40],[1.1, 2.2, 3.3, 4.4, 5],"carat"), 0.6)
 
-        # input_data_type (str)= ['1.23','2.23','3.23'] while target(float) [1.23,2.23,3.23]
-        # therefore same column
-        # input_data_type (str)= ['1','2','3'] while target(float) [1.23,2.23,3.23]
-        # therefore not same column
-        self.assertEqual(similarity_score_from_col_values(['1', '2', '3'], [1.5,3.6,7.7]), 0)
-        self.assertEqual(similarity_score_from_col_values(['1.4', '2.5', '3'], [1.0,3.0,7.1]), 2)
-
-        # input data type (float)= [1.0,2.0,3.0] while target (int) is [1,2,3] therefore same
-        # if input data type (float)= [1.23,2.48,3.22] while target (int) is [1,2,3] therefore not same
-        # input data tyoe (str) = ['1','2','3'] while target (int) is [1,2,3] therefore same
-        # input data type (str) = ['1.23','2.23','3.13'] while target (int) is [1,2,3] therefore not same
-        self.assertEqual(similarity_score_from_col_values([4,54,6], [1,2,3]), 3)
-        self.assertEqual(similarity_score_from_col_values([1.4, 2.5, 3.58], [1,2,3]), 0)
-        self.assertEqual(similarity_score_from_col_values(['1', '2', '3'], [1,2,3]), 3)
-        self.assertEqual(similarity_score_from_col_values(['1.4', '2.5', '3.2'], [1,2,3]), 0)
+        # If target column is raprate 
+        # In carat raprate range should be greater than 1000 and less than 20000
+        self.assertEqual(similarity_score_from_col_values([1000.1,2000,3000,4000,5000],[2000.1,2000,3000,4000,5000],"raprate"), 0.8)
+        self.assertEqual(similarity_score_from_col_values([1.1,2.4,4.2,2000.8,2.1],[2000.1,2000,3000,4000,5000],"raprate"), 0.2)
 
 class TestGetStandardNames(unittest.TestCase):
     def test_clarity(self):

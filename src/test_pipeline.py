@@ -11,8 +11,6 @@ def main():
     test_file_names = os.listdir(test_data_dir)
 
     for test_file_name in test_file_names:
-        # if test_file_name != "DHARAM.xlsx":
-        #     continue
         file_path = os.path.join(test_data_dir,test_file_name)
         print(f"====File name : {test_file_name} ======")
         start = time.time()

@@ -2,13 +2,21 @@ magic_numbers:
   clarity_threshold: 0.75
   clarity_normalizing_factor: 2
   clarity_enhancing_factor: 0.5
+
   carat_enhancing_factor: 0.75
+  carat_normalizing_factor: 0.05
+
   color_threshold: 0.75
   color_normalizing_factor: 2
   color_enhancing_factor: 0.5
+
   shape_similarity_threshold: 0.7
-  carat_normalizing_factor: 0.05
+  
   fluor_similarity_threshold: 0.8
   fluor_normalizing_factor: 2
   fluor_enhancing_factor: 0.5
   fluor_transfor_df_threshold: 0.3
+
+  raprate_threshold_factor: 0.8
+  raprate_normalizing_factor: 0.5
+  raprate_enhanching_factor: 0.5
