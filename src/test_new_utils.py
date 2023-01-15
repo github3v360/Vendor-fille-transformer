@@ -76,7 +76,7 @@ def test_stage():
             # Getting final similarity score by merging 
             # modified similarity score fetched from the name of current column in the cleaned dataframe (df_cleaned) 
             # and simiraity score fetched from the column values of current column in the cleaned dataframe (df_cleaned)
-            final_similarity_score = scoremerge_similarity_score(sim_score_from_cur_col_name,similarity_score_of_value,cur_target_column,params['magic_numbers'])
+            final_similarity_score = score_modifier.merge_similarity_score(sim_score_from_cur_col_name,similarity_score_of_value,cur_target_column,params['magic_numbers'])
 
             # storing the final similarity score (probability)
             # of the current column in the cleaned dataframe (df_cleaned) 
