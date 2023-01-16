@@ -55,31 +55,26 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
   
   #For Cut
   elif target_name == "cut":
-
-    if sim_score_val ==  1:
-        final_similarity_score = sim_score_name + magic_numbers['cut_enhancing_factor']
-    
+    if sim_score > magic_numbers['cut_similarity_threshold']:
+      need_to_continue = True
     else:
-        final_similarity_score = sim_score_name
-      
+      sim_score /= magic_numbers['cut_normalizing_factor']
+  
   #For Polish
   elif target_name == "polish":
-
-    if sim_score_val ==  1:
-        final_similarity_score = sim_score_name + magic_numbers['polish_enhancing_factor']
-
+    if sim_score > magic_numbers['polish_similarity_threshold']:
+      need_to_continue = True
     else:
-        final_similarity_score = sim_score_name
+      sim_score /= magic_numbers['polish_normalizing_factor']
+
 
   #For Symmetry
   elif target_name == "symmetry":
-
-    if sim_score_val ==  1:
-        final_similarity_score = sim_score_name + magic_numbers['sym_enhancing_factor']
-    
+    if sim_score > magic_numbers['sym_similarity_threshold']:
+      need_to_continue = True
     else:
-        final_similarity_score = sim_score_name
-
+      sim_score /= magic_numbers['sym_normalizing_factor']
+    
   else:
     raise Exception("The function could not find this target name")
   
