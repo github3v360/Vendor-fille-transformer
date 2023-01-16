@@ -47,7 +47,7 @@ def test_stage():
             
             # Getting the current column of cleaned dataframe unique values
             try:
-                cur_df_cleaned_column_unique_values = list(df[cur_df_cleaned_column_name].unique())[:10]
+                cur_df_cleaned_column_unique_values = list(df_cleaned[cur_df_cleaned_column_name].unique())[:10]
                 cur_df_cleaned_column_name = cur_df_cleaned_column_name.lower()
             except:
                 continue
@@ -63,7 +63,7 @@ def test_stage():
     
             # We will modify the simiraity score fetched from the name of current column in the cleaned dataframe (df_cleaned)
             # before calculating similarity score based on column values of current column in the cleaned dataframe (df_cleaned)
-            sim_score_from_cur_col_name,need_to_continue = score_modifier.modify_sim_score_of_name(sim_score_from_cur_col_name,cur_target_column,params['magic_numbers'])
+            sim_score_from_cur_col_name,need_to_continue = score_modifier.modify_sim_score_of_name(sim_score_from_cur_col_name,cur_target_column,magic_numbers)
 
             # This statement gets executed when simiraity score fetched from 
             # the name of current column in the cleaned dataframe (df_cleaned) is above threshold
@@ -76,7 +76,7 @@ def test_stage():
             # Getting final similarity score by merging 
             # modified similarity score fetched from the name of current column in the cleaned dataframe (df_cleaned) 
             # and simiraity score fetched from the column values of current column in the cleaned dataframe (df_cleaned)
-            final_similarity_score = score_modifier.merge_similarity_score(sim_score_from_cur_col_name,similarity_score_of_value,cur_target_column,params['magic_numbers'])
+            final_similarity_score = score_modifier.merge_similarity_score(sim_score_from_cur_col_name,similarity_score_of_value,cur_target_column,magic_numbers)
 
             # storing the final similarity score (probability)
             # of the current column in the cleaned dataframe (df_cleaned) 
@@ -96,7 +96,6 @@ def test_stage():
 
     # ==== Stage 4 (Post-Processing the Data) ==== 
     # To transform non-standard values to standard values
-    df_processed=df_pre_processed
     df_pre_processed['shape'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_shape_column(x['shape'],magic_numbers),axis=1)
     df_pre_processed['fluorescent'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_fluor_column(x['fluorescent'],magic_numbers),axis=1)
     df_processed=df_pre_processed

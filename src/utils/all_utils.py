@@ -231,7 +231,7 @@ def get_standard_names(target_name):
     return ["fluor","flour","fluorescent"]
   
   elif target_name == "raprate":
-    return ["AskingPrice", "PerCarat", "PerCt", "Rap","Price", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt"]
+    return ["AskingPrice", "Rap",'Rapprice']
 
   else:
     raise Exception("The function could not find other satndard names for this target name")
@@ -629,6 +629,7 @@ def transform_df(df):
 
     # Getting the column name with highest similarity to cur_column
     predicted_column = get_highest_prob_column(probs, columns_name)
+    print(predicted_column)
 
     # Assigning column name with highest similarity to cur_column t0 final_df
     final_df[cur_column] = df[predicted_column]

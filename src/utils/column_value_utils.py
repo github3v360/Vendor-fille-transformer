@@ -56,6 +56,37 @@ def get_target_column_unique_values(target_name):
 
   return target_unique_values
 
+def get_most_common_type(values):
+    """Returns the data type that occurs most frequently in a list of values, along with the count of that data type.
+    
+    Args:
+        values (list): The list of values.
+        
+    Returns:
+        tuple: A tuple containing the data type that occurs most frequently in the list and the count of that data type.
+    """
+    # Initialize a dictionary to count the occurrences of each data type
+    type_counts = {
+        int: 0,
+        float: 0,
+        str: 0,
+    }
+    
+    # Count the occurrences of each data type
+    for value in values:
+        if isinstance(value, int):
+            type_counts[int] += 1
+        elif isinstance(value, float):
+            type_counts[float] += 1
+        elif isinstance(value, str):
+            type_counts[str] += 1
+    
+    # Get the data type with the highest count
+    most_common_type = max(type_counts, key=type_counts.get)
+    
+    # Return the data type and count as a tuple
+    return (most_common_type, type_counts[most_common_type])
+
 def similarity_score_from_col_values(column_unique_values,taget_column_unique_values,target_name):
 
   """
