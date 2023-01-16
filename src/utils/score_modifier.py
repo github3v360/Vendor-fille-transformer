@@ -21,11 +21,11 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
     if sim_score > magic_numbers['clarity_threshold']:
       need_to_continue = False
     else:
-      sim_score = (sim_score / magic_numbers['clarity_normalizing_factor'])
+      sim_score = (sim_score * magic_numbers['clarity_normalizing_factor_for_col_name'])
     
   # For Carat
   elif target_name == "carat":
-    sim_score *= magic_numbers['carat_enhancing_factor']
+    sim_score *= magic_numbers['carat_normalizing_factor_for_col_name']
 
   # For Color
   elif target_name == "color":
@@ -33,7 +33,7 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
     if sim_score > magic_numbers['color_threshold']:
       need_to_continue = False
     else:
-      sim_score /= magic_numbers['color_normalizing_factor']
+      sim_score *= magic_numbers['color_normalizing_factor_for_col_name']
   
   # For shape (Modification Remaining and will be done in future)
   elif target_name == "shape":
@@ -44,14 +44,14 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
     if sim_score > magic_numbers['fluor_similarity_threshold']:
       need_to_continue = True
     else:
-      sim_score /= magic_numbers['fluor_normalizing_factor']
+      sim_score *= magic_numbers['fluor_normalizing_factor_for_col_name']
   
   # For raprate
   elif target_name == "raprate":
     if sim_score >= magic_numbers['raprate_threshold_factor']:
       need_to_continue = False
     else:
-      sim_score *= magic_numbers['raprate_enhanching_factor']
+      sim_score *= magic_numbers['raprate_normalizing_factor_for_col_name']
 
   else:
     raise Exception("The function could not find this target name")
@@ -63,7 +63,7 @@ def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbe
   This functionm will merge similarity score calculated from column name and column values
 
   Args:
-  sim_score_name: similarity score calculated from name
+  sim_score_name: Modified similarity score calculated from name
   sim_score_val: similarityb score calculated from value
   target_name: The name of target column
   magic_numbers(dict) = magic numbers in form of dictionary
@@ -74,25 +74,15 @@ def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbe
 
   # For Clarity
   if target_name == "clarity":
-
-    if sim_score_val ==  1:
-      final_similarity_score = sim_score_name + magic_numbers['clarity_enhancing_factor']
-    
-    else:
-      final_similarity_score = sim_score_name
+    final_similarity_score = sim_score_name + sim_score_val * magic_numbers['clarity_normalizing_factor_for_col_value']
 
   # For Carat
   elif target_name == "carat":
-    final_similarity_score = sim_score_name + (sim_score_val*magic_numbers['carat_normalizing_factor'])
+    final_similarity_score = sim_score_name + (sim_score_val*magic_numbers['carat_normalizing_factor_for_col_value'])
   
   # For Color
   elif target_name == "color":
-
-    if sim_score_val ==  1:
-      final_similarity_score = sim_score_name + magic_numbers['color_enhancing_factor']
-    
-    else:
-      final_similarity_score = sim_score_name
+    final_similarity_score = sim_score_name + sim_score_val * magic_numbers['color_normalizing_factor_for_col_value']
   
   # For shape (Modification Remaining and will be done in future)
   elif target_name == "shape":
@@ -100,16 +90,11 @@ def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbe
   
   # Fluorescent
   elif target_name == "fluorescent":
-
-    if sim_score_val ==  1:
-      final_similarity_score = sim_score_name + magic_numbers['fluor_enhancing_factor']
-    
-    else:
-      final_similarity_score = sim_score_name
+    final_similarity_score = sim_score_name + sim_score_val * magic_numbers['fluor_normalizing_factor_for_col_value']
   
-  # Rarate
+  # Raprate
   elif target_name == "raprate":
-    final_similarity_score = sim_score_name + (sim_score_val*magic_numbers['raprate_enhanching_factor'])
+    final_similarity_score = sim_score_name + (sim_score_val*magic_numbers['raprate_normalizing_factor_for_col_value'])
     
   else:
     raise Exception("The function could not find this target name")

@@ -1,22 +1,31 @@
 magic_numbers:
-  clarity_threshold: 0.75
-  clarity_normalizing_factor: 2
-  clarity_enhancing_factor: 0.5
 
-  carat_enhancing_factor: 0.75
-  carat_normalizing_factor: 0.05
+  # ====== For clarity =======
+  # if similarity score fetched from column name(header name) is greater than threshold
+  # Then we are confident that this is the right column and we do no need check other columns
+  clarity_threshold: 0.75
+
+  # final_similarity_score = (sim_score_from_col_name*clarity_normalizing_factor_for_col_name) + (sim_score_from_col_val * clarity_normalizing_factor_for_col_value)
+  clarity_normalizing_factor_for_col_name: 0.5
+  clarity_normalizing_factor_for_col_value: 0.5
+
+  carat_normalizing_factor_for_col_name: 0.75
+  carat_normalizing_factor_for_col_value: 0.25
 
   color_threshold: 0.75
-  color_normalizing_factor: 2
-  color_enhancing_factor: 0.5
+  color_normalizing_factor_for_col_name: 0.5
+  color_normalizing_factor_for_col_value: 0.5
 
-  shape_similarity_threshold: 0.7
+  # This is used during post-processing stage
+  # where we transform non-standard value to standard value.
+  # There while using the string_similarity function we need this threshold parameter
+  shape_similarity_transform_df_threshold: 0.7
   
   fluor_similarity_threshold: 0.8
-  fluor_normalizing_factor: 2
-  fluor_enhancing_factor: 0.5
-  fluor_transfor_df_threshold: 0.3
+  fluor_normalizing_factor_for_col_name: 0.5
+  fluor_normalizing_factor_for_col_value: 0.5
+  fluor_similarity_transform_df_threshold: 0.3
 
   raprate_threshold_factor: 0.8
-  raprate_normalizing_factor: 0.5
-  raprate_enhanching_factor: 0.5
+  raprate_normalizing_factor_for_col_name: 0.5
+  raprate_normalizing_factor_for_col_value: 0.5

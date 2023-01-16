@@ -85,7 +85,8 @@ def test_stage():
         # Getting the column name from the cleaned_df with highest probability (similarity) score
         # to current target column (cur_target_column) 
         predicted_column = common_utils.get_highest_prob_column(probs, df_cleaned_columns_name)
-
+        print(predicted_column)
+        
         # Adding column of cleaned_df with highest probability(similarity) score 
         # to df_pre_processed
         df_pre_processed[cur_target_column] = df_cleaned[predicted_column]

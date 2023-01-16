@@ -33,7 +33,7 @@ def transform_shape_column(cur_shape,magic_numbers):
         best_key = shape
     
     # If the similarity score is higher then threshold then we return the standard shape accordingly
-    if best_sim  > magic_numbers['shape_similarity_threshold']:
+    if best_sim  > magic_numbers['shape_similarity_transform_df_threshold']:
       return shape_dict[best_key]
     else:
       return None
@@ -67,7 +67,7 @@ def transform_fluor_column(cur_fluor,magic_numbers):
         best_key = fluor
     
     # If the similarity score is higher then threshold then we return the standard fluor accordingly
-    if best_sim  > magic_numbers['fluor_transfor_df_threshold']:
+    if best_sim  > magic_numbers['fluor_similarity_transform_df_threshold']:
       return fluor_dict[best_key]
     else:
       return None
