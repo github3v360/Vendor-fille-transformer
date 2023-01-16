@@ -14,7 +14,7 @@ def correct_df_headers(df):
   """
 
   # Possible Correct names of headers (More can be added in future)
-  col_names = ['srno','color','cut','shape','clarity','purity',"carat","size" , "cts",  "crtwt","fluor","flour"]
+  col_names = ['srno','color','cut','shape','clarity','purity',"carat","size" , "cts",  "crtwt","fluor","flour", "polish", "sym"]
 
   flag = False
 

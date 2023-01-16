@@ -24,6 +24,15 @@ def get_standard_names(target_name):
   elif target_name == "raprate":
     return ["AskingPrice", "Rap",'Rapprice']
 
+  elif target_name == "cut":      
+    return ["Cut", "CutGrade"]
+
+  elif target_name == "polish":
+    return ["Finish", "Pol"]  
+
+  elif target_name == "symmetry":
+    return ["Sym", "Symetry", "Sym-metry"]
+
   else:
     raise Exception("The function could not find other satndard names for this target name")
 

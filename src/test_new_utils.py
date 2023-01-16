@@ -15,7 +15,8 @@ def test_stage():
     # ==== Stage 3 (Processing the Data) ====
 
     # Declaring the target column (required columns)
-    target_columns = ['clarity','carat','color','shape',"fluorescent","raprate"]
+    target_columns = ['clarity','carat','color','shape','fluorescent','raprate','cut','polish','symmetry']
+
 
     # reading params to get magic numbers
     params = common_utils.read_yaml("params.yaml")

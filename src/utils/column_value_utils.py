@@ -48,6 +48,18 @@ def get_target_column_unique_values(target_name):
   elif target_name == "raprate":
     target_unique_values = [12000.00,21000.00,11000.00,18000.00,16000.12]
 
+  elif target_name == "cut":
+    target_unique_values = ["I","EX","VG","None","G","F","P"]
+    flag = True
+
+  elif target_name == "polish":
+    target_unique_values = ["I","EX","VG","G","F","P","VG-EX","G-VG","F-G"]
+    flag = True
+
+  elif target_name == "symmetry":
+    target_unique_values = ["I","EX","VG","G","F","P","VG-EX","G-VG","F-G"]
+    flag = True
+    
   else:
     raise Exception("The function could not find this target name")
   

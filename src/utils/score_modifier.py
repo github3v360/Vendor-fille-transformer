@@ -52,6 +52,33 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
       need_to_continue = False
     else:
       sim_score *= magic_numbers['raprate_enhanching_factor']
+  
+  #For Cut
+  elif target_name == "cut":
+
+    if sim_score_val ==  1:
+        final_similarity_score = sim_score_name + magic_numbers['cut_enhancing_factor']
+    
+    else:
+        final_similarity_score = sim_score_name
+      
+  #For Polish
+  elif target_name == "polish":
+
+    if sim_score_val ==  1:
+        final_similarity_score = sim_score_name + magic_numbers['polish_enhancing_factor']
+
+    else:
+        final_similarity_score = sim_score_name
+
+  #For Symmetry
+  elif target_name == "symmetry":
+
+    if sim_score_val ==  1:
+        final_similarity_score = sim_score_name + magic_numbers['sym_enhancing_factor']
+    
+    else:
+        final_similarity_score = sim_score_name
 
   else:
     raise Exception("The function could not find this target name")
@@ -107,9 +134,36 @@ def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbe
     else:
       final_similarity_score = sim_score_name
   
-  # Rarate
+  # Raprate
   elif target_name == "raprate":
     final_similarity_score = sim_score_name + (sim_score_val*magic_numbers['raprate_enhanching_factor'])
+    
+  #Cut 
+  elif target_name == "cut":
+
+        if sim_score_val ==  1:
+            final_similarity_score = sim_score_name + magic_numbers['cut_enhancing_factor']
+        
+        else:
+            final_similarity_score = sim_score_name
+            
+  #Polish      
+   elif target_name == "polish":
+
+        if sim_score_val ==  1:
+            final_similarity_score = sim_score_name + magic_numbers['polish_enhancing_factor']
+
+        else:
+            final_similarity_score = sim_score_name
+
+  #symmetry          
+   elif target_name == "symmetry":
+
+        if sim_score_val ==  1:
+            final_similarity_score = sim_score_name + magic_numbers['sym_enhancing_factor']
+        
+        else:
+            final_similarity_score = sim_score_name
     
   else:
     raise Exception("The function could not find this target name")

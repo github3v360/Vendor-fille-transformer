@@ -20,3 +20,15 @@ magic_numbers:
   raprate_threshold_factor: 0.8
   raprate_normalizing_factor: 0.5
   raprate_enhanching_factor: 0.5
+
+  cut_similarity_threshold: 0.8
+  cut_normalizing_factor: 2
+  cut_enhancing_factor: 0.5
+
+  polish_similarity_threshold: 0.8
+  polish_normalizing_factor: 2
+  polish_enhancing_factor: 0.5
+
+  sym_similarity_threshold: 0.8
+  sym_normalizing_factor: 2
+  sym_enhancing_factor: 0.5
