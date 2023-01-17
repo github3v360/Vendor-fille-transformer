@@ -18,7 +18,7 @@ python src/main.py -f=your_file_path
 
 # Similarity(Probability) Score Calculation Logic
 
-#### Let's take example of clarity 
+### Let's take example of clarity 
 
 sim_score_from_col_name = similarity score calculated from the column name
 
