@@ -3,10 +3,10 @@
 from src.utils import data_cleaner, common_utils, column_name_utils, column_value_utils, score_modifier, post_processing_utils
 import pandas as pd
 
-def test_stage():
+def test_stage(file_path):
 
     # ==== Stage 1 (Reading the file // Fetching the file) ====
-    df = pd.read_excel(r"C:\Users\hp\Downloads\JBBROTHER.xlsx")
+    df = pd.read_excel(file_path)
     
     # ==== Stage 2 (Cleaning the Data) ====
     df_corrected_headers = data_cleaner.correct_df_headers(df)
@@ -15,7 +15,8 @@ def test_stage():
     # ==== Stage 3 (Processing the Data) ====
 
     # Declaring the target column (required columns)
-    target_columns = ['clarity','carat','color','shape',"fluorescent","raprate"]
+    target_columns = ['clarity','carat','color','shape',
+    "fluorescent","raprate","length","width","depth"]
 
     # reading params to get magic numbers
     params = common_utils.read_yaml("params.yaml")
@@ -93,12 +94,16 @@ def test_stage():
 
         # Dropping the column with highest probability (similarity) score from cleaned_df
         # since we do not need to iterate over that column again
-        df_cleaned = df_cleaned.drop(columns=predicted_column)
+        if cur_target_column not in ["length","width","depth"]:
+            df_cleaned = df_cleaned.drop(columns=predicted_column)
 
     # ==== Stage 4 (Post-Processing the Data) ==== 
     # To transform non-standard values to standard values
     df_pre_processed['shape'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_shape_column(x['shape'],magic_numbers),axis=1)
     df_pre_processed['fluorescent'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_fluor_column(x['fluorescent'],magic_numbers),axis=1)
+    df_pre_processed['length'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_measurement_column(x['length'],'length'),axis=1)
+    df_pre_processed['width'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_measurement_column(x['width'],'width'),axis=1)
+    df_pre_processed['depth'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_measurement_column(x['depth'],'depth'),axis=1)
     df_processed=df_pre_processed
 
     # ==== end of all stages ====

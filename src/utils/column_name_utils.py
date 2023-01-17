@@ -23,7 +23,16 @@ def get_standard_names(target_name):
   
   elif target_name == "raprate":
     return ["AskingPrice", "Rap",'Rapprice']
+  
+  elif target_name == "length":
+    return ["M1","Measurement","Diameter","length"]
 
+  elif target_name == "width":
+    return ["M2","Measurement","Diameter","width"]
+
+  elif target_name == "depth":
+    return ["M3","Measurement","Diameter","depth"]
+    
   else:
     raise Exception("The function could not find other satndard names for this target name")
 

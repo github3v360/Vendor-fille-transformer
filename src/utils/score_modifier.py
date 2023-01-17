@@ -52,6 +52,9 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
       need_to_continue = False
     else:
       sim_score *= magic_numbers['raprate_normalizing_factor_for_col_name']
+  
+  elif target_name in ["length","width","depth"]:
+    sim_score = sim_score * magic_numbers['measurement_normalizing_factor_for_col_name']
 
   else:
     raise Exception("The function could not find this target name")
@@ -95,6 +98,9 @@ def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbe
   # Raprate
   elif target_name == "raprate":
     final_similarity_score = sim_score_name + (sim_score_val*magic_numbers['raprate_normalizing_factor_for_col_value'])
+  
+  elif target_name in ["length","width","depth"]:
+    final_similarity_score = sim_score_name + (sim_score_val*magic_numbers['measurement_normalizing_factor_for_col_value'])
     
   else:
     raise Exception("The function could not find this target name")

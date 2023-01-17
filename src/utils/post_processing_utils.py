@@ -71,3 +71,20 @@ def transform_fluor_column(cur_fluor,magic_numbers):
       return fluor_dict[best_key]
     else:
       return None
+
+def transform_measurement_column(cur_val,target_name):
+
+  if cur_val is None or type(cur_val) == int or type(cur_val) == float:
+    return cur_val
+  ops_to_replace = ["+","-","x","X"]
+  for cur_op in ops_to_replace:
+    cur_val = cur_val.replace(cur_op,"*")
+  cur_val = cur_val.split("*")
+
+  if target_name == "length":
+    return float(cur_val[0])
+  elif target_name == "width":
+    return float(cur_val[2])
+  else:
+    return float(cur_val[-1])
+  

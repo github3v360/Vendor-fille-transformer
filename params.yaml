@@ -29,3 +29,6 @@ magic_numbers:
   raprate_threshold_factor: 0.8
   raprate_normalizing_factor_for_col_name: 0.5
   raprate_normalizing_factor_for_col_value: 0.5
+
+  measurement_normalizing_factor_for_col_name: 0.4
+  measurement_normalizing_factor_for_col_value: 0.6

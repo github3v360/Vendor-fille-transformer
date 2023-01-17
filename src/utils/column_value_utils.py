@@ -48,6 +48,12 @@ def get_target_column_unique_values(target_name):
   elif target_name == "raprate":
     target_unique_values = [12000.00,21000.00,11000.00,18000.00,16000.12]
 
+  # The logic for these column in entirely different from others
+  # we will try to find arithmetic operators if column is string
+  elif target_name in ["length","width","depth"]:
+    return ["*","x","X","+","-"]
+    
+
   else:
     raise Exception("The function could not find this target name")
   
@@ -87,6 +93,21 @@ def get_most_common_type(values):
     # Return the data type and count as a tuple
     return (most_common_type, type_counts[most_common_type])
 
+def get_score_from_range(rangeA,rangeB,values,n):
+  total = 0
+  for value in values:
+
+    if type(value) != int or value is None or type(value) != float:
+      try:
+        value = int(value)
+      except:
+        continue 
+    
+    if value >= rangeA and value <= rangeB:
+      total+=1
+  
+  return total / n
+
 def similarity_score_from_col_values(column_unique_values,taget_column_unique_values,target_name):
 
   """
@@ -101,6 +122,7 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     Returns:
         str: The similarity score of the column and a target column
     """ 
+
   #get the data type of column_unique_values
   input_data_type = get_most_common_type(column_unique_values)
 
@@ -114,9 +136,37 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
   
   # Getting length of column_unique_values
   n = len(column_unique_values)
-  
-  # Writing logic for string data type considering target data type will always be correct
-  if target_data_type[0] == str:
+
+  # ===== Special Logics ===========
+
+  if target_name in ["length","width","depth"]:
+
+    if input_data_type[0] == str:
+      get_val = None
+      for val in column_unique_values:
+        if val is not None:
+          get_val = val
+          break
+      if get_val is None:
+        return 0
+      if "*" in get_val:
+        return 1
+      get_val = get_val.replace("x","*")
+      get_val = get_val.replace("X","*")
+      try:
+        temp = eval(get_val)
+        return 1
+      except:
+        return 0
+    
+    elif input_data_type[0] == float:
+      return get_score_from_range(1,10,column_unique_values,n)
+    
+    else:
+      return 0
+    
+  # Writing General logic for string data type considering target data type will always be correct
+  elif target_data_type[0] == str:
  
     # If one of column_unique_values matches with any of the taget_column_unique_values then we will return 1 else 0
     for value in column_unique_values:
@@ -127,38 +177,27 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
 
     return 0
   
-  # =====Writing logic for int and float data type===== 
-  if not flag:
+  # =====Writing General logic for int and float data type=====
+  else:
+    if not flag:
 
-    # input_data_type[0] == str because we are checking logic for int and float 
-    # input_data_type[0] == int vecause if target values are [1.4,1.8] and input values are 
-    # [1,3] it means they are definitely not falling in same category.
+      # input_data_type[0] == str because we are checking logic for int and float 
+      # input_data_type[0] == int vecause if target values are [1.4,1.8] and input values are 
+      # [1,3] it means they are definitely not falling in same category.
 
-    if input_data_type[0] == str or input_data_type == int:
-      return 0
+      if input_data_type[0] == str or input_data_type == int:
+        return 0
   
-  # Here now the probability is calculated on the basis of the range of value
+    # Here now the probability is calculated on the basis of the range of value
 
-  if target_name == 'carat':
-
-    rangeA = 1.0
-    rangeB = 20.0
+    if target_name == 'carat':
+      rangeA = 1.0
+      rangeB = 20.0
   
-  elif target_name == 'raprate':
+    elif target_name == 'raprate':
+      rangeA = 2000
+      rangeB = 100000
     
-    rangeA = 2000
-    rangeB = 100000
+    return get_score_from_range(rangeA,rangeB,column_unique_values,n)
   
-  total = 0
-  for value in column_unique_values:
-
-    if type(value) != int or value is None or type(value) != float:
-      try:
-        value = int(value)
-      except:
-        continue 
-    
-    if value >= rangeA and value <= rangeB:
-      total+=1
-  
-  return total / n
+     
