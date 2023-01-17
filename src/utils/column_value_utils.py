@@ -52,6 +52,9 @@ def get_target_column_unique_values(target_name):
   # we will try to find arithmetic operators if column is string
   elif target_name in ["length","width","depth"]:
     return ["*","x","X","+","-"]
+
+  elif target_name == "comment":
+    flag = True
   
   elif target_name == "cut":
     target_unique_values = ["I","EX","VG","G","F","P"]

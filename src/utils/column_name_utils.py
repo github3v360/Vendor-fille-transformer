@@ -43,7 +43,7 @@ def get_standard_names(target_name):
     return ["Sym", "Symetry", "Sym-metry","symmetry"]
 
   elif target_name == "table":
-    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl"]
+    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%"]
     
   else:
     raise Exception("The function could not find other satndard names for this target name")
