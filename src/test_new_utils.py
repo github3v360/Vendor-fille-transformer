@@ -10,13 +10,14 @@ def test_stage(file_path):
     
     # ==== Stage 2 (Cleaning the Data) ====
     df_corrected_headers = data_cleaner.correct_df_headers(df)
-    df_cleaned = data_cleaner.drop_empty_columns(df_corrected_headers)
+    # df_cleaned = data_cleaner.drop_empty_columns(df_corrected_headers)
+    df_cleaned = df_corrected_headers
 
     # ==== Stage 3 (Processing the Data) ====
 
     # Declaring the target column (required columns)
     target_columns = ['clarity','carat','color','shape',
-    "fluorescent","raprate","length","width","depth"]
+    "fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth"]
 
     # reading params to get magic numbers
     params = common_utils.read_yaml("params.yaml")

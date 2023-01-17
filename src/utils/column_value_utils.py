@@ -52,7 +52,21 @@ def get_target_column_unique_values(target_name):
   # we will try to find arithmetic operators if column is string
   elif target_name in ["length","width","depth"]:
     return ["*","x","X","+","-"]
+  
+  elif target_name == "cut":
+    target_unique_values = ["I","EX","VG","G","F","P"]
+    flag = True
+
+  elif target_name == "polish":
+    target_unique_values = ["I","EX","VG","G","F","P","VG-EX","G-VG","F-G"]
+    flag = True
+
+  elif target_name == "symmetry":
+    target_unique_values = ["I","EX","VG","G","F","P","VG-EX","G-VG","F-G"]
+    flag = True
     
+  elif target_name == "table":
+    target_unique_values = [56.2,57.6,58.2,59.5,60.4,61.3,62.2,63.2,65.5,70.3,72.2]
 
   else:
     raise Exception("The function could not find this target name")
@@ -144,7 +158,7 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     if input_data_type[0] == str:
       get_val = None
       for val in column_unique_values:
-        if val is not None:
+        if val is not None and type(val) == str:
           get_val = val
           break
       if get_val is None:
@@ -197,6 +211,10 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     elif target_name == 'raprate':
       rangeA = 2000
       rangeB = 100000
+      
+    elif target_name == 'table':
+      rangeA = 50
+      rangeB = 73
     
     return get_score_from_range(rangeA,rangeB,column_unique_values,n)
   

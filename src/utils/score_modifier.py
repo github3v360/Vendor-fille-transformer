@@ -55,6 +55,35 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
   
   elif target_name in ["length","width","depth"]:
     sim_score = sim_score * magic_numbers['measurement_normalizing_factor_for_col_name']
+  
+  #For Cut
+  elif target_name == "cut":
+    if sim_score > magic_numbers['cut_similarity_threshold']:
+      need_to_continue = True
+    else:
+      sim_score *= magic_numbers['cut_normalizing_factor_for_col_name']
+  
+  #For Polish
+  elif target_name == "polish":
+    if sim_score > magic_numbers['polish_similarity_threshold']:
+      need_to_continue = True
+    else:
+      sim_score *= magic_numbers['polish_normalizing_factor_for_col_name']
+
+
+  #For Symmetry
+  elif target_name == "symmetry":
+    if sim_score > magic_numbers['sym_similarity_threshold']:
+      need_to_continue = True
+    else:
+      sim_score *= magic_numbers['sym_normalizing_factor_for_col_name']
+    
+  # For table
+  elif target_name == "table":
+    if sim_score >= magic_numbers['table_threshold_factor']:
+      need_to_continue = True
+    else:
+      sim_score *= magic_numbers['table_normalizing_factor_for_col_name']
 
   else:
     raise Exception("The function could not find this target name")
@@ -101,6 +130,21 @@ def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbe
   
   elif target_name in ["length","width","depth"]:
     final_similarity_score = sim_score_name + (sim_score_val*magic_numbers['measurement_normalizing_factor_for_col_value'])
+  
+  #Cut 
+  elif target_name == "cut":
+    final_similarity_score = sim_score_name + sim_score_val * magic_numbers['cut_normalizing_factor_for_col_value']
+            
+  #Polish      
+  elif target_name == "polish":
+    final_similarity_score = sim_score_name + sim_score_val * magic_numbers['polish_normalizing_factor_for_col_value']
+
+  #symmetry          
+  elif target_name == "symmetry":
+    final_similarity_score = sim_score_name + sim_score_val * magic_numbers['sym_normalizing_factor_for_col_value']
+    
+  elif target_name == "table":
+    final_similarity_score = sim_score_name + (sim_score_val*magic_numbers['table_normalizing_factor_for_col_value'])
     
   else:
     raise Exception("The function could not find this target name")
