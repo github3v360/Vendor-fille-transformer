@@ -158,7 +158,7 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     if input_data_type[0] == str:
       get_val = None
       for val in column_unique_values:
-        if val is not None and type(val) == str::
+        if val is not None and type(val) == str:
           get_val = val
           break
       if get_val is None:
