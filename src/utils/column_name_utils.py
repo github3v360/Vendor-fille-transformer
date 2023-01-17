@@ -32,6 +32,18 @@ def get_standard_names(target_name):
 
   elif target_name == "depth":
     return ["M3","Measurement","Diameter","depth"]
+  
+  elif target_name == "cut":      
+    return ["Cut", "CutGrade"]
+
+  elif target_name == "polish":
+    return ["Finish", "Pol","polish"]  
+
+  elif target_name == "symmetry":
+    return ["Sym", "Symetry", "Sym-metry","symmetry"]
+
+  elif target_name == "table":
+    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl"]
     
   else:
     raise Exception("The function could not find other satndard names for this target name")

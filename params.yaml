@@ -32,3 +32,20 @@ magic_numbers:
 
   measurement_normalizing_factor_for_col_name: 0.4
   measurement_normalizing_factor_for_col_value: 0.6
+  
+  cut_similarity_threshold: 0.8
+  cut_normalizing_factor_for_col_name: 0.5
+  cut_normalizing_factor_for_col_value: 0.5
+
+  polish_similarity_threshold: 0.8
+  polish_normalizing_factor_for_col_name: 0.5
+  polish_normalizing_factor_for_col_value: 0.5
+
+  sym_similarity_threshold: 0.8
+  sym_normalizing_factor_for_col_name: 0.5
+  sym_normalizing_factor_for_col_value: 0.5
+  
+   
+  table_threshold_factor: 0.8
+  table_normalizing_factor_for_col_name: 0.5
+  table_normalizing_factor_for_col_value: 0.5
