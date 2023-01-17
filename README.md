@@ -29,4 +29,5 @@ clarity_normalizing_factor_for_col_name = weightage given to the "sim_score_from
 clarity_normalizing_factor_for_col_value = weightage given to the "sim_score_from_col_val"
 
 
-Final_similarity_score = (sim_score_from_col_name*clarity_normalizing_factor_for_col_name) + (sim_score_from_col_val * clarity_normalizing_factor_for_col_value)
+Final_similarity_score = (sim_score_from_col_name*clarity_normalizing_factor_for_col_name) + 
+                         (sim_score_from_col_val * clarity_normalizing_factor_for_col_value)
