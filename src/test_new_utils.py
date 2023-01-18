@@ -17,7 +17,7 @@ def test_stage(file_path):
 
     # Declaring the target column (required columns)
     target_columns = ['clarity','carat','color','shape',
-    "fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth"]
+    "fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth","price per carat","discount","comments"]
 
     # reading params to get magic numbers
     params = common_utils.read_yaml("params.yaml")
@@ -112,5 +112,5 @@ def test_stage(file_path):
     print(df_processed.head())
     return df_processed
 
-if __name__ == "__main__":
-    test_stage()
+# if __name__ == "__main__":
+#     test_stage()

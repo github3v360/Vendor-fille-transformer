@@ -50,6 +50,17 @@ magic_numbers:
   table_normalizing_factor_for_col_name: 0.5
   table_normalizing_factor_for_col_value: 0.5
 
-  column_threshold_factor: 0.8
-  column_normalizing_factor_for_col_name: 0.7
-  column_normalizing_factor_for_col_value: 0.3
+  comments_threshold_factor: 0.8
+  comments_normalizing_factor_for_col_name: 0.7
+  comments_normalizing_factor_for_col_value: 0.3
+  comments_similarity_threshold: 0.8
+
+  ppc_threshold_factor: 0.8
+  ppc_normalizing_factor_for_col_name: 0.7
+  ppc_normalizing_factor_for_col_value: 0.3
+  ppc_similarity_threshold: 0.8
+
+  disc_threshold_factor: 0.8
+  disc_normalizing_factor_for_col_name: 0.7
+  disc_normalizing_factor_for_col_value: 0.3
+  disc_similarity_threshold: 0.8
