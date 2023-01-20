@@ -129,10 +129,10 @@ def transform_cut_column(cut_val,magic_numbers):
 def transform_discount_column(disc_val,magic_numbers,ppc_val,raprate_val):
     try:
         if int(disc_val) == 0:      
-            val = ((ppc_val/raprate_val) - 1)*100
-            return round(val,2)
-        else:
-            return round(disc_val,2)
+            disc_val = ((ppc_val/raprate_val) - 1)*100
+        if disc_val < 0:
+            disc_val*=-1
+        return round(disc_val,2)
     except:
         return disc_val
 
