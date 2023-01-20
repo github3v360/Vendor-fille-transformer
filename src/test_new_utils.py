@@ -11,7 +11,7 @@ def test_stage(file_path):
     # ==== Stage 2 (Cleaning the Data) ====
     df_corrected_headers = data_cleaner.correct_df_headers(df)
     # df_cleaned = data_cleaner.drop_empty_columns(df_corrected_headers)
-    df_cleaned = df_corrected_headers
+    df_cleaned,_ = df_corrected_headers
 
     # ==== Stage 3 (Processing the Data) ====
 

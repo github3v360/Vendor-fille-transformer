@@ -21,6 +21,9 @@ def correct_df_headers(df):
   # Getting the current header names of the input dataframe
   cur_columns = list(df.columns)
 
+  #
+  correct_row_idx = -1
+
   # This for loop wil check if the DataFrame is already in correct format or not
   for cur_column in cur_columns:
     if cur_column in col_names:
@@ -45,6 +48,7 @@ def correct_df_headers(df):
           continue
         if cur_column in col_names:
           flag = True 
+          correct_row_idx = i
           break
 
       # Update the DataFrame if we found row with correct headers
@@ -53,7 +57,7 @@ def correct_df_headers(df):
         df.columns = cur_columns
         break
         
-  return df 
+  return df,correct_row_idx
 
 def drop_empty_columns(df):
   """
