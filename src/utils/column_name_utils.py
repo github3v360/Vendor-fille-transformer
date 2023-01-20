@@ -53,7 +53,13 @@ def get_standard_names(target_name):
 
   elif target_name == "discount":
     return ["disc","disc%","RapNet Discount %", "PctRapNetDiscount", "Rap netDisc", "RapnetDiscount", "RapnetDiscountPct", "RapnetDiscountPercent", "RapnetDiscPct", "RapnetDpx", "RapnetRapPct", "RDisc", "RDiscount", "RDiscountPct", "RDiscountPercent", "RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price"]
-     
+  
+  elif target_name == "total":
+    return ["amount","total","total price"]
+  
+  elif target_name == "rap price total":
+    return ["rap total","rap value"]
+      
   else:
     raise Exception("The function could not find other satndard names for this target name")
 

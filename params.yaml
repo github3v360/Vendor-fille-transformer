@@ -36,6 +36,7 @@ magic_numbers:
   cut_similarity_threshold: 0.8
   cut_normalizing_factor_for_col_name: 0.5
   cut_normalizing_factor_for_col_value: 0.5
+  cut_similarity_transform_df_threshold: 0.7
 
   polish_similarity_threshold: 0.8
   polish_normalizing_factor_for_col_name: 0.5
@@ -64,3 +65,13 @@ magic_numbers:
   disc_normalizing_factor_for_col_name: 0.7
   disc_normalizing_factor_for_col_value: 0.3
   disc_similarity_threshold: 0.8
+
+  amt_threshold_factor: 0.8
+  amt_normalizing_factor_for_col_name: 0.7
+  amt_normalizing_factor_for_col_value: 0.3
+  amt_similarity_threshold: 0.8
+
+  raptotal_threshold_factor: 0.8
+  raptotal_normalizing_factor_for_col_name: 0.7
+  raptotal_normalizing_factor_for_col_value: 0.3
+  raptotal_similarity_threshold: 0.8
