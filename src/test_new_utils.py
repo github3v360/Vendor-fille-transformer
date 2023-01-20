@@ -102,9 +102,21 @@ def test_stage(file_path):
     # To transform non-standard values to standard values
     df_pre_processed['shape'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_shape_column(x['shape'],magic_numbers),axis=1)
     df_pre_processed['fluorescent'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_fluor_column(x['fluorescent'],magic_numbers),axis=1)
-    df_pre_processed['length'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_measurement_column(x['length'],'length'),axis=1)
-    df_pre_processed['width'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_measurement_column(x['width'],'width'),axis=1)
-    df_pre_processed['depth'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_measurement_column(x['depth'],'depth'),axis=1)
+    
+    flag = True
+    try:
+        temp = float(df_pre_processed['length'].iloc[0])
+        flag = False
+    except:
+        pass
+    if flag:
+        df_pre_processed['length'],df_pre_processed['width'],df_pre_processed['depth'] = zip(*df_pre_processed['length'].apply(post_processing_utils.transform_measurement_column))
+    else:
+        df_pre_processed['length'] = df_pre_processed['length'].astype(float)
+        df_pre_processed['width'] = df_pre_processed['width'].astype(float)
+        df_pre_processed['depth'] = df_pre_processed['depth'].astype(float)
+    df_pre_processed['ratio'] = round(df_pre_processed['length'] / df_pre_processed['width'],2)
+    df_pre_processed['depth %'] = round((df_pre_processed['depth'] / df_pre_processed['width']) * 100,2)
     df_processed=df_pre_processed
 
     # ==== end of all stages ====
