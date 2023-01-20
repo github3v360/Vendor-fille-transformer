@@ -89,8 +89,6 @@ def transform_measurement_column(cur_val):
 
   cur_val = cur_val.split("*")
   cur_val = [float(val) for val in cur_val]
-  depth = min(cur_val)
-  cur_val.remove(depth)
-  cur_val.append(depth)
+  cur_val.sort(reverse=True)
   return cur_val
   
