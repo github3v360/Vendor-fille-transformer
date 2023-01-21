@@ -30,6 +30,25 @@ class TestGetTargetColumnUniqueValues(unittest.TestCase):
         self.assertIn("trapezoid", shape_unique_values)
         self.assertIn("heart", shape_unique_values)
         
+        cut_unique_values = column_value_utils.get_target_column_unique_values("cut")
+        self.assertEqual(len(cut_unique_values), 6)
+        self.assertEqual("I", cut_unique_values)
+        self.assertEqual("EX",cut_unique_values)
+
+        polish_unique_values = column_value_utils.get_target_column_unique_values("polish")
+        self.assertEqual(len(polish_unique_values), 9)
+        self.assertEqual("I",polish_unique_values)
+        self.assertEqual("EX",polish_unique_values)
+
+        sym_unique_values = column_value_utils.get_target_column_unique_values("sym")
+        self.assertEqual(len(sym_unique_values), 9)
+        self.assertEqual("I",sym_unique_values)
+        self.assertEqual("EX",sym_unique_values)
+
+        table_unique_values = column_value_utils.get_target_column_unique_values("table")
+        self.assertEqual(len(table_unique_values), 11)
+        self.assertEqual(float, type(table_unique_values[0]))
+        self.assertEqual(float, type(table_unique_values[2]))
         # Test for invalid target column
         with self.assertRaises(Exception):
             column_value_utils.get_target_column_unique_values("invalid")
@@ -70,5 +89,9 @@ class TestSimilarityScoreFromColValues(unittest.TestCase):
         self.assertEqual(column_value_utils.similarity_score_from_col_values([1000.1,2000,3000,4000,5000],[2000.1,2000,3000,4000,5000],"raprate"), 0.8)
         self.assertEqual(column_value_utils.similarity_score_from_col_values([1.1,2.4,4.2,2000.8,2.1],[2000.1,2000,3000,4000,5000],"raprate"), 0.2)
 
+        # If target column is table
+        # In carat raprate range should be greater than 50 and less than 72
+        self.assertEqual(column_value_utils.similarity_score_from_col_values([50.00,57,63,72,64],[50.00,57,63,72,64],"table"), 1)
+        self.assertEqual(column_value_utils.similarity_score_from_col_values([20,100,2,52,56],[50.00,57,63,72,64],"table"), 0.4)
 if __name__ == "__main__":
     unittest.main()

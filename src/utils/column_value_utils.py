@@ -52,6 +52,11 @@ def get_target_column_unique_values(target_name):
   # we will try to find arithmetic operators if column is string
   elif target_name in ["length","width","depth"]:
     return ["*","x","X","+","-"]
+
+  elif target_name == "comments":
+    # print(target_name)  
+    target_unique_values = [",","additional"]
+    flag = True
   
   elif target_name == "cut":
     target_unique_values = ["I","EX","VG","G","F","P"]
@@ -67,6 +72,18 @@ def get_target_column_unique_values(target_name):
     
   elif target_name == "table":
     target_unique_values = [56.2,57.6,58.2,59.5,60.4,61.3,62.2,63.2,65.5,70.3,72.2]
+
+  elif target_name == "price per carat":
+    target_unique_values = [5000, 7000,8600,10000,12067,16800]
+
+  elif target_name == "discount":
+    target_unique_values = [-2,1.0,30.89,70.65,-4.00,-50.00]
+
+  elif target_name == "total":
+    target_unique_values = [5000.0, 56789.98,76452.98,54637.83]
+
+  elif target_name == "rap price total":
+    target_unique_values = [5000.0, 56789.98,76452.98,54637.83]
 
   else:
     raise Exception("The function could not find this target name")
@@ -178,7 +195,7 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     
     else:
       return 0
-    
+
   # Writing General logic for string data type considering target data type will always be correct
   elif target_data_type[0] == str:
  
@@ -216,6 +233,22 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
       rangeA = 50
       rangeB = 73
     
+    elif target_name == 'price per carat':
+      rangeA = 5000
+      rangeB = 30000
+
+    elif target_name == 'discount':
+      rangeA = -99
+      rangeB = 99
+
+    elif target_name == 'total':
+      rangeA = 10000
+      rangeB = 100000
+
+    elif target_name == 'rap price total':
+      rangeA = 10000
+      rangeB = 100000
+
     return get_score_from_range(rangeA,rangeB,column_unique_values,n)
   
      

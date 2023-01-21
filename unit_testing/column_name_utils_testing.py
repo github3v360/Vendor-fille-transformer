@@ -33,7 +33,23 @@ class TestGetStandardNames(unittest.TestCase):
     def test_carat(self):
         std_names = column_name_utils.get_standard_names("carat")
         self.assertEqual(std_names, ["carat", "size", "cts", "crtwt"])
+
+    def test_cut(self):
+        std_names = column_name_utils.get_standard_names("cut")
+        self.assertEqual(std_names, ["Cut", "CutGrade"])
+
+    def test_polish(self):
+        std_names = column_name_utils.get_standard_names("polish")
+        self.assertEqual(std_names, ["Finish", "Pol","polish"])
+
+    def test_sym(self):
+        std_names = column_name_utils.get_standard_names("symmetry")
+        self.assertEqual(std_names, ["Sym", "Symetry", "Sym-metry","symmetry"])
         
+    def test_table(self):
+        std_names = column_name_utils.get_standard_names("table")
+        self.assertEqual(std_names, ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl"])
+
     def test_invalid_name(self):
         with self.assertRaises(Exception):
             column_name_utils.get_standard_names("invalid_name")

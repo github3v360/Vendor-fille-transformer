@@ -43,8 +43,23 @@ def get_standard_names(target_name):
     return ["Sym", "Symetry", "Sym-metry","symmetry"]
 
   elif target_name == "table":
-    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl"]
+    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%"]
     
+  elif target_name == "comments":
+    return ["Comments", "Remark", "Lab comment", "Cert comment", "Certificate comment", "Laboratory comment","Report Comments"]
+   
+  elif target_name == "price per carat":
+    return ["AskingPrice", "PerCarat", "PerCt", "Prc", "Price", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt", "Px","price/carat","RapNet Price"]
+
+  elif target_name == "discount":
+    return ["disc","disc%","RapNet Discount %", "PctRapNetDiscount", "Rap netDisc", "RapnetDiscount", "RapnetDiscountPct", "RapnetDiscountPercent", "RapnetDiscPct", "RapnetDpx", "RapnetRapPct", "RDisc", "RDiscount", "RDiscountPct", "RDiscountPercent", "RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price"]
+  
+  elif target_name == "total":
+    return ["amount","total","total price"]
+  
+  elif target_name == "rap price total":
+    return ["rap total","rap value"]
+      
   else:
     raise Exception("The function could not find other satndard names for this target name")
 
