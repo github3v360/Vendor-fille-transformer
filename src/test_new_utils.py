@@ -17,11 +17,7 @@ def test_stage(file_path):
 
     # Declaring the target column (required columns)
     target_columns = ['clarity','carat','color','shape',"fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth",
-    "price per carat","discount","total","rap price total","comments"] 
-
-    # target_columns = ['clarity','carat','color','shape',"fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth","price per carat","discount","comments"] 
-    # ,"Rapprice per carat","" ,
-
+    "price per carat","discount","total","rap price total","comments"]
 
     # reading params to get magic numbers
     params = common_utils.read_yaml("params.yaml")
@@ -122,29 +118,17 @@ def test_stage(file_path):
     df_pre_processed['ratio'] = round(df_pre_processed['length'] / df_pre_processed['width'],2)
     df_pre_processed['depth %'] = round((df_pre_processed['depth'] / df_pre_processed['width']) * 100,2)
     df_pre_processed['cut'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_cut_column(x['cut'],magic_numbers),axis=1)
+
     df_pre_processed['discount'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_discount_column(x['discount'],magic_numbers,x['price per carat'],x['raprate']),axis=1)
     df_pre_processed['total'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_total_column(x['total'],magic_numbers,x['price per carat'],x['carat']),axis=1)
     df_pre_processed['rap price total'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_rap_total_column(x['rap price total'],magic_numbers,x['raprate'],x['carat']),axis=1)
-    flag = True
-    try:
-        temp = float(df_pre_processed['length'].iloc[0])
-        flag = False
-    except:
-        pass
-    if flag:
-        df_pre_processed['length'],df_pre_processed['width'],df_pre_processed['depth'] = zip(*df_pre_processed['length'].apply(post_processing_utils.transform_measurement_column))
-    else:
-        df_pre_processed['length'] = df_pre_processed['length'].astype(float)
-        df_pre_processed['width'] = df_pre_processed['width'].astype(float)
-        df_pre_processed['depth'] = df_pre_processed['depth'].astype(float)
-    df_pre_processed['ratio'] = round(df_pre_processed['length'] / df_pre_processed['width'],2)
-    df_pre_processed['depth %'] = round((df_pre_processed['depth'] / df_pre_processed['width']) * 100,2)
+    
     df_processed=df_pre_processed
 
     # ==== end of all stages ====
 
     # print(df_processed.head())
-    print(df_processed.head(10))
+    print(df_processed.head(5))
 
     return df_processed
 
