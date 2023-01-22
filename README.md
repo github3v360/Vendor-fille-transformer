@@ -15,3 +15,19 @@ python src/test_pipeline.py
 ```
 python src/main.py -f=your_file_path
 ```
+
+# Similarity(Probability) Score Calculation Logic
+
+### Let's take example of clarity 
+
+sim_score_from_col_name = similarity score calculated from the column name
+
+sim_score_from_col_val = similarity score calculated from the column name
+
+clarity_normalizing_factor_for_col_name = weightage given to the "sim_score_from_col_name"
+
+clarity_normalizing_factor_for_col_value = weightage given to the "sim_score_from_col_val"
+
+
+Final_similarity_score = (sim_score_from_col_name * clarity_normalizing_factor_for_col_name) + 
+                         (sim_score_from_col_val * clarity_normalizing_factor_for_col_value)
