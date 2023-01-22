@@ -13,7 +13,7 @@ class TestTransformShapeColumn(unittest.TestCase):
     result = post_processing_utils.transform_shape_column("RND",magic_numbers)
     self.assertEqual(result, "Round")
     
-    # Test with a shape that is close to a shape in the shape dictionary
+    # Test with a shape that is close to a shape in the shape dictionary df['disc'] = df['disc'].astype(float)
     result = post_processing_utils.transform_shape_column("ROUD",magic_numbers)
     self.assertEqual(result, "Round")
     
