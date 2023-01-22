@@ -33,8 +33,8 @@ def correct_df_headers(df):
   # If DataFrame is not in Correct Format
   if not flag:
 
-    # We will check the 4 row below the current header to get the row with correct header
-    for i in range(4):
+    # We will check the 10 row below the current header to get the row with correct header
+    for i in range(10):
 
       # Getting the row values of next row
       cur_columns = list(df.iloc[i])

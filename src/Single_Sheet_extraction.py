@@ -3,17 +3,14 @@
 from src.utils import data_cleaner, common_utils, column_name_utils, column_value_utils, score_modifier, post_processing_utils
 import pandas as pd
 
-def extract_from_single_sheet(file_path):
-
-    # ==== Stage 1 (Reading the file // Fetching the file) ====
-    df = pd.read_excel(file_path)
+def extract_from_single_sheet(df,debug):
     
-    # ==== Stage 2 (Cleaning the Data) ====
+    # ==== Stage 1 (Cleaning the Data) ====
     df_corrected_headers = data_cleaner.correct_df_headers(df)
     # df_cleaned = data_cleaner.drop_empty_columns(df_corrected_headers)
     df_cleaned,_ = df_corrected_headers
 
-    # ==== Stage 3 (Processing the Data) ====
+    # ==== Stage 2 (Processing the Data) ====
 
     # Declaring the target column (required columns)
     target_columns = ['clarity','carat','color','shape',"fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth",
@@ -87,7 +84,9 @@ def extract_from_single_sheet(file_path):
         # Getting the column name from the cleaned_df with highest probability (similarity) score
         # to current target column (cur_target_column) 
         predicted_column = common_utils.get_highest_prob_column(probs, df_cleaned_columns_name)
-        print(predicted_column)
+
+        if debug:
+            print(predicted_column)
         
         # Adding column of cleaned_df with highest probability(similarity) score 
         # to df_pre_processed
@@ -98,7 +97,7 @@ def extract_from_single_sheet(file_path):
         if cur_target_column not in ["length","width","depth"]:
             df_cleaned = df_cleaned.drop(columns=predicted_column)
 
-    # ==== Stage 4 (Post-Processing the Data) ==== 
+    # ==== Stage 3 (Post-Processing the Data) ==== 
     # To transform non-standard values to standard values
     df_pre_processed['shape'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_shape_column(x['shape'],magic_numbers),axis=1)
     df_pre_processed['fluorescent'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_fluor_column(x['fluorescent'],magic_numbers),axis=1)
@@ -126,8 +125,5 @@ def extract_from_single_sheet(file_path):
     df_processed=df_pre_processed
 
     # ==== end of all stages ====
-
-    # print(df_processed.head())
-    print(df_processed.head(5))
 
     return df_processed
