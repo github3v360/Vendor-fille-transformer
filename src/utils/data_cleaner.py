@@ -67,5 +67,5 @@ def drop_empty_columns(df):
   Output:
   out_df = Output DataFrame
   """
-  out_df = df.dropna(axis=1)
-  return out_df
+#   out_df = df.dropna(axis=1)
+  return df.dropna()

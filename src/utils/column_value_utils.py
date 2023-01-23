@@ -168,6 +168,9 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
   # Getting length of column_unique_values
   n = len(column_unique_values)
 
+  if n==0:
+      return 0
+
   # ===== Special Logics ===========
 
   if target_name in ["length","width","depth"]:

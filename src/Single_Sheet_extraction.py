@@ -6,9 +6,8 @@ import pandas as pd
 def extract_from_single_sheet(df,debug):
     
     # ==== Stage 1 (Cleaning the Data) ====
-    df_corrected_headers = data_cleaner.correct_df_headers(df)
-    # df_cleaned = data_cleaner.drop_empty_columns(df_corrected_headers)
-    df_cleaned,_ = df_corrected_headers
+    df_corrected_headers,_ = data_cleaner.correct_df_headers(df)
+    df_cleaned = data_cleaner.drop_empty_columns(df_corrected_headers)
 
     # ==== Stage 2 (Processing the Data) ====
 
@@ -104,7 +103,7 @@ def extract_from_single_sheet(df,debug):
     
     flag = True
     try:
-        temp = float(df_pre_processed['length'].iloc[0])
+        temp = float(df_pre_processed['length'].iloc[20])
         flag = False
     except:
         pass

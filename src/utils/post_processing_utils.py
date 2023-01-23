@@ -7,7 +7,7 @@ def transform_shape_column(cur_shape,magic_numbers):
   This will transform the non-standard shape name to standard shape name
   Example -: It will transform the "RND" to "ROUND"
   """
-  if cur_shape == "" or cur_shape is None:
+  if cur_shape == "" or cur_shape is None or (type(cur_shape) != str):
     return None
 
   # Loading shape dictionary file
@@ -43,7 +43,8 @@ def transform_fluor_column(cur_fluor,magic_numbers):
   This will transform the non-standard fluor name to standard fluor name
   Example -: It will transform the "MED" to "MEDIUM"
   """
-
+  if cur_fluor == "" or cur_fluor is None or (type(cur_fluor) != str):
+    return None
   # Initializing our fluorescent dictionary
   fluor_key = ["faint","medium","none","f","m","n","fnt","med","non"]
   fluor_values = ["FAINT","MEDIUM","NONE","FAINT","MEDIUM","NONE","FAINT","MEDIUM","NONE"]
@@ -79,8 +80,8 @@ def transform_measurement_column(cur_val):
   cur_val: The current value during iteration of column
   """
 
-  if cur_val is None:
-    return cur_val
+  if cur_val is None or cur_val is None or (type(cur_val) != str):
+    return [1,1,1]
     
   ops_to_replace = ["+","-","x","X"]
 
