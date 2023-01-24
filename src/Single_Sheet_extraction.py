@@ -7,7 +7,7 @@ def extract_from_single_sheet(df,debug):
     
     # ==== Stage 1 (Cleaning the Data) ====
     df_corrected_headers,_ = data_cleaner.correct_df_headers(df)
-    df_cleaned = data_cleaner.drop_empty_columns(df_corrected_headers)
+    df_cleaned = data_cleaner.drop_empty_columns_and_rows(df_corrected_headers)
 
     # ==== Stage 2 (Processing the Data) ====
 
