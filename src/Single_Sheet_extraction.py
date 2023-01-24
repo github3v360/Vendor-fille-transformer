@@ -116,8 +116,8 @@ def extract_from_single_sheet(df,debug):
     df_pre_processed['ratio'] = round(df_pre_processed['length'] / df_pre_processed['width'],2)
     df_pre_processed['depth %'] = round((df_pre_processed['depth'] / df_pre_processed['width']) * 100,2)
     df_pre_processed['cut'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_cut_column(x['cut'],magic_numbers),axis=1)
-
     df_pre_processed['discount'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_discount_column(x['discount'],magic_numbers,x['price per carat'],x['raprate']),axis=1)
+    # df_pre_processed['price per carat'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_ppc_column(x['price per carat'],magic_numbers,x['discount'],x['raprate']),axis=1)
     df_pre_processed['total'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_total_column(x['total'],magic_numbers,x['price per carat'],x['carat']),axis=1)
     df_pre_processed['rap price total'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_rap_total_column(x['rap price total'],magic_numbers,x['raprate'],x['carat']),axis=1)
     

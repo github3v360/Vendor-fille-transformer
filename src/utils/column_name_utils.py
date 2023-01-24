@@ -7,22 +7,23 @@ def get_standard_names(target_name):
   list: List of all other standard names of the target name.
   '''
   if target_name == "clarity":
-   return ["clarity","purity"]
+   return ["clarity","purity","Clar", "Clearity"]
   
   elif target_name == "color":
-    return ["color","colour"]
+    return ["color","colour","Colr"]
     
   elif target_name == "shape":
-    return ["shape"]
+    return ["shape","shp"]
     
   elif target_name == "carat":
-    return ["carat","size" , "cts",  "crtwt"]
+    return ["Carat", "CaratSize", "CaratWeight", "Ct", "CtSize", "CtWeight", "Weight", "Sz", "cts",  "crtwt","size"]
+    
   
   elif target_name == "fluorescent":
-    return ["fluor","flour","fluorescent"]
+    return ["fluor","flour","fluorescent","Flr", "FlrIntensity", "Fluo Intensity", "Fluor Intensity", "Fluorescence", "Fluorescence Intensity", "FluorescenceIntensity", "FluorIntensity"]
   
   elif target_name == "raprate":
-    return ["AskingPrice", "Rap",'Rapprice']
+    return ["Rap",'Rapprice']
   
   elif target_name == "length":
     return ["M1","Measurement","Diameter","length"]
@@ -49,10 +50,10 @@ def get_standard_names(target_name):
     return ["Comments", "Remark", "Lab comment", "Cert comment", "Certificate comment", "Laboratory comment","Report Comments"]
    
   elif target_name == "price per carat":
-    return ["AskingPrice", "PerCarat", "PerCt", "Prc", "Price", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt", "Px","price/carat","RapNet Price"]
+    return ["PerCarat", "PerCt", "Prc", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt", "Px","price/carat","RapNet Price"]
 
   elif target_name == "discount":
-    return ["disc","disc%","RapNet Discount %", "PctRapNetDiscount", "Rap netDisc", "RapnetDiscount", "RapnetDiscountPct", "RapnetDiscountPercent", "RapnetDiscPct", "RapnetDpx", "RapnetRapPct", "RDisc", "RDiscount", "RDiscountPct", "RDiscountPercent", "RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price"]
+    return ["disc","disc%","RapNet Discount %", "PctRapNetDiscount", "Rap netDisc", "RapnetDiscount", "RapnetDiscountPct", "RapnetDiscountPercent", "RapnetDiscPct", "RapnetDpx", "RapnetRapPct", "RDisc", "RDiscount", "RDiscountPct", "RDiscountPercent", "RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price","per"]
   
   elif target_name == "total":
     return ["amount","total","total price"]

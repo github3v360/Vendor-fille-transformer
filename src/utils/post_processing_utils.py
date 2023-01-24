@@ -131,6 +131,16 @@ def transform_cut_column(cut_val,magic_numbers):
     else:
       return None
 
+# def transform_ppc_column(ppc_val,magic_numbers,disc_val,raprate_val):
+#     try:   
+#         # disc_val = ((ppc_val/raprate_val) - 1)*100
+#         ppc_val = disc_val * raprate_val
+#         if ppc_val < 0:
+#             ppc_val*=-1
+#         return round(ppc_val,2)
+#     except:
+#         return ppc_val
+
 def transform_discount_column(disc_val,magic_numbers,ppc_val,raprate_val):
     try:
         if int(disc_val) == 0:      
