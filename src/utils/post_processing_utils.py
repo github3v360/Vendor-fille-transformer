@@ -131,45 +131,9 @@ def transform_cut_column(cut_val,magic_numbers):
     else:
       return None
 
-# def transform_ppc_column(ppc_val,magic_numbers,disc_val,raprate_val):
-#     try:   
-#         # disc_val = ((ppc_val/raprate_val) - 1)*100
-#         ppc_val = disc_val * raprate_val
-#         if ppc_val < 0:
-#             ppc_val*=-1
-#         return round(ppc_val,2)
-#     except:
-#         return ppc_val
-
-def transform_discount_column(disc_val,magic_numbers,ppc_val,raprate_val):
-    try:
-        if int(disc_val) == 0:      
-            disc_val = ((ppc_val/raprate_val) - 1)*100
-        if disc_val < 0:
-            disc_val*=-1
-        return round(disc_val,2)
-    except:
-        return disc_val
-
-def transform_total_column(tot_val,magic_numbers,ppc_val,carat_val):
-    try:
-        if type(tot_val) != "int" or int(tot_val) == 0:      
-            trial_total = ppc_val*carat_val
-            return round(trial_total,2)
-        else:
-            return round(tot_val,2)
-    except:
-        return round(tot_val,2)
-
-def transform_rap_total_column(rap_tot_val,magic_numbers,rap_rate,carat_val):
-    # print(type(rap_tot_val))
-    try:
-        if isinstance(rap_tot_val, str) or math.isnan(rap_tot_val) or int(rap_tot_val) == 0 or rap_tot_val != (rap_rate*carat_val):      
-            trial_total = rap_rate*carat_val
-            return round(trial_total,2)
-        else:
-            return round(rap_tot_val,2)
-    except:
-        # trial_total = rap_rate*carat_val
-        return round(rap_tot_val,2)
+def transform_discount_column(disc_val):
+    disc_val = float(disc_val)
+    if disc_val < 0:
+        return disc_val*(-1)
+    return disc_val
     

@@ -27,4 +27,4 @@ def get_highest_prob_column(probs, cols):
     sorted_prob_cols = sorted(prob_cols, key= lambda item: item[0] ,reverse=True)
     
     # Return the column name with the highest probability
-    return sorted_prob_cols[0][1]
+    return sorted_prob_cols[0][1],sorted_prob_cols[0][0]

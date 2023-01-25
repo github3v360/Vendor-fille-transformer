@@ -11,16 +11,9 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
   sim_score: The modified similarity score
   need_to_continue(bool): Stating that whether we need to calculate the similarity score from values or not
   """
-
-  # Setting Default value of need to continue to True
-  need_to_continue = True
-
+  
   # For Clarity
   if target_name == "clarity":
-
-    if sim_score > magic_numbers['clarity_threshold']:
-      need_to_continue = False
-    else:
       sim_score = (sim_score * magic_numbers['clarity_normalizing_factor_for_col_name'])
     
   # For Carat
@@ -29,10 +22,6 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
 
   # For Color
   elif target_name == "color":
-
-    if sim_score > magic_numbers['color_threshold']:
-      need_to_continue = False
-    else:
       sim_score *= magic_numbers['color_normalizing_factor_for_col_name']
   
   # For shape (Modification Remaining and will be done in future)
@@ -41,16 +30,10 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
   
   # For fluorescent
   elif target_name == "fluorescent":
-    if sim_score > magic_numbers['fluor_similarity_threshold']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['fluor_normalizing_factor_for_col_name']
   
   # For raprate
   elif target_name == "raprate":
-    if sim_score >= magic_numbers['raprate_threshold_factor']:
-      need_to_continue = False
-    else:
       sim_score *= magic_numbers['raprate_normalizing_factor_for_col_name']
   
   elif target_name in ["length","width","depth"]:
@@ -58,67 +41,40 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
   
   #For Cut
   elif target_name == "cut":
-    if sim_score > magic_numbers['cut_similarity_threshold']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['cut_normalizing_factor_for_col_name']
   
   #For Polish
   elif target_name == "polish":
-    if sim_score > magic_numbers['polish_similarity_threshold']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['polish_normalizing_factor_for_col_name']
 
 
   #For Symmetry
   elif target_name == "symmetry":
-    if sim_score > magic_numbers['sym_similarity_threshold']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['sym_normalizing_factor_for_col_name']
     
   # For table
   elif target_name == "table":
-    if sim_score >= magic_numbers['table_threshold_factor']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['table_normalizing_factor_for_col_name']
 
   elif target_name == "comments":
-    if sim_score > magic_numbers['comments_similarity_threshold']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['comments_normalizing_factor_for_col_name']
 
   elif target_name == "price per carat":
-    if sim_score > magic_numbers['ppc_similarity_threshold']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['ppc_normalizing_factor_for_col_name']
 
   elif target_name == "discount":
-    if sim_score > magic_numbers['disc_similarity_threshold']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['disc_normalizing_factor_for_col_name']
 
   elif target_name == "total":
-    if sim_score > magic_numbers['amt_similarity_threshold']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['amt_normalizing_factor_for_col_name']
 
   elif target_name == "rap price total":
-    if sim_score > magic_numbers['raptotal_similarity_threshold']:
-      need_to_continue = True
-    else:
       sim_score *= magic_numbers['raptotal_normalizing_factor_for_col_name']
 
   else:
     raise Exception("The function could not find this target name")
   
-  return sim_score, need_to_continue
+  return sim_score
 
 def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbers):
   """

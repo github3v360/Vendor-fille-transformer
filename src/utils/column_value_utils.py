@@ -1,5 +1,6 @@
 import os 
 import pickle 
+import numpy as np
 
 def get_target_column_unique_values(target_name):
   """
@@ -128,9 +129,9 @@ def get_score_from_range(rangeA,rangeB,values,n):
   total = 0
   for value in values:
 
-    if type(value) != int or value is None or type(value) != float:
+    if type(value) not in [int,float] or value is None:
       try:
-        value = int(value)
+        value = float(value)
       except:
         continue 
     
@@ -213,20 +214,12 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
   
   # =====Writing General logic for int and float data type=====
   else:
-    if not flag:
-
-      # input_data_type[0] == str because we are checking logic for int and float 
-      # input_data_type[0] == int vecause if target values are [1.4,1.8] and input values are 
-      # [1,3] it means they are definitely not falling in same category.
-
-      if input_data_type[0] == str or input_data_type == int:
-        return 0
   
     # Here now the probability is calculated on the basis of the range of value
 
     if target_name == 'carat':
-      rangeA = 1.0
-      rangeB = 20.0
+      rangeA = 0.1
+      rangeB = 10
   
     elif target_name == 'raprate':
       rangeA = 2000
@@ -244,6 +237,21 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
       rangeA = -99
       rangeB = 99
 
+      # Additional Logic for Discount
+      # Discount columns are the only with negative number so we can take advantage of that
+
+      for val in column_unique_values:
+
+          if val is None:
+              continue
+          if type(val) not in [int,float]:
+              try:
+                  val =float(val)
+              except:
+                  continue
+          if val  < 0:
+              return 1000    
+    
     elif target_name == 'total':
       rangeA = 10000
       rangeB = 100000
