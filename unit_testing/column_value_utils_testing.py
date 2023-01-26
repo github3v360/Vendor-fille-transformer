@@ -49,6 +49,21 @@ class TestGetTargetColumnUniqueValues(unittest.TestCase):
         self.assertEqual(len(table_unique_values), 11)
         self.assertEqual(float, type(table_unique_values[0]))
         self.assertEqual(float, type(table_unique_values[2]))
+
+        ppc_unique_values = column_value_utils.get_target_column_unique_values("price per carat")
+        self.assertEqual(len(ppc_unique_values), 6)
+        self.assertEqual(int, type(ppc_unique_values[0]))
+        self.assertEqual(int, type(ppc_unique_values[2]))
+
+        disc_unique_values = column_value_utils.get_target_column_unique_values("discount")
+        self.assertEqual(len(disc_unique_values), 11)
+        self.assertEqual(float, type(disc_unique_values[0]))
+        self.assertEqual(float, type(disc_unique_values[2]))
+
+        stockref_unique_values = column_value_utils.get_target_column_unique_values("Stock Ref")
+        self.assertEqual(len(stockref_unique_values), 11)
+        self.assertEqual("J841722022A", stockref_unique_values[0])
+        self.assertEqual(str, type(stockref_unique_values[0]))
         # Test for invalid target column
         with self.assertRaises(Exception):
             column_value_utils.get_target_column_unique_values("invalid")

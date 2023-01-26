@@ -50,6 +50,14 @@ class TestGetStandardNames(unittest.TestCase):
         std_names = column_name_utils.get_standard_names("table")
         self.assertEqual(std_names, ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl"])
 
+    def test_ppc(self):
+        std_names = column_name_utils.get_standard_names("price per carat")
+        self.assertEqual(std_names, ["PerCarat", "PerCt", "Prc", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt"])
+
+    def test_discount(self):
+        std_names = column_name_utils.get_standard_names("discount")
+        self.assertEqual(std_names, ["RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price","per","disc","disc%","RapNet Discount %"])
+
     def test_invalid_name(self):
         with self.assertRaises(Exception):
             column_name_utils.get_standard_names("invalid_name")
@@ -60,6 +68,7 @@ class TestStringSimilarity(unittest.TestCase):
         self.assertAlmostEqual(column_name_utils.string_similarity("Hello", "heLLo"), 1.0)
         self.assertGreaterEqual(column_name_utils.string_similarity("Hello", "Helo"), 0.6)
         self.assertGreaterEqual(column_name_utils.string_similarity("Hello", "Hullo"), 0.6)
+        self.assertGreaterEqual(column_name_utils.string_similarity(" ", "None"), 0.0)
         self.assertEqual(column_name_utils.string_similarity("Hello", "Bye"), 0.0)
         self.assertEqual(column_name_utils.string_similarity(1, "1"), 1.0)
         self.assertEqual(column_name_utils.string_similarity(1, "Bye"), 0.0)
