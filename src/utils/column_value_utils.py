@@ -205,12 +205,13 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
 
   # Writing General logic for string data type considering target data type will always be correct
   elif target_data_type[0] == str:
- 
+      
     # If one of column_unique_values matches with any of the taget_column_unique_values then we will return 1 else 0
     for value in column_unique_values:
       if type(value) != str:
         value = str(value)
-      if value.lower() in taget_column_unique_values:
+      value = value.lower().strip()
+      if any(value == target_value.strip() for target_value in taget_column_unique_values):
         return 1
 
     return 0
@@ -225,7 +226,7 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
       rangeB = 10
   
     elif target_name == 'raprate':
-      rangeA = 2000
+      rangeA = 1000
       rangeB = 100000
       
     elif target_name == 'table':

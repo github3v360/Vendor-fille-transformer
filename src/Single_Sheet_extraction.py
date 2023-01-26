@@ -56,7 +56,7 @@ def extract_from_single_sheet(df,debug):
     
             # getting simiraity score based on name of current column in the cleaned dataframe (df_cleaned)
             sim_score_from_cur_col_name = column_name_utils.similarity_score_from_col_name(cur_df_cleaned_column_name,cur_target_col_std_names)
-    
+            
             # We will modify the simiraity score fetched from the name of current column in the cleaned dataframe (df_cleaned)
             # before calculating similarity score based on column values of current column in the cleaned dataframe (df_cleaned)
             sim_score_from_cur_col_name = score_modifier.modify_sim_score_of_name(sim_score_from_cur_col_name,cur_target_column,magic_numbers)
@@ -86,7 +86,7 @@ def extract_from_single_sheet(df,debug):
         # Adding column of cleaned_df with highest probability(similarity) score 
         # to df_pre_processed on if the probability is more than 65%
         print(f"{cur_target_column} {predicted_column} {prob}")
-        if prob > 0.65:
+        if prob > 0.61:
             df_pre_processed[cur_target_column] = df_cleaned[predicted_column]
 
             # Dropping the column with highest probability (similarity) score from cleaned_df
