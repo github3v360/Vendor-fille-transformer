@@ -86,6 +86,9 @@ def get_target_column_unique_values(target_name):
   elif target_name == "rap price total":
     target_unique_values = [5000.0, 56789.98,76452.98,54637.83]
 
+  elif target_name == "Stock Ref":
+    target_unique_values = ["VSBDJ003","1627905","244507","J841722022A","589452","921905043","1.00W863776","2121000601"]
+    
   else:
     raise Exception("The function could not find this target name")
   

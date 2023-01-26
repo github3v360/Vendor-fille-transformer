@@ -60,7 +60,10 @@ def get_standard_names(target_name):
   
   elif target_name == "rap price total":
     return ["rap total","rap value"]
-      
+  
+  elif target_name == "Stock Ref":
+    return ["ReferenceNum", "ReferenceNumber", "Stock", "Stock Num", "Stock_no", "StockNo", "StockNum", "StockNumber", "VenderStockNumber","Refno","Packet No"]
+     
   else:
     raise Exception("The function could not find other satndard names for this target name")
 

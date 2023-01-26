@@ -54,3 +54,6 @@ magic_numbers:
 
   raptotal_normalizing_factor_for_col_name: 0.5
   raptotal_normalizing_factor_for_col_value: 0.5
+
+  stockref_normalizing_factor_for_col_name: 0.5
+  stockref_normalizing_factor_for_col_value: 0.5
