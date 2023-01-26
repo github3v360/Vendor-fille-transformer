@@ -10,7 +10,7 @@ def get_standard_names(target_name):
    return ["clarity","purity","Clar", "Clearity"]
   
   elif target_name == "color":
-    return ["color","colour","Colr"]
+    return ["color","colour","Colr","col"]
     
   elif target_name == "shape":
     return ["shape","shp"]

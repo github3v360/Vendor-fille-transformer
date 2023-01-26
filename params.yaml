@@ -46,8 +46,8 @@ magic_numbers:
   ppc_normalizing_factor_for_col_name: 0.5
   ppc_normalizing_factor_for_col_value: 0.5
 
-  disc_normalizing_factor_for_col_name: 0.3
-  disc_normalizing_factor_for_col_value: 0.7
+  disc_normalizing_factor_for_col_name: 0.6
+  disc_normalizing_factor_for_col_value: 0.4
 
   amt_normalizing_factor_for_col_name: 0.5
   amt_normalizing_factor_for_col_value: 0.5

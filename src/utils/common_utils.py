@@ -28,3 +28,22 @@ def get_highest_prob_column(probs, cols):
     
     # Return the column name with the highest probability
     return sorted_prob_cols[0][1],sorted_prob_cols[0][0]
+
+def assure_data_type(values):
+
+    out_vals = values.copy()
+
+    for idx,val in enumerate(values):
+
+        if (val is None) or (type(val) in [int,float]):
+            out_vals[idx] = val
+            continue
+        
+        else:
+
+            try:
+                val = float(val)
+            except:
+                pass
+            out_vals[idx] = val
+    return out_vals

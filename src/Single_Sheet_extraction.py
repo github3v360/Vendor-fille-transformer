@@ -49,17 +49,13 @@ def extract_from_single_sheet(df,debug):
             # Getting the current column of cleaned dataframe unique values
             try:
                 cur_df_cleaned_column_unique_values = list(df_cleaned[cur_df_cleaned_column_name].unique())[:10]
+                cur_df_cleaned_column_unique_values = common_utils.assure_data_type(cur_df_cleaned_column_unique_values)
                 cur_df_cleaned_column_name = cur_df_cleaned_column_name.lower()
             except:
                 continue
     
             # getting simiraity score based on name of current column in the cleaned dataframe (df_cleaned)
             sim_score_from_cur_col_name = column_name_utils.similarity_score_from_col_name(cur_df_cleaned_column_name,cur_target_col_std_names)
-            # if simiraity score fetched from the name of current column in the cleaned dataframe (df_cleaned) is 1
-            # then it means we found our column and we do not need to iterate further
-            # if sim_score_from_cur_col_name == 1:
-            #     probs[idx] = 1
-            #     break
     
             # We will modify the simiraity score fetched from the name of current column in the cleaned dataframe (df_cleaned)
             # before calculating similarity score based on column values of current column in the cleaned dataframe (df_cleaned)
@@ -67,7 +63,7 @@ def extract_from_single_sheet(df,debug):
 
             # getting simiraity score based on the column values of current column in the cleaned dataframe (df_cleaned)
             similarity_score_of_value = column_value_utils.similarity_score_from_col_values(cur_df_cleaned_column_unique_values,cur_target_col_unique_vals,cur_target_column)
-
+            
             # Getting final similarity score by merging 
             # modified similarity score fetched from the name of current column in the cleaned dataframe (df_cleaned) 
             # and simiraity score fetched from the column values of current column in the cleaned dataframe (df_cleaned)
@@ -88,63 +84,85 @@ def extract_from_single_sheet(df,debug):
             print(predicted_column)
         
         # Adding column of cleaned_df with highest probability(similarity) score 
-        # to df_pre_processed
-        df_pre_processed[cur_target_column] = df_cleaned[predicted_column]
+        # to df_pre_processed on if the probability is more than 65%
+        print(f"{cur_target_column} {predicted_column} {prob}")
+        if prob > 0.65:
+            df_pre_processed[cur_target_column] = df_cleaned[predicted_column]
 
-        # Dropping the column with highest probability (similarity) score from cleaned_df
-        # since we do not need to iterate over that column again
-        if cur_target_column not in ["length","width","depth"]:
-            df_cleaned = df_cleaned.drop(columns=predicted_column)
+            # Dropping the column with highest probability (similarity) score from cleaned_df
+            # since we do not need to iterate over that column again
+            if cur_target_column not in ["length","width","depth"]:
+                df_cleaned = df_cleaned.drop(columns=predicted_column)
 
     # ==== Stage 3 (Post-Processing the Data) ==== 
     # To transform non-standard values to standard values
-    df_pre_processed['shape'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_shape_column(x['shape'],magic_numbers),axis=1)
-    df_pre_processed['fluorescent'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_fluor_column(x['fluorescent'],magic_numbers),axis=1)
+    fetched_columns = list(df_pre_processed.columns)
+
+    if "shape" in fetched_columns:
+        df_pre_processed['shape'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_shape_column(x['shape'],magic_numbers),axis=1)
+    
+    if "fluorescent" in fetched_columns:
+        df_pre_processed['fluorescent'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_fluor_column(x['fluorescent'],magic_numbers),axis=1)
     
     # Corecting the length, width and depth column
-    flag = True
-    try:
-        temp = float(df_pre_processed['length'].iloc[20])
-        flag = False
-    except:
-        pass
+    measurement_columns = ["length","width","depth"]
 
-    if flag:
-        df_pre_processed['length'],df_pre_processed['width'],df_pre_processed['depth'] = zip(*df_pre_processed['length'].apply(post_processing_utils.transform_measurement_column))
-    else:
-        df_pre_processed['length'] = df_pre_processed['length'].astype(float)
-        df_pre_processed['width'] = df_pre_processed['width'].astype(float)
-        df_pre_processed['depth'] = df_pre_processed['depth'].astype(float)
+    if set(measurement_columns).issubset(set(fetched_columns)):
 
-    df_pre_processed['ratio'] = round(df_pre_processed['length'] / df_pre_processed['width'],2)
-    df_pre_processed['depth %'] = round((df_pre_processed['depth'] / df_pre_processed['width']) * 100,2)
+        flag = True
+        try:
+            temp = float(df_pre_processed['length'].iloc[20])
+            flag = False
+        except:
+            pass
 
-    df_pre_processed['cut'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_cut_column(x['cut'],magic_numbers),axis=1)
+        if flag:
+            df_pre_processed['length'],df_pre_processed['width'],df_pre_processed['depth'] = zip(*df_pre_processed['length'].apply(post_processing_utils.transform_measurement_column))
+        else:
+            df_pre_processed['length'] = df_pre_processed['length'].astype(float)
+            df_pre_processed['width'] = df_pre_processed['width'].astype(float)
+            df_pre_processed['depth'] = df_pre_processed['depth'].astype(float)
 
-    price_list = ["price per carat","discount","total"]
-    df_pre_processed["rap price total"] = df_pre_processed['raprate'] * df_pre_processed['carat']
+        # Calculate the ratio and depth column
+        df_pre_processed['ratio'] = round(df_pre_processed['length'] / df_pre_processed['width'],2)
+        df_pre_processed['depth %'] = round((df_pre_processed['depth'] / df_pre_processed['width']) * 100,2)
+
+    if "cut" in fetched_columns:
+        # Correct the cut column
+        df_pre_processed['cut'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_cut_column(x['cut'],magic_numbers),axis=1)
+
+    price_columns = ["carat","raprate","price per carat","discount","total"]
+
+    if set(price_columns[:2]).issubset(set(fetched_columns)) and any([item in fetched_columns for item in price_columns[2:]]):
+        # Now Calculating and correcting the price related column
+        price_list = price_columns[2:]
+        df_pre_processed["rap price total"] = df_pre_processed['raprate'] * df_pre_processed['carat']
 
     
-    max_prob = -1
-    price_name = None
+        max_prob = -1
+        price_name = None
 
-    for cur_price_name in price_list:
-        cur_prob = prob_dict[cur_price_name]
+        for cur_price_name in price_list:
+            try:
+                cur_prob = prob_dict[cur_price_name]
+            except:
+                continue
 
-        if cur_prob > max_prob:
-            max_prob = cur_prob
-            price_name = cur_price_name
-    if price_name == "discount":
-        df_pre_processed["discount"] = df_pre_processed["discount"].apply(post_processing_utils.transform_discount_column)
-        df_pre_processed["price per carat"] = df_pre_processed['raprate'] * (1 - (df_pre_processed['discount']/100))
-        df_pre_processed['total'] = df_pre_processed["price per carat"] * df_pre_processed['carat']
-    elif price_name == "price per carat":
-        df_pre_processed['discount'] =  (1 - (df_pre_processed["price per carat"] / df_pre_processed['raprate']))*100
-        df_pre_processed['total'] = df_pre_processed["price per carat"] * df_pre_processed['carat']
-    else:
-        df_pre_processed["price per carat"] = df_pre_processed['total'] / df_pre_processed['carat']
-        df_pre_processed['discount'] = (1 - (df_pre_processed["price per carat"] / df_pre_processed['raprate']))*100
-
+            if cur_prob > max_prob:
+                max_prob = cur_prob
+                price_name = cur_price_name
+        if price_name == "discount":
+            df_pre_processed["discount"] = df_pre_processed["discount"].apply(post_processing_utils.transform_discount_column)
+            df_pre_processed["price per carat"] = df_pre_processed['raprate'] * (1 - (df_pre_processed['discount']/100))
+            df_pre_processed['total'] = df_pre_processed["price per carat"] * df_pre_processed['carat']
+        elif price_name == "price per carat":
+            df_pre_processed['discount'] =  (1 - (df_pre_processed["price per carat"] / df_pre_processed['raprate']))*100
+            df_pre_processed['total'] = df_pre_processed["price per carat"] * df_pre_processed['carat']
+        else:
+            df_pre_processed["price per carat"] = df_pre_processed['total'] / df_pre_processed['carat']
+            df_pre_processed['discount'] = (1 - (df_pre_processed["price per carat"] / df_pre_processed['raprate']))*100
+    target_columns+=['ratio','depth %']
+    print(f"Not able to detect {set(target_columns) - set(df_pre_processed.columns)}")
     df_processed=df_pre_processed
 
     # ==== end of all stages ====
