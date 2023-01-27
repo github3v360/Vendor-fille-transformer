@@ -50,7 +50,7 @@ def get_standard_names(target_name):
     return ["Comments", "Remark", "Lab comment", "Cert comment", "Certificate comment", "Laboratory comment","Report Comments"]
    
   elif target_name == "price per carat":
-    return ["PerCarat", "PerCt", "Prc", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt", "Px","price/carat","RapNet Price"]
+    return ["PerCarat", "PerCt", "Prc", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt", "Px","price/carat"]
 
   elif target_name == "discount":
     return ["disc","disc%","RapNet Discount %", "PctRapNetDiscount", "Rap netDisc", "RapnetDiscount", "RapnetDiscountPct", "RapnetDiscountPercent", "RapnetDiscPct", "RapnetDpx", "RapnetRapPct", "RDisc", "RDiscount", "RDiscountPct", "RDiscountPercent", "RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price","per"]

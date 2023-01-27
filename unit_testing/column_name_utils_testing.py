@@ -20,19 +20,23 @@ class TestSimilarityScoreFromColName(unittest.TestCase):
 class TestGetStandardNames(unittest.TestCase):
     def test_clarity(self):
         std_names = column_name_utils.get_standard_names("clarity")
-        self.assertEqual(std_names, ["clarity", "purity"])
+        self.assertEqual(std_names, ["clarity","purity","Clar", "Clearity"])
     
     def test_color(self):
         std_names = column_name_utils.get_standard_names("color")
-        self.assertEqual(std_names, ["color", "colour"])
+        self.assertEqual(std_names, ["color","colour","Colr","col"])
         
     def test_shape(self):
         std_names = column_name_utils.get_standard_names("shape")
-        self.assertEqual(std_names, ["shape"])
+        self.assertEqual(std_names, ["shape","shp"])
         
     def test_carat(self):
         std_names = column_name_utils.get_standard_names("carat")
-        self.assertEqual(std_names, ["carat", "size", "cts", "crtwt"])
+        self.assertEqual(std_names, ["Carat", "CaratSize", "CaratWeight", "Ct", "CtSize", "CtWeight", "Weight", "Sz", "cts",  "crtwt","size"])
+    
+    def test_fluorescent(self):
+        std_names = column_name_utils.get_standard_names("fluorescent")
+        self.assertEqual(std_names, ["fluor","flour","fluorescent","Flr", "FlrIntensity", "Fluo Intensity", "Fluor Intensity", "Fluorescence", "Fluorescence Intensity", "FluorescenceIntensity", "FluorIntensity"])
 
     def test_cut(self):
         std_names = column_name_utils.get_standard_names("cut")
@@ -48,15 +52,15 @@ class TestGetStandardNames(unittest.TestCase):
         
     def test_table(self):
         std_names = column_name_utils.get_standard_names("table")
-        self.assertEqual(std_names, ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl"])
+        self.assertEqual(std_names, ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%"])
 
     def test_ppc(self):
         std_names = column_name_utils.get_standard_names("price per carat")
-        self.assertEqual(std_names, ["PerCarat", "PerCt", "Prc", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt"])
+        self.assertEqual(std_names, ["PerCarat", "PerCt", "Prc", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt", "Px","price/carat"])
 
     def test_discount(self):
         std_names = column_name_utils.get_standard_names("discount")
-        self.assertEqual(std_names, ["RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price","per","disc","disc%","RapNet Discount %"])
+        self.assertEqual(std_names, ["disc","disc%","RapNet Discount %", "PctRapNetDiscount", "Rap netDisc", "RapnetDiscount", "RapnetDiscountPct", "RapnetDiscountPercent", "RapnetDiscPct", "RapnetDpx", "RapnetRapPct", "RDisc", "RDiscount", "RDiscountPct", "RDiscountPercent", "RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price","per"])
 
     def test_invalid_name(self):
         with self.assertRaises(Exception):
