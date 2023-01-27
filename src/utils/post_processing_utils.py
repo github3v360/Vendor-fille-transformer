@@ -76,12 +76,13 @@ def transform_fluor_column(cur_fluor,magic_numbers):
 def transform_measurement_column(cur_val):
 
   """
-  Args:
-  cur_val: The current value during iteration of column
+  This function will return length, width and depth if the measurement column is in string format
+  Eg -: IInput: Measurement = "2 * 3 *4" 
+        Output: length = 4, width = 3 and depth = 2
   """
 
-  if cur_val is None or cur_val is None or (type(cur_val) != str):
-    return [1,1,1]
+  if cur_val == "" or cur_val is None or (type(cur_val) != str):
+    return [None,None,None]
     
   ops_to_replace = ["+","-","x","X"]
 
