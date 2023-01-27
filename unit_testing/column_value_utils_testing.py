@@ -108,5 +108,6 @@ class TestSimilarityScoreFromColValues(unittest.TestCase):
         # In carat raprate range should be greater than 50 and less than 72
         self.assertEqual(column_value_utils.similarity_score_from_col_values([50.00,57,63,72,64],[50.00,57,63,72,64],"table"), 1)
         self.assertEqual(column_value_utils.similarity_score_from_col_values([20,100,2,52,56],[50.00,57,63,72,64],"table"), 0.4)
+
 if __name__ == "__main__":
     unittest.main()
