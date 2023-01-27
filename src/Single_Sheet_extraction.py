@@ -1,10 +1,22 @@
 # Importing Required Libraries
-
+import logging
 from src.utils import data_cleaner, common_utils, column_name_utils, column_value_utils, score_modifier, post_processing_utils
 import pandas as pd
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# formatter = logging.Formatter('Time: %(asctime)s   :    %(message)s')
+file_handler = logging.FileHandler('running_logs/test.log')
+
+file_handler.setLevel(logging.INFO)
+# file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+
 def extract_from_single_sheet(df,debug):
-    
+    logger.info("-" * 50)
+    logger.info("Predicted Column            Probablity" )
     # ==== Stage 1 (Cleaning the Data) ====
     df_corrected_headers,_ = data_cleaner.correct_df_headers(df)
     df_cleaned = data_cleaner.drop_empty_columns_and_rows(df_corrected_headers)
@@ -76,6 +88,8 @@ def extract_from_single_sheet(df,debug):
         # Getting the column name from the cleaned_df with highest probability (similarity) score
         # to current target column (cur_target_column) 
         predicted_column,prob = common_utils.get_highest_prob_column(probs, df_cleaned_columns_name)
+        logger.info(predicted_column)
+        logger.info(round(prob,3))
 
         # update prob dict
         prob_dict[cur_target_column] = prob
