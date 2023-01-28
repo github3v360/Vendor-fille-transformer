@@ -1,3 +1,12 @@
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+file_handler = logging.FileHandler('running_logs/test.log')
+
+file_handler.setLevel(logging.INFO)
+logger.addHandler(file_handler)
+
 def get_standard_names(target_name):
   ''' 
   This function will return the other standard(nick) names of the target name
@@ -65,7 +74,7 @@ def get_standard_names(target_name):
     return ["ReferenceNum", "ReferenceNumber", "Stock", "Stock Num", "Stock_no", "StockNo", "StockNum", "StockNumber", "VenderStockNumber","Refno","Packet No"]
      
   else:
-    raise Exception("The function could not find other satndard names for this target name")
+    logger.exception("The function could not find other satndard names for this target name")
 
 def string_similarity(string1, string2):
     """Calculates the similarity between two strings using the Levenshtein distance algorithm.

@@ -1,6 +1,15 @@
 import os 
 import pickle 
 import numpy as np
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+file_handler = logging.FileHandler('running_logs/test.log')
+
+file_handler.setLevel(logging.INFO)
+logger.addHandler(file_handler)
 
 def get_target_column_unique_values(target_name):
   """
@@ -90,7 +99,7 @@ def get_target_column_unique_values(target_name):
     target_unique_values = ["VSBDJ003","1627905","244507","J841722022A","589452","921905043","1.00W863776","2121000601"]
     
   else:
-    raise Exception("The function could not find this target name")
+    logger.exception("The function could not find this target name")
   
   if flag:
     target_unique_values = [value.lower() for value in target_unique_values]
