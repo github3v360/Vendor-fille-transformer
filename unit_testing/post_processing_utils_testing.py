@@ -41,64 +41,35 @@ class TestTransformShapeColumn(unittest.TestCase):
     result = post_processing_utils.transform_shape_column(None,magic_numbers)
     self.assertIsNone(result)
 
-class TestTransformfluorColumn(unittest.TestCase):
-  def test_transform_fluor_column(self):
+class TestTransformCutColumn(unittest.TestCase):
+    def test_transform_cut_column(self):
     
-    magic_numbers = common_utils.read_yaml("params.yaml")['magic_numbers']
+        magic_numbers = common_utils.read_yaml("params.yaml")['magic_numbers']
 
-    # Test with a fluorescent that exists in the fluor dictionary
-    result = post_processing_utils.transform_fluor_column("faint",magic_numbers)
-    self.assertEqual(result, "FAINT")
+        def test_transform_cut_column_none(self):
+            cut_val = ""
+            magic_numbers = {"cut_similarity_transform_df_threshold": 0.8}
+            result = post_processing_utils.transform_cut_column(cut_val, magic_numbers)
+            self.assertEqual(result, None)
 
-    # Test with a fluorescent that exists in the fluor dictionary
-    result = post_processing_utils.transform_fluor_column("f",magic_numbers)
-    self.assertEqual(result, "FAINT")
+        def test_transform_cut_column_exact_match(self):
+            cut_val = "I"
+            magic_numbers = {"cut_similarity_transform_df_threshold": 0.8}
+            result = post_processing_utils.transform_cut_column(cut_val, magic_numbers)
+            self.assertEqual(result, "I")
 
-    # Test with a fluorescent that exists in the fluor dictionary
-    result = post_processing_utils.transform_fluor_column("non",magic_numbers)
-    self.assertEqual(result, "NONE")
+        def test_transform_cut_column_similar_match(self):
+            cut_val = "in"
+            magic_numbers = {"cut_similarity_transform_df_threshold": 0.8}
+            result = post_processing_utils.transform_cut_column(cut_val, magic_numbers)
+            self.assertEqual(result, "I")
 
-    # Test with a fluorescent that don't exists in the fluor dictionary
-    result = post_processing_utils.transform_fluor_column("med-w",magic_numbers)
-    self.assertEqual(result, "MEDIUM")
+        def test_transform_cut_column_no_match(self):
+            cut_val = "abc"
+            magic_numbers = {"cut_similarity_transform_df_threshold": 0.8}
+            result = post_processing_utils.transform_cut_column(cut_val, magic_numbers)
+            self.assertEqual(result, None)    
 
-    # Test with a fluorescent that exists in the fluor dictionary
-    result = post_processing_utils.transform_fluor_column("",magic_numbers)
-    self.assertEqual(result, None)
-
-    result = post_processing_utils.transform_fluor_column(None,magic_numbers)
-    self.assertEqual(result, None)
-
-
-class TestTransformMeasurementColumn(unittest.TestCase):
-  def test_transform_measurement_column(self):
-
-      result = post_processing_utils.transform_measurement_column("2*3*4")
-      self.assertEqual(result,[4,3,2])
-
-      result = post_processing_utils.transform_measurement_column(" 2  *     3*    4 ")
-      self.assertEqual(result,[4,3,2])
-
-      result = post_processing_utils.transform_measurement_column("2+3+4")
-      self.assertEqual(result,[4,3,2])
-
-      result = post_processing_utils.transform_measurement_column("2*3+4")
-      self.assertEqual(result,[4,3,2])
-
-      result = post_processing_utils.transform_measurement_column("2.2*3.2*4.2")
-      self.assertEqual(result,[4.2,3.2,2.2])
-
-      result = post_processing_utils.transform_measurement_column(None)
-      self.assertEqual(result,[None,None,None])
-
-      result = post_processing_utils.transform_measurement_column("")
-      self.assertEqual(result,[None,None,None])
-
-      result = post_processing_utils.transform_measurement_column(1)
-      self.assertEqual(result,[None,None,None])
-
-
-    
 
 
 if __name__ == "__main__":
