@@ -2,21 +2,21 @@
 import logging
 from src.utils import data_cleaner, common_utils, column_name_utils, column_value_utils, score_modifier, post_processing_utils
 import pandas as pd
+import os
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-# formatter = logging.Formatter('Time: %(asctime)s   :    %(message)s')
+if os.path.dirname("running_logs"):
+    os.makedirs('running_logs')
+
 file_handler = logging.FileHandler('running_logs/test.log')
 
 file_handler.setLevel(logging.INFO)
-# file_handler.setFormatter(formatter)
-
 logger.addHandler(file_handler)
 
 def extract_from_single_sheet(df,debug):
-    logger.info("-" * 50)
-    logger.info("Predicted Column            Probablity" )
+    logger.info("-" * 75)
     # ==== Stage 1 (Cleaning the Data) ====
     df_corrected_headers,_ = data_cleaner.correct_df_headers(df)
     df_cleaned = data_cleaner.drop_empty_columns_and_rows(df_corrected_headers)
@@ -88,18 +88,19 @@ def extract_from_single_sheet(df,debug):
         # Getting the column name from the cleaned_df with highest probability (similarity) score
         # to current target column (cur_target_column) 
         predicted_column,prob = common_utils.get_highest_prob_column(probs, df_cleaned_columns_name)
-        logger.info(predicted_column)
-        logger.info(round(prob,3))
+        # logger.info(predicted_column)
+        # logger.info(round(prob,3))
 
         # update prob dict
         prob_dict[cur_target_column] = prob
 
         if debug:
-            print(predicted_column)
+            logger.info(predicted_column)
         
         # Adding column of cleaned_df with highest probability(similarity) score 
         # to df_pre_processed on if the probability is more than 65%
-        print(f"{cur_target_column} {predicted_column} {prob}")
+        p = round(prob,3)
+        logger.info(f"'{cur_target_column}' is present as '{predicted_column}' with probability {round(p,3)}")
         if prob > 0.61:
             df_pre_processed[cur_target_column] = df_cleaned[predicted_column]
 
@@ -176,9 +177,13 @@ def extract_from_single_sheet(df,debug):
             df_pre_processed["price per carat"] = df_pre_processed['total'] / df_pre_processed['carat']
             df_pre_processed['discount'] = (1 - (df_pre_processed["price per carat"] / df_pre_processed['raprate']))*100
     target_columns+=['ratio','depth %']
-    print(f"Not able to detect {set(target_columns) - set(df_pre_processed.columns)}")
+    
+    logger.info("-" * 75)
+    logger.info(f"Not able to detect {set(target_columns) - set(df_pre_processed.columns)}")
     df_processed=df_pre_processed
 
     # ==== end of all stages ====
-
+    logger.info("-" * 75)
+    logger.info(df_processed.head(5))
+    logger.info("-" * 75)
     return df_processed
