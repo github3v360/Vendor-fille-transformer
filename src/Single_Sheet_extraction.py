@@ -3,6 +3,7 @@ import logging
 from src.utils import data_cleaner, common_utils, column_name_utils, column_value_utils, score_modifier, post_processing_utils
 import pandas as pd
 import os
+from src import hyperlink_extraction
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -15,11 +16,12 @@ file_handler = logging.FileHandler('running_logs/test.log')
 file_handler.setLevel(logging.INFO)
 logger.addHandler(file_handler)
 
-def extract_from_single_sheet(df,debug):
+def extract_from_single_sheet(df,ws,debug):
     logger.info("-" * 75)
     # ==== Stage 1 (Cleaning the Data) ====
-    df_corrected_headers,_ = data_cleaner.correct_df_headers(df)
-    df_cleaned = data_cleaner.drop_empty_columns_and_rows(df_corrected_headers)
+    df_corrected_headers,correct_row_idx = data_cleaner.correct_df_headers(df)
+    df_with_links, link_columns_name = hyperlink_extraction.add_hyperlink_columns(df_corrected_headers,ws,correct_row_idx)
+    df_cleaned = data_cleaner.drop_empty_columns_and_rows(df_with_links)
     
     # ==== Stage 2 (Processing the Data) ====
 
@@ -181,6 +183,9 @@ def extract_from_single_sheet(df,debug):
     logger.info("-" * 75)
     logger.info(f"Not able to detect {set(target_columns) - set(df_pre_processed.columns)}")
     df_processed=df_pre_processed
+
+    # Add links
+    df_processed[link_columns_name] = df_with_links[link_columns_name]
 
     # ==== end of all stages ====
     logger.info("-" * 75)

@@ -56,7 +56,7 @@ def correct_df_headers(df):
         df = df[i+1:]
         df.columns = cur_columns
         break
-        
+  df = df.reset_index(drop=True)
   return df,correct_row_idx
 
 def drop_empty_columns_and_rows(df):

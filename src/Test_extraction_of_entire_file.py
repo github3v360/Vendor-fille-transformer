@@ -22,7 +22,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 def main():
 
-    test_data_dir = "artifacts/new_test_data"
+    test_data_dir = "artifacts/test_data"
     test_file_names = os.listdir(test_data_dir)
     out_dir = "artifacts/output_generated"
 
