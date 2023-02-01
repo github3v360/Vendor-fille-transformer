@@ -100,7 +100,7 @@ def helloFirestore(event, context):
     log_bucket = client.bucket(log_bucket_name)
     log_blob = bucket.blob("logs.log")
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-    handler = logging.StreamHandler(log_blob.writer(content_type='text/plain'))
+    handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
@@ -128,3 +128,5 @@ def helloFirestore(event, context):
         summaryFilePath,
         os.path.join(tempdir, 'summary_2.xlsx')
         )
+
+        log_blob.upload_from_string(handler.stream.getvalue(), content_type='text/plain')
