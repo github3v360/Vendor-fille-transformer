@@ -3,15 +3,8 @@ import pickle
 import numpy as np
 import logging
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
-file_handler = logging.FileHandler('running_logs/test.log')
-
-file_handler.setLevel(logging.INFO)
-logger.addHandler(file_handler)
-
-def get_target_column_unique_values(target_name):
+def get_target_column_unique_values(target_name,logger):
   """
   This function will return the unique values of the target columns
 

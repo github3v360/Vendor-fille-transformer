@@ -1,13 +1,6 @@
 import logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
-file_handler = logging.FileHandler('running_logs/test.log')
-
-file_handler.setLevel(logging.INFO)
-logger.addHandler(file_handler)
-
-def get_standard_names(target_name):
+def get_standard_names(target_name,logger):
   ''' 
   This function will return the other standard(nick) names of the target name
   Args:

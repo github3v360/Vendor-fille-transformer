@@ -6,13 +6,7 @@ import os
 from src import hyperlink_extraction
 
 
-def extract_from_single_sheet(df,ws,debug,log_file_path):
-    # setting up logger
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-    file_handler = logging.FileHandler(log_file_path)
-    file_handler.setLevel(logging.INFO)
-    logger.addHandler(file_handler)
+def extract_from_single_sheet(df,ws,debug,logger):
 
     logger.info("-" * 75)
     # ==== Stage 1 (Cleaning the Data) ====
@@ -47,14 +41,14 @@ def extract_from_single_sheet(df,ws,debug,log_file_path):
         df_cleaned_columns_name = list(df_cleaned.columns)
         
         # Getting the other standard names for the current target column (cur_target_column)
-        cur_target_col_std_names = column_name_utils.get_standard_names(cur_target_column)  
+        cur_target_col_std_names = column_name_utils.get_standard_names(cur_target_column,logger)  
 
         # Set the probability of each column in df_cleaned belonging to the
         # current target column (cur_target_column) to -1.
         probs = [-1] * len(df_cleaned_columns_name)
 
         # This will get the current target column (cur_target_column) unique values
-        cur_target_col_unique_vals = column_value_utils.get_target_column_unique_values(cur_target_column)
+        cur_target_col_unique_vals = column_value_utils.get_target_column_unique_values(cur_target_column,logger)
 
         # Iteratively obtain the probability of all columns in cleaned df (df_cleaned) belonging to the
         # current target column (cur_target_column).

@@ -35,7 +35,7 @@ def main():
         print(f"====File name : {test_file_name} ======")
         start = time.time()
         try:
-            out_df = Extraction_of_entire_file.extract_entire_file(file_path,False,log_file_path)
+            out_df = Extraction_of_entire_file.extract_entire_file(file_path,False,logger)
             #logger.info(out_df.head(5))
         except:
             logger.exception('Failed Due to: ')
