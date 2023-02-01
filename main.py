@@ -99,6 +99,7 @@ def helloFirestore(event, context):
     log_bucket_name = os.environ['LOGS_BUCKET']
     log_bucket = client.bucket(log_bucket_name)
     log_blob = bucket.blob("logs.log")
+    logger = logging.getLogger(__name__)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
