@@ -15,7 +15,15 @@ def Find(string):
     # Return the first link if any are found, or None if not
     return links[0] if links else None
 
-test_data_dir  = os.path.join("artifacts","new_test_data")
+def extract_report_number(url):
+    if url is None:
+        return None
+    report_number = re.search("(reportno|report_no)=(\d+)", url)
+    if report_number is None:
+        return None
+    return report_number.group(2)
+
+test_data_dir  = os.path.join("artifacts","test_data")
 test_data_files_name =  os.listdir(test_data_dir)
 
 import pandas as pd
@@ -64,6 +72,9 @@ for file_name in test_data_files_name[:]:
 
     for j in range(len(cols_link)):
         df_link[df.columns[cols_link[j][1]-1] + "_link"] = [None]*len(df)
+    
+    # Initializing report number column
+    df_link['report_no'] = [None]*len(df)
 
     t = 0
 
@@ -85,21 +96,26 @@ for file_name in test_data_files_name[:]:
                 
                 # If hyperlink is not given
                 if cur_hyperlink_value.target is not None:
+                    extracted_link = cur_hyperlink_value.target
                     df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = cur_hyperlink_value.target
-                    continue
 
             # If hyperlink is None or hyperlink.target is None
             else:
-                df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = Find(cur_cell.value)
+                extracted_link = Find(cur_cell.value)
+            
+            df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = extracted_link
+            if df_link['report_no'].iloc[t] is None:
+                df_link['report_no'].iloc[t] = extract_report_number(extracted_link)
             
         t+=1
 
     print("+==========================+")
+
+    print(df_link['report_no'].head())
+
+    # Drop column if entirely empty
+    df_link.dropna(axis=1, how='all', inplace=True)
     
     print(len(df_link) == len(df))
 
-    print(df.head(3))
-
     df = pd.concat([df,df_link],axis=1)
-
-    print(df.head(5))
