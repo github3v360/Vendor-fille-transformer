@@ -96,7 +96,7 @@ def helloFirestore(event, context):
 
     userId = None
 
-    log_bucket_name = os.environ['SUMMARY_BUCKET']
+    log_bucket_name = os.environ['LOGS_BUCKET']
     log_bucket = client.bucket(log_bucket_name)
     log_blob = bucket.blob("logs.log")
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
