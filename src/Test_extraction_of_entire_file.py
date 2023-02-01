@@ -9,13 +9,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+log_file_path = "running_logs/test.log"
 
 formatter = logging.Formatter('Time: %(asctime)s   :    %(message)s')
 
-if os.path.dirname("running_logs"):
-    os.makedirs('running_logs')
-
-file_handler = logging.FileHandler('running_logs/test.log')
+file_handler = logging.FileHandler(log_file_path)
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 
@@ -37,7 +35,7 @@ def main():
         print(f"====File name : {test_file_name} ======")
         start = time.time()
         try:
-            out_df = Extraction_of_entire_file.extract_entire_file(file_path,False)
+            out_df = Extraction_of_entire_file.extract_entire_file(file_path,False,log_file_path)
             #logger.info(out_df.head(5))
         except:
             logger.exception('Failed Due to: ')

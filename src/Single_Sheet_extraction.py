@@ -5,18 +5,15 @@ import pandas as pd
 import os
 from src import hyperlink_extraction
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
-if os.path.dirname("running_logs"):
-    os.makedirs('running_logs')
+def extract_from_single_sheet(df,ws,debug,log_file_path):
+    # setting up logger
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+    file_handler = logging.FileHandler(log_file_path)
+    file_handler.setLevel(logging.INFO)
+    logger.addHandler(file_handler)
 
-file_handler = logging.FileHandler('running_logs/test.log')
-
-file_handler.setLevel(logging.INFO)
-logger.addHandler(file_handler)
-
-def extract_from_single_sheet(df,ws,debug):
     logger.info("-" * 75)
     # ==== Stage 1 (Cleaning the Data) ====
     df_corrected_headers,correct_row_idx = data_cleaner.correct_df_headers(df)

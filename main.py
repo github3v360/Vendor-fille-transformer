@@ -101,7 +101,9 @@ def helloFirestore(event, context):
         blob=bucket.blob(currentFilePath)
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
 
-        out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),debug=False)
+        log_path = os.path.join(temp_dir,'test.log')
+
+        out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),debug=False,log_path)
         out_df=out_df.reset_index()
 
         userId=currentFilePath.split('/')[0]
