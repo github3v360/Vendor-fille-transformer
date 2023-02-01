@@ -86,6 +86,11 @@ def collect_logs(handler):
         log_data.append(handler.formatter.format(record))
     return "\n".join(log_data)
 
+logs = []
+class CustomHandler(logging.Handler):
+    def emit(self, record):
+        logs.append(self.format(record))
+
 def helloFirestore(event, context):
     """
     Triggered by a change to a Firestore document.
@@ -105,6 +110,7 @@ def helloFirestore(event, context):
     log_bucket_name = os.environ['LOGS_BUCKET']
     log_bucket = client.bucket(log_bucket_name)
     log_blob = bucket.blob("logs.log")
+    
     logger = logging.getLogger(__name__)
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     handler = logging.StreamHandler()
@@ -112,6 +118,8 @@ def helloFirestore(event, context):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+    custom_handler = CustomHandler()
+    logger.addHandler(custom_handler)
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
