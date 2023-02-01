@@ -102,12 +102,11 @@ def helloFirestore(event, context):
         blob=bucket.blob(currentFilePath)
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
 
-        log_file_path = os.path.join(tempdir,'test.log')
+        log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs.log")
 
         logger = logging.getLogger(__name__)
-        logger.setLevel(logging.INFO)
+        
         formatter = logging.Formatter('Time: %(asctime)s   :    %(message)s')
-
         file_handler = logging.FileHandler(log_file_path)
         file_handler.setLevel(logging.INFO)
         file_handler.setFormatter(formatter)
