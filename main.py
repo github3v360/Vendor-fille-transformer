@@ -95,23 +95,22 @@ def helloFirestore(event, context):
     filenames=[]
 
     userId = None
+
+    log_bucket_name = os.environ['SUMMARY_BUCKET']
+    log_bucket = client.bucket(log_bucket_name)
+    log_blob = bucket.blob("logs.log")
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+    handler = logging.StreamHandler(log_blob.writer(content_type='text/plain'))
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
     
         blob=bucket.blob(currentFilePath)
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
-
-        log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs.log")
-
-        logger = logging.getLogger(__name__)
-        
-        formatter = logging.Formatter('Time: %(asctime)s   :    %(message)s')
-        file_handler = logging.FileHandler(log_file_path)
-        file_handler.setLevel(logging.INFO)
-        file_handler.setFormatter(formatter)
-
-        logger.addHandler(file_handler)
 
         out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logger)
         out_df=out_df.reset_index()
