@@ -29,6 +29,9 @@ def extract_from_single_sheet(df,ws,debug):
     target_columns = ['clarity','carat','color','shape',"fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth",
     "price per carat","discount","total","rap price total",'Stock Ref',"comments"]
 
+    # if 'report_no' not in df_with_links.columns:
+    #     target_columns.append('report_no')
+
     # Initializing dictionary to store the probabilty of target columns
     prob_dict = dict.fromkeys(target_columns,-1)
 

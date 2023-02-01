@@ -13,6 +13,16 @@ def Find(string):
     # Return the first link if any are found, or None if not
     return links[0] if links else None
 
+def extract_report_number(url):
+    if url is None:
+        return None
+
+    report_number = re.search("(reportno|report_no)=(\d+)", url)
+
+    if report_number is None:
+        return None
+    return report_number.group(2)
+
 def add_hyperlink_columns(df,ws,correct_row_idx):
 
     columns_name = list(df.columns)
@@ -45,6 +55,9 @@ def add_hyperlink_columns(df,ws,correct_row_idx):
     for j in range(len(cols_link)):
         df_link[df.columns[cols_link[j][1]-1] + "_link"] = [None]*len(df)
 
+    # Initializing report number column
+    df_link['report_no'] = [None]*len(df)
+
     t = 0
 
     for i in range(correct_row_idx+3,ws.max_row+1):
@@ -65,13 +78,21 @@ def add_hyperlink_columns(df,ws,correct_row_idx):
                 
                 # If hyperlink is not given
                 if cur_hyperlink_value.target is not None:
+                    extracted_link = cur_hyperlink_value.target
                     df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = cur_hyperlink_value.target
-                    continue
 
             # If hyperlink is None or hyperlink.target is None
             else:
-                df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = Find(cur_cell.value)
+                extracted_link = Find(cur_cell.value)
+            
+            df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = extracted_link
+            if df_link['report_no'].iloc[t] is None:
+                df_link['report_no'].iloc[t] = extract_report_number(extracted_link)
             
         t+=1
+    
+    # Drop column if entirely empty
+    df_link.dropna(axis=1, how='all', inplace=True)
+    
     df = pd.concat([df,df_link],axis=1)
     return df,list(df_link.columns)
