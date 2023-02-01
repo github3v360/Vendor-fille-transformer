@@ -80,6 +80,12 @@ def addSummaryFileMeta(summaryFilePath, uid, VENDORNAME):
 
   collection_ref.add(data)
 
+def collect_logs(handler):
+    log_data = []
+    for record in handler.records:
+        log_data.append(handler.formatter.format(record))
+    return "\n".join(log_data)
+
 def helloFirestore(event, context):
     """
     Triggered by a change to a Firestore document.
@@ -130,4 +136,4 @@ def helloFirestore(event, context):
         os.path.join(tempdir, 'summary_2.xlsx')
         )
 
-        log_blob.upload_from_string(handler.stream.getvalue(), content_type='text/plain')
+        log_blob.upload_from_string(collect_logs(handler), content_type='text/plain')
