@@ -16,6 +16,7 @@ import pickle
 import yaml
 import pandas as pd
 from src import Extraction_of_entire_file
+import logging
 
 # Bucket Realted parameters and functions
 
@@ -101,9 +102,19 @@ def helloFirestore(event, context):
         blob=bucket.blob(currentFilePath)
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
 
-        log_path = os.path.join(temp_dir,'test.log')
+        log_file_path = os.path.join(tempdir,'test.log')
 
-        out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,log_path)
+        logger = logging.getLogger(__name__)
+        logger.setLevel(logging.INFO)
+        formatter = logging.Formatter('Time: %(asctime)s   :    %(message)s')
+
+        file_handler = logging.FileHandler(log_file_path)
+        file_handler.setLevel(logging.INFO)
+        file_handler.setFormatter(formatter)
+
+        logger.addHandler(file_handler)
+
+        out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logger)
         out_df=out_df.reset_index()
 
         userId=currentFilePath.split('/')[0]

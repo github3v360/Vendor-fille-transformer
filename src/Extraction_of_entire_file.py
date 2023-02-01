@@ -3,7 +3,7 @@ import pandas as pd
 import openpyxl 
 from openpyxl import load_workbook
 
-def extract_entire_file(file_path,debug,log_file_path):
+def extract_entire_file(file_path,debug,logger):
 
     # ==== (Reading the file // Fetching the file) ====
 
@@ -30,7 +30,7 @@ def extract_entire_file(file_path,debug,log_file_path):
             continue
 
         # Data Extraction from current sheet
-        out_df = Single_Sheet_extraction.extract_from_single_sheet(df,wb_xl[sheet_name],debug,log_file_path)
+        out_df = Single_Sheet_extraction.extract_from_single_sheet(df,wb_xl[sheet_name],debug,logger)
 
         # Concatenation of global dataframe with out_df
         if global_df is None:
