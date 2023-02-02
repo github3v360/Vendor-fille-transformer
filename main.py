@@ -17,6 +17,7 @@ import yaml
 import pandas as pd
 from src import Extraction_of_entire_file
 import logging
+import io
 
 # Bucket Realted parameters and functions
 
@@ -86,10 +87,14 @@ def collect_logs(handler):
         log_data.append(handler.formatter.format(record))
     return "\n".join(log_data)
 
-logs = []
-class CustomHandler(logging.Handler):
-    def emit(self, record):
-        logs.append(self.format(record))
+import logging
+import io
+import google.cloud.storage as storage
+
+def log_message(message, log_buffer):
+    # Log the message to a buffer
+    logging.basicConfig(level=logging.INFO, stream=log_buffer)
+    logging.info(message)
 
 def helloFirestore(event, context):
     """
@@ -118,8 +123,13 @@ def helloFirestore(event, context):
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    custom_handler = CustomHandler()
-    logger.addHandler(custom_handler)
+
+    log_buffer = io.StringIO()
+
+    log_message("Function processed a request please bhai ho ja", log_buffer)
+    log_message("ksdnsnkncnncfkenekn", log_buffer)
+    log_string = log_buffer.getvalue()
+    log_blob.upload_from_string(log_string)
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
