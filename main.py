@@ -129,7 +129,10 @@ def helloFirestore(event, context):
     log_message("Function processed a request please bhai ho ja", log_buffer)
     log_message("ksdnsnkncnncfkenekn", log_buffer)
     log_string = log_buffer.getvalue()
+    print(log_string)
     log_blob.upload_from_string(log_string)
+    print("hi")
+    log_blob.make_public()
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
