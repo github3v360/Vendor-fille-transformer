@@ -90,6 +90,25 @@ def get_target_column_unique_values(target_name,logger):
 
   elif target_name == "Stock Ref":
     target_unique_values = ["VSBDJ003","1627905","244507","J841722022A","589452","921905043","1.00W863776","2121000601"]
+
+  elif target_name == "Report No":
+    target_unique_values = [5673832,7463526,6526352,6283620,4233562,8362432,873625]
+
+#   elif target_name == "Cert":
+#       target_unique_values = ["GIA" ,"G.I.A", "G","AGS", "AGSL", "AGS0", "A","CGL", "Central Gem Laboratory",
+# "DCLA",
+# "GCAL",
+# "GSI, GS, Gemscience","HRD","HRD", "H",
+# "IGI", "I",
+# "NGTC",
+# "None", "N", "X", "NO", "NON","NC", "NonCert",
+# "Other", "Own","PGS",
+# "VGR",
+# "RDC",
+# "RDR",
+# "GHI",
+# "DBGIS",
+# "SGL"]
     
   else:
     logger.exception("The function could not find this target name")
@@ -260,6 +279,10 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     elif target_name == 'rap price total':
       rangeA = 10000
       rangeB = 100000
+
+    elif target_name == 'Report No':
+      rangeA = 10000
+      rangeB = 1000000000
 
     return get_score_from_range(rangeA,rangeB,column_unique_values,n)
   
