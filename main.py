@@ -17,6 +17,7 @@ import yaml
 import pandas as pd
 from src import Extraction_of_entire_file
 import logging
+import io
 
 # Bucket Realted parameters and functions
 
@@ -80,6 +81,21 @@ def addSummaryFileMeta(summaryFilePath, uid, VENDORNAME):
 
   collection_ref.add(data)
 
+def collect_logs(handler):
+    log_data = []
+    for record in handler.records:
+        log_data.append(handler.formatter.format(record))
+    return "\n".join(log_data)
+
+import logging
+import io
+import google.cloud.storage as storage
+
+def log_message(message, log_buffer):
+    # Log the message to a buffer
+    logging.basicConfig(level=logging.INFO, stream=log_buffer)
+    logging.info(message)
+
 def helloFirestore(event, context):
     """
     Triggered by a change to a Firestore document.
@@ -95,24 +111,34 @@ def helloFirestore(event, context):
     filenames=[]
 
     userId = None
+
+    log_bucket_name = os.environ['LOGS_BUCKET']
+    log_bucket = client.bucket(log_bucket_name)
+    log_blob = bucket.blob("logs.log")
+    
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    log_buffer = io.StringIO()
+
+    log_message("Function processed a request please bhai ho ja", log_buffer)
+    log_message("ksdnsnkncnncfkenekn", log_buffer)
+    log_string = log_buffer.getvalue()
+    print(log_string)
+    log_blob.upload_from_string(log_string)
+    print("hi")
+    log_blob.make_public()
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
     
         blob=bucket.blob(currentFilePath)
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
-
-        log_file_path = os.path.join(tempdir,'test.log')
-
-        logger = logging.getLogger(__name__)
-        logger.setLevel(logging.INFO)
-        formatter = logging.Formatter('Time: %(asctime)s   :    %(message)s')
-
-        file_handler = logging.FileHandler(log_file_path)
-        file_handler.setLevel(logging.INFO)
-        file_handler.setFormatter(formatter)
-
-        logger.addHandler(file_handler)
 
         out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logger)
         out_df=out_df.reset_index()
@@ -130,3 +156,5 @@ def helloFirestore(event, context):
         summaryFilePath,
         os.path.join(tempdir, 'summary_2.xlsx')
         )
+
+        log_blob.upload_from_string(collect_logs(handler), content_type='text/plain')
