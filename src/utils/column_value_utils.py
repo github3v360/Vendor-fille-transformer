@@ -165,11 +165,6 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
 
   #get the data type of taget_column_unique_values
   target_data_type = get_most_common_type(taget_column_unique_values)
-
-  # This will indicate that both do not have same data type
-  flag = True
-  if input_data_type[0] != target_data_type[0]:
-    flag = False
   
   # Getting length of column_unique_values
   n = len(column_unique_values)
@@ -194,7 +189,7 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
       get_val = get_val.replace("x","*")
       get_val = get_val.replace("X","*")
       try:
-        temp = eval(get_val)
+        _ = eval(get_val)
         return 1
       except:
         return 0
@@ -244,7 +239,7 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
       rangeB = 99
 
       # Additional Logic for Discount
-      # Discount columns are the only with negative number so we can take advantage of that
+      # Discount columns are the only  ccolumns with negative number so we can take advantage of that
 
       for val in column_unique_values:
 

@@ -34,7 +34,7 @@ def get_standard_names(target_name,logger):
     return ["M2","Measurement","Diameter","width"]
 
   elif target_name == "depth":
-    return ["M3","Measurement","Diameter","depth"]
+    return ["M3","Measure","Diameter","depth","height"]
   
   elif target_name == "cut":      
     return ["Cut", "CutGrade"]

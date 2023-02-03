@@ -128,7 +128,7 @@ def extract_from_single_sheet(df,ws,debug,logger):
             pass
 
         if flag:
-            df_pre_processed['length'],df_pre_processed['width'],df_pre_processed['depth'] = zip(*df_pre_processed['length'].apply(post_processing_utils.transform_measurement_column))
+            df_pre_processed['length'],df_pre_processed['width'],df_pre_processed['depth'] = zip(*df_pre_processed.apply(lambda x: post_processing_utils.transform_measurement_column(x['length'],x['depth']),axis=1))
         df_pre_processed['length'] = df_pre_processed['length'].astype(float)
         df_pre_processed['width'] = df_pre_processed['width'].astype(float)
         df_pre_processed['depth'] = df_pre_processed['depth'].astype(float)
