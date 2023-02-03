@@ -66,6 +66,12 @@ def get_standard_names(target_name,logger):
   elif target_name == "Stock Ref":
     return ["ReferenceNum", "ReferenceNumber", "Stock", "Stock Num", "Stock_no", "StockNo", "StockNum", "StockNumber", "VenderStockNumber","Refno","Packet No"]
      
+  elif target_name == "Report No":
+    return  ['REPORTNO','REPORT NO','REP NO','REPORT #','CERT#','CERTIFICATE','CERTIFICATE NO','CERTIFICATE #','CERTI NO.','REPORT','CERT #','CERT NO.','CERTNO','CERT. NO','GIA OR FM','REP_NO','CERT_NO','CERT.NO','VIEW CERTIFICATE','CERT NO','CERTINO']
+
+#   elif target_name == "Cert":
+#     return  ['CERT','LAB','LAB NAME','ONL. CERT','CRT','CERT.','CERTIFIED LAB']
+    
   else:
     logger.exception("The function could not find other satndard names for this target name")
 

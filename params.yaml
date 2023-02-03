@@ -40,8 +40,8 @@ magic_numbers:
   table_normalizing_factor_for_col_name: 0.5
   table_normalizing_factor_for_col_value: 0.5
 
-  comments_normalizing_factor_for_col_name: 0.7
-  comments_normalizing_factor_for_col_value: 0.3
+  comments_normalizing_factor_for_col_name: 0.8
+  comments_normalizing_factor_for_col_value: 0.2
 
   ppc_normalizing_factor_for_col_name: 0.5
   ppc_normalizing_factor_for_col_value: 0.5
@@ -57,3 +57,9 @@ magic_numbers:
 
   stockref_normalizing_factor_for_col_name: 0.5
   stockref_normalizing_factor_for_col_value: 0.5
+
+  report_normalizing_factor_for_col_name: 0.9
+  report_normalizing_factor_for_col_value: 0.1
+
+  # cert_normalizing_factor_for_col_name: 0.5
+  # cert_normalizing_factor_for_col_value: 0.5

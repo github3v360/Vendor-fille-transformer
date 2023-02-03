@@ -7,7 +7,7 @@ from src import hyperlink_extraction
 
 
 def extract_from_single_sheet(df,ws,debug,logger):
-
+    df.drop(columns=df.columns[0], axis=1,  inplace=True)
     logger.info("-" * 75)
     # ==== Stage 1 (Cleaning the Data) ====
     df_corrected_headers,correct_row_idx = data_cleaner.correct_df_headers(df)
@@ -18,10 +18,13 @@ def extract_from_single_sheet(df,ws,debug,logger):
 
     # Declaring the target column (required columns)
     target_columns = ['clarity','carat','color','shape',"fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth",
-    "price per carat","discount","total","rap price total",'Stock Ref',"comments"]
+    "price per carat","discount","total","rap price total","comments"]
 
-    # if 'report_no' not in df_with_links.columns:
-    #     target_columns.append('report_no')
+    if 'report_no' not in df_with_links.columns:
+        # print("df.head(3)")
+        logger.info("Report No. not found in Link")
+        target_columns.append('Report No')
+
 
     # Initializing dictionary to store the probabilty of target columns
     prob_dict = dict.fromkeys(target_columns,-1)
