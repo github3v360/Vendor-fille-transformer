@@ -68,7 +68,11 @@ def add_hyperlink_columns(df,ws,correct_row_idx):
             
             # If completely empty simply return None
             if cur_cell.value is None and cur_cell.hyperlink is None:
-                df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = None
+
+                try:
+                    df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = None
+                except:
+                    pass
                 continue
 
             # If hyperlink is not None

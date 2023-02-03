@@ -23,13 +23,15 @@ def extract_report_number(url):
         return None
     return report_number.group(2)
 
-test_data_dir  = os.path.join("artifacts","test_data")
+test_data_dir  = os.path.join("artifacts","new_test_data_2")
 test_data_files_name =  os.listdir(test_data_dir)
 
 import pandas as pd
 from openpyxl import load_workbook
 
 for file_name in test_data_files_name[:]:
+    if file_name != "UNIQUE BR.xlsx":
+        continue
     print()
     print(f" =========== File Name : {file_name} ============")
     
@@ -62,8 +64,10 @@ for file_name in test_data_files_name[:]:
 
     cur_sheet = df[sheet_names[0]]
     df,correct_row_idx = data_cleaner.correct_df_headers(cur_sheet)
-    
+    print(len(df))
     df_link = pd.DataFrame()
+
+    print(f"==== {cols_link} ====")
 
     total_link_columns = len(cols_link)
 
@@ -86,7 +90,10 @@ for file_name in test_data_files_name[:]:
             
             # If completely empty simply return None
             if cur_cell.value is None and cur_cell.hyperlink is None:
-                df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = None
+                try:
+                    df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = None
+                except:
+                    pass
                 continue
 
             # If hyperlink is not None
@@ -111,7 +118,7 @@ for file_name in test_data_files_name[:]:
 
     print("+==========================+")
 
-    print(df_link['report_no'].head())
+    
 
     # Drop column if entirely empty
     df_link.dropna(axis=1, how='all', inplace=True)
@@ -119,3 +126,4 @@ for file_name in test_data_files_name[:]:
     print(len(df_link) == len(df))
 
     df = pd.concat([df,df_link],axis=1)
+    print(df.tail())

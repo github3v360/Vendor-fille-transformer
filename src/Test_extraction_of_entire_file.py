@@ -30,18 +30,18 @@ def main():
 
 
     for test_file_name in test_file_names:
+        # if test_file_name != "UNIQUE BR.xlsx":
+        #     continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
         print(f"====File name : {test_file_name} ======")
         start = time.time()
         try:
             out_df = Extraction_of_entire_file.extract_entire_file(file_path,False,logger)
-            #logger.info(out_df.head(5))
         except:
             logger.exception('Failed Due to: ')
             logger.info(f"Logic Failed for {test_file_name} file")
             logger.info("-" *50)
-            # print(f"Logic Failed for {test_file_name} file")
             continue
         end = time.time()
         print()
