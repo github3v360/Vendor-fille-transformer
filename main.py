@@ -97,13 +97,9 @@ def helloFirestore(event, context):
 
     userId = None
 
-    logger = logging.getLogger("my_logger")
-    logger.setLevel(logging.INFO)
-    handler = logging.StreamHandler()
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    logger = logging.getLogger()
+    log_buffer = io.StringIO()
+    logger.basicConfig(level=logging.INFO, stream=log_buffer)
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
