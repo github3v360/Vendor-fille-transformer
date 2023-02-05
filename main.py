@@ -97,9 +97,8 @@ def helloFirestore(event, context):
 
     userId = None
 
-    logger = logging.getLogger()
     log_buffer = io.StringIO()
-    logger.basicConfig(level=logging.INFO, stream=log_buffer)
+    logging.basicConfig(level=logging.INFO, stream=log_buffer)
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
@@ -107,7 +106,7 @@ def helloFirestore(event, context):
         blob=bucket.blob(currentFilePath)
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
 
-        out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logger)
+        out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logging)
         out_df=out_df.reset_index()
 
         userId=currentFilePath.split('/')[0]
