@@ -96,14 +96,13 @@ def helloFirestore(event, context):
     filenames=[]
 
     userId = None
-    
-    logger = logging.getLogger(__name__)
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-    handler = logging.StreamHandler()
-    handler.setLevel(logging.INFO)
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    logger.setFormatter(formatter)
+
+    logger.info("Data Extraction Started")
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
