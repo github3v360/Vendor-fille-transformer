@@ -20,7 +20,10 @@ def extract_report_number(url):
     report_number = re.search("(reportno|report_no)=(\d+)", url)
 
     if report_number is None:
-        return None
+        report_number = re.search(r'/certificate/(\d+)', url)
+        if report_number is None:
+            return None
+        return report_number.group(1)
     return report_number.group(2)
 
 def add_hyperlink_columns(df,ws,correct_row_idx):
