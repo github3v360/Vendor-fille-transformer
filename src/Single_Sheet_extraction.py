@@ -7,13 +7,15 @@ from src import hyperlink_extraction
 
 
 def extract_from_single_sheet(df,ws,debug,logger):
-    df.drop(columns=df.columns[0], axis=1,  inplace=True)
+    
     logger.info("-" * 75)
     # ==== Stage 1 (Cleaning the Data) ====
     df_corrected_headers,correct_row_idx = data_cleaner.correct_df_headers(df)
     df_with_links, link_columns_name = hyperlink_extraction.add_hyperlink_columns(df_corrected_headers,ws,correct_row_idx)
     df_cleaned = data_cleaner.drop_empty_columns_and_rows(df_with_links)
-    
+    df.drop(columns=df.columns[0], axis=1,  inplace=True)
+    count_of_rows = df.shape[0]
+    print(count_of_rows)
     # ==== Stage 2 (Processing the Data) ====
 
     # Declaring the target column (required columns)
@@ -23,7 +25,7 @@ def extract_from_single_sheet(df,ws,debug,logger):
     if 'report_no' not in df_with_links.columns:
         # print("df.head(3)")
         logger.info("Report No. not found in Link")
-        target_columns.append('Report No')
+        target_columns.append('report_no')
 
 
     # Initializing dictionary to store the probabilty of target columns
@@ -59,7 +61,7 @@ def extract_from_single_sheet(df,ws,debug,logger):
             
             # Getting the current column of cleaned dataframe unique values
             try:
-                cur_df_cleaned_column_unique_values = list(df_cleaned[cur_df_cleaned_column_name].unique())[:10]
+                cur_df_cleaned_column_unique_values = list(df_cleaned[cur_df_cleaned_column_name].unique())
                 cur_df_cleaned_column_unique_values = common_utils.assure_data_type(cur_df_cleaned_column_unique_values)
                 cur_df_cleaned_column_name = cur_df_cleaned_column_name.lower()
             except:
@@ -73,7 +75,7 @@ def extract_from_single_sheet(df,ws,debug,logger):
             sim_score_from_cur_col_name = score_modifier.modify_sim_score_of_name(sim_score_from_cur_col_name,cur_target_column,magic_numbers)
 
             # getting simiraity score based on the column values of current column in the cleaned dataframe (df_cleaned)
-            similarity_score_of_value = column_value_utils.similarity_score_from_col_values(cur_df_cleaned_column_unique_values,cur_target_col_unique_vals,cur_target_column)
+            similarity_score_of_value = column_value_utils.similarity_score_from_col_values(count_of_rows,cur_df_cleaned_column_unique_values,cur_target_col_unique_vals,cur_target_column)
             
             # Getting final similarity score by merging 
             # modified similarity score fetched from the name of current column in the cleaned dataframe (df_cleaned) 
@@ -107,6 +109,27 @@ def extract_from_single_sheet(df,ws,debug,logger):
             # since we do not need to iterate over that column again
             if cur_target_column not in ["length","width","depth"]:
                 df_cleaned = df_cleaned.drop(columns=predicted_column)
+
+    print("Remaining Columns: ",df_cleaned.columns)
+    cols = df_cleaned.columns
+
+    remaining_columns_df = pd.DataFrame()
+    list_of_dicts = []
+    # c = 0
+    for index, row in df_cleaned.iterrows():
+        d = {}
+        for col in cols:
+            # if not math.isnan(col):
+            #     if df_cleaned[col].dtype != object:
+            #         b = 'NAN' + str(c)
+            #         c = c+1
+            #         d[b] = row[col]
+            # else:
+            d[col] = row[col]
+        # print(d)
+        list_of_dicts.append(d)
+        
+    remaining_columns_df["Extra Column"] = list_of_dicts
 
     # ==== Stage 3 (Post-Processing the Data) ==== 
     # To transform non-standard values to standard values
@@ -184,6 +207,7 @@ def extract_from_single_sheet(df,ws,debug,logger):
 
     # Add links
     df_processed[link_columns_name] = df_with_links[link_columns_name]
+    df_processed = pd.concat([df_processed, remaining_columns_df], axis=1)
 
     # ==== end of all stages ====
     logger.info("-" * 75)

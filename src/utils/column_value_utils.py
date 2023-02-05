@@ -91,8 +91,8 @@ def get_target_column_unique_values(target_name,logger):
   elif target_name == "Stock Ref":
     target_unique_values = ["VSBDJ003","1627905","244507","J841722022A","589452","921905043","1.00W863776","2121000601"]
 
-  elif target_name == "Report No":
-    target_unique_values = [5673832,7463526,6526352,6283620,4233562,8362432,873625]
+  elif target_name == "report_no":
+    target_unique_values = ["5673832","7463526","6526352","6283620","4233562","8362432","873625"]
 
 #   elif target_name == "Cert":
 #       target_unique_values = ["GIA" ,"G.I.A", "G","AGS", "AGSL", "AGS0", "A","CGL", "Central Gem Laboratory",
@@ -164,7 +164,7 @@ def get_score_from_range(rangeA,rangeB,values,n):
   
   return total / n
 
-def similarity_score_from_col_values(column_unique_values,taget_column_unique_values,target_name):
+def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_column_unique_values,target_name):
 
   """
      This function calculates the similarity score between a column and a target column.
@@ -219,8 +219,18 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     else:
       return 0
 
+  elif target_name == 'report_no':
+    #   print(column_unique_values.sort())
+      l = len(column_unique_values)
+    #   last_value_length = len(column_unique_values[-1]) last_value_length >3
+
+      if l == count_of_rows:
+        print("Equal values found")
+        return 1
+      else:
+        return 0
   # Writing General logic for string data type considering target data type will always be correct
-  elif target_data_type[0] == str:
+  elif target_data_type[0] == str and target_name != 'report_no':
       
     # If one of column_unique_values matches with any of the taget_column_unique_values then we will return 1 else 0
     for value in column_unique_values:
