@@ -62,7 +62,7 @@ def get_target_column_unique_values(target_name,logger):
     flag = True
   
   elif target_name == "cut":
-    target_unique_values = ["I","EX","VG","G","F","P"]
+    target_unique_values = ["I","EX","VG","G","F","P","EX+","EX +"]
     flag = True
 
   elif target_name == "polish":
