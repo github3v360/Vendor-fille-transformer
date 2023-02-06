@@ -56,16 +56,17 @@ def correct_df_headers(df):
         df = df[i+1:]
         df.columns = cur_columns
         break
-        
+  df = df.reset_index(drop=True)
   return df,correct_row_idx
 
-def drop_empty_columns(df):
+def drop_empty_columns_and_rows(df):
   """
-  To drop columns with no data
+  To drop columns and rows with no data
   Args:
   df: Input Dataframe
   Output:
   out_df = Output DataFrame
   """
-  out_df = df.dropna(axis=1)
-  return out_df
+  df = df.dropna(how="all")
+  df = df.dropna(how="all",axis=1)
+  return df

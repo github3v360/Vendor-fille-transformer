@@ -16,6 +16,8 @@ import pickle
 import yaml
 import pandas as pd
 from src import Extraction_of_entire_file
+import logging
+import io
 
 # Bucket Realted parameters and functions
 
@@ -94,6 +96,9 @@ def helloFirestore(event, context):
     filenames=[]
 
     userId = None
+
+    log_buffer = io.StringIO()
+    logging.basicConfig(level=logging.INFO, stream=log_buffer)
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
@@ -101,7 +106,7 @@ def helloFirestore(event, context):
         blob=bucket.blob(currentFilePath)
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
 
-        out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),debug=False)
+        out_df = Extraction_of_entire_file.extract_entire_file(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logging)
         out_df=out_df.reset_index()
 
         userId=currentFilePath.split('/')[0]

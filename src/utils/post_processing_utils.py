@@ -7,7 +7,7 @@ def transform_shape_column(cur_shape,magic_numbers):
   This will transform the non-standard shape name to standard shape name
   Example -: It will transform the "RND" to "ROUND"
   """
-  if cur_shape == "" or cur_shape is None:
+  if cur_shape == "" or cur_shape is None or (type(cur_shape) != str):
     return None
 
   # Loading shape dictionary file
@@ -43,7 +43,8 @@ def transform_fluor_column(cur_fluor,magic_numbers):
   This will transform the non-standard fluor name to standard fluor name
   Example -: It will transform the "MED" to "MEDIUM"
   """
-
+  if cur_fluor == "" or cur_fluor is None or (type(cur_fluor) != str):
+    return None
   # Initializing our fluorescent dictionary
   fluor_key = ["faint","medium","none","f","m","n","fnt","med","non"]
   fluor_values = ["FAINT","MEDIUM","NONE","FAINT","MEDIUM","NONE","FAINT","MEDIUM","NONE"]
@@ -72,25 +73,46 @@ def transform_fluor_column(cur_fluor,magic_numbers):
     else:
       return None
 
-def transform_measurement_column(cur_val):
+def transform_measurement_column(cur_val_l,cur_val_d):
 
   """
+  This function will return length, width and depth if the measurement column is in string format
+  Eg -: Input: Measurement = "2 * 3 *4" 
+        Output: length = 4, width = 3 and depth = 2
+  
+  If the measurement column is in this format = [4*1]
+  then length = 4 , width = 1 and depth would be cur_val_d
+
   Args:
-  cur_val: The current value during iteration of column
+  cur_val_l = current row length value
+  cur_val_d = current row depth value
+
   """
 
-  if cur_val is None:
-    return cur_val
+  if cur_val_l == "" or cur_val_l is None or (type(cur_val_l) != str):
+    return [None,None,None]
     
   ops_to_replace = ["+","-","x","X"]
 
   for cur_op in ops_to_replace:
-    cur_val = cur_val.replace(cur_op,"*")
+    cur_val_l = cur_val_l.replace(cur_op,"*")
 
-  cur_val = cur_val.split("*")
-  cur_val = [float(val) for val in cur_val]
-  cur_val.sort(reverse=True)
-  return cur_val
+  cur_val_l = cur_val_l.split("*")
+
+  cur_val_l_len = 0
+  for val in cur_val_l:
+      cur_val_l[cur_val_l_len] = float(val)
+      cur_val_l_len+=1
+
+  cur_val_l.sort(reverse=True)  
+  
+  if cur_val_l_len == 2:
+    cur_val_l.append(cur_val_d)
+
+  elif cur_val_l_len != 3:
+    cur_val_l = [None,None,None]
+    
+  return cur_val_l
   
 def transform_cut_column(cut_val,magic_numbers):
 
@@ -130,35 +152,9 @@ def transform_cut_column(cut_val,magic_numbers):
     else:
       return None
 
-def transform_discount_column(disc_val,magic_numbers,ppc_val,raprate_val):
-    try:
-        if int(disc_val) == 0:      
-            disc_val = ((ppc_val/raprate_val) - 1)*100
-        if disc_val < 0:
-            disc_val*=-1
-        return round(disc_val,2)
-    except:
-        return disc_val
-
-def transform_total_column(tot_val,magic_numbers,ppc_val,carat_val):
-    try:
-        if type(tot_val) != "int" or int(tot_val) == 0:      
-            trial_total = ppc_val*carat_val
-            return round(trial_total,2)
-        else:
-            return round(tot_val,2)
-    except:
-        return round(tot_val,2)
-
-def transform_rap_total_column(rap_tot_val,magic_numbers,rap_rate,carat_val):
-    # print(type(rap_tot_val))
-    try:
-        if isinstance(rap_tot_val, str) or math.isnan(rap_tot_val) or int(rap_tot_val) == 0 or rap_tot_val != (rap_rate*carat_val):      
-            trial_total = rap_rate*carat_val
-            return round(trial_total,2)
-        else:
-            return round(rap_tot_val,2)
-    except:
-        # trial_total = rap_rate*carat_val
-        return round(rap_tot_val,2)
+def transform_discount_column(disc_val):
+    disc_val = float(disc_val)
+    if disc_val < 0:
+        return disc_val*(-1)
+    return disc_val
     

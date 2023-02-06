@@ -1,7 +1,10 @@
 import os 
 import pickle 
+import numpy as np
+import logging
 
-def get_target_column_unique_values(target_name):
+
+def get_target_column_unique_values(target_name,logger):
   """
   This function will return the unique values of the target columns
 
@@ -85,8 +88,30 @@ def get_target_column_unique_values(target_name):
   elif target_name == "rap price total":
     target_unique_values = [5000.0, 56789.98,76452.98,54637.83]
 
+  elif target_name == "Stock Ref":
+    target_unique_values = ["VSBDJ003","1627905","244507","J841722022A","589452","921905043","1.00W863776","2121000601"]
+
+  elif target_name == "Report No":
+    target_unique_values = [5673832,7463526,6526352,6283620,4233562,8362432,873625]
+
+#   elif target_name == "Cert":
+#       target_unique_values = ["GIA" ,"G.I.A", "G","AGS", "AGSL", "AGS0", "A","CGL", "Central Gem Laboratory",
+# "DCLA",
+# "GCAL",
+# "GSI, GS, Gemscience","HRD","HRD", "H",
+# "IGI", "I",
+# "NGTC",
+# "None", "N", "X", "NO", "NON","NC", "NonCert",
+# "Other", "Own","PGS",
+# "VGR",
+# "RDC",
+# "RDR",
+# "GHI",
+# "DBGIS",
+# "SGL"]
+    
   else:
-    raise Exception("The function could not find this target name")
+    logger.exception("The function could not find this target name")
   
   if flag:
     target_unique_values = [value.lower() for value in target_unique_values]
@@ -128,9 +153,9 @@ def get_score_from_range(rangeA,rangeB,values,n):
   total = 0
   for value in values:
 
-    if type(value) != int or value is None or type(value) != float:
+    if type(value) not in [int,float] or value is None:
       try:
-        value = int(value)
+        value = float(value)
       except:
         continue 
     
@@ -159,14 +184,12 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
 
   #get the data type of taget_column_unique_values
   target_data_type = get_most_common_type(taget_column_unique_values)
-
-  # This will indicate that both do not have same data type
-  flag = True
-  if input_data_type[0] != target_data_type[0]:
-    flag = False
   
   # Getting length of column_unique_values
   n = len(column_unique_values)
+
+  if n==0:
+      return 0
 
   # ===== Special Logics ===========
 
@@ -185,7 +208,7 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
       get_val = get_val.replace("x","*")
       get_val = get_val.replace("X","*")
       try:
-        temp = eval(get_val)
+        _ = eval(get_val)
         return 1
       except:
         return 0
@@ -198,35 +221,28 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
 
   # Writing General logic for string data type considering target data type will always be correct
   elif target_data_type[0] == str:
- 
+      
     # If one of column_unique_values matches with any of the taget_column_unique_values then we will return 1 else 0
     for value in column_unique_values:
       if type(value) != str:
         value = str(value)
-      if value.lower() in taget_column_unique_values:
+      value = value.lower().strip()
+      if any(value == target_value.strip() for target_value in taget_column_unique_values):
         return 1
 
     return 0
   
   # =====Writing General logic for int and float data type=====
   else:
-    if not flag:
-
-      # input_data_type[0] == str because we are checking logic for int and float 
-      # input_data_type[0] == int vecause if target values are [1.4,1.8] and input values are 
-      # [1,3] it means they are definitely not falling in same category.
-
-      if input_data_type[0] == str or input_data_type == int:
-        return 0
   
     # Here now the probability is calculated on the basis of the range of value
 
     if target_name == 'carat':
-      rangeA = 1.0
-      rangeB = 20.0
+      rangeA = 0.1
+      rangeB = 10
   
     elif target_name == 'raprate':
-      rangeA = 2000
+      rangeA = 1000
       rangeB = 100000
       
     elif target_name == 'table':
@@ -241,6 +257,21 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
       rangeA = -99
       rangeB = 99
 
+      # Additional Logic for Discount
+      # Discount columns are the only  ccolumns with negative number so we can take advantage of that
+
+      for val in column_unique_values:
+
+          if val is None:
+              continue
+          if type(val) not in [int,float]:
+              try:
+                  val =float(val)
+              except:
+                  continue
+          if val  < 0:
+              return 1000    
+    
     elif target_name == 'total':
       rangeA = 10000
       rangeB = 100000
@@ -248,6 +279,10 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     elif target_name == 'rap price total':
       rangeA = 10000
       rangeB = 100000
+
+    elif target_name == 'Report No':
+      rangeA = 10000
+      rangeB = 1000000000
 
     return get_score_from_range(rangeA,rangeB,column_unique_values,n)
   

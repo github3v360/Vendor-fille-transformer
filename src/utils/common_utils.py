@@ -27,4 +27,29 @@ def get_highest_prob_column(probs, cols):
     sorted_prob_cols = sorted(prob_cols, key= lambda item: item[0] ,reverse=True)
     
     # Return the column name with the highest probability
-    return sorted_prob_cols[0][1]
+    return sorted_prob_cols[0][1],sorted_prob_cols[0][0]
+
+def assure_data_type(values):
+
+    '''
+    This column will transform the string data type to float data type if possible
+    Since pandas DataFrame sometimes read dataframe column with float values and convert them in to string 
+    Therefore we need to reconvert the string to float
+    '''
+
+    out_vals = values.copy()
+
+    for idx,val in enumerate(values):
+
+        if (val is None) or (type(val) in [int,float]):
+            out_vals[idx] = val
+            continue
+        
+        else:
+
+            try:
+                val = float(val)
+            except:
+                pass
+            out_vals[idx] = val
+    return out_vals
