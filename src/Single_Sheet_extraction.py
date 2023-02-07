@@ -14,6 +14,11 @@ def extract_from_single_sheet(df,ws,debug,logger):
     df_with_links, link_columns_name = hyperlink_extraction.add_hyperlink_columns(df_corrected_headers,ws,correct_row_idx)
     df_cleaned = data_cleaner.drop_empty_columns_and_rows(df_with_links)
 
+    # It is possible that initially sheet is not empty but
+    # after cleaning sheet gets empty so we return the empty dataframe from here
+    if len(df_cleaned.columns) == 0:
+        return df_cleaned
+
     # Finding total count of rows
     count_of_rows = df_cleaned.shape[0]
 
