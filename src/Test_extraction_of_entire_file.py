@@ -30,7 +30,7 @@ def main():
 
 
     for test_file_name in test_file_names:
-        # if test_file_name != "UNIQUE BR.xlsx":
+        # if test_file_name != "KAPU BR.xlsx":
         #     continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)

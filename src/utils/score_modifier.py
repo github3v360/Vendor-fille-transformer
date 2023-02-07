@@ -74,7 +74,7 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
   elif target_name == "Stock Ref":
       sim_score *= magic_numbers['stockref_normalizing_factor_for_col_name']
 
-  elif target_name == "report_no"
+  elif target_name == "report_no":
       sim_score *= magic_numbers['report_normalizing_factor_for_col_name']
       
   # elif target_name == "Cert":

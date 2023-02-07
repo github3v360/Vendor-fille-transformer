@@ -14,11 +14,8 @@ def extract_from_single_sheet(df,ws,debug,logger):
     df_with_links, link_columns_name = hyperlink_extraction.add_hyperlink_columns(df_corrected_headers,ws,correct_row_idx)
     df_cleaned = data_cleaner.drop_empty_columns_and_rows(df_with_links)
 
-    # Removing Serial Number column
-    df.drop(columns=df.columns[0], axis=1,  inplace=True)
-
     # Finding total count of rows
-    count_of_rows = df.shape[0]
+    count_of_rows = df_cleaned.shape[0]
 
     # ==== Stage 2 (Processing the Data) ====
 
@@ -112,6 +109,8 @@ def extract_from_single_sheet(df,ws,debug,logger):
     for index, row in df_cleaned.iterrows():
         d = {}
         for col in cols:
+            if type(col) != str:
+                continue
             d[col] = row[col]
         list_of_dicts.append(d)
         

@@ -94,22 +94,6 @@ def get_target_column_unique_values(target_name,logger):
 
   elif target_name == "report_no":
     target_unique_values = ["5673832784","4851297767","4851269742","52364789152","45862177986","45841253698"]
-
-#   elif target_name == "Cert":
-#       target_unique_values = ["GIA" ,"G.I.A", "G","AGS", "AGSL", "AGS0", "A","CGL", "Central Gem Laboratory",
-# "DCLA",
-# "GCAL",
-# "GSI, GS, Gemscience","HRD","HRD", "H",
-# "IGI", "I",
-# "NGTC",
-# "None", "N", "X", "NO", "NON","NC", "NonCert",
-# "Other", "Own","PGS",
-# "VGR",
-# "RDC",
-# "RDR",
-# "GHI",
-# "DBGIS",
-# "SGL"]
     
   else:
     logger.exception("The function could not find this target name")
@@ -237,7 +221,7 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_co
     else:
         return 0
   # Writing General logic for string data type considering target data type will always be correct
-  elif target_data_type[0] == str and target_name != 'report_no':
+  elif target_data_type[0] == str:
       
     # If one of column_unique_values matches with any of the taget_column_unique_values then we will return 1 else 0
     for value in column_unique_values:
