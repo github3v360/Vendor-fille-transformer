@@ -68,6 +68,8 @@ def post_processing_function(fetched_columns,df_pre_processed,magic_numbers,prob
         else:
             df_pre_processed["price per carat"] = df_pre_processed['total'] / df_pre_processed['carat']
             df_pre_processed['discount'] = (1 - (df_pre_processed["price per carat"] / df_pre_processed['raprate']))*100
-    # target_columns+=['ratio','depth %']
+    
+    df_pre_processed['report_no'] = df_pre_processed.apply(lambda x: post_processing_utils.transform_report_no_column(x['report_no'],x['report_no_from_link']),axis=1)
+    df_pre_processed.drop('report_no_from_link',axis=1,inplace=True)
     return df_pre_processed
     

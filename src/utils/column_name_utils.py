@@ -46,7 +46,7 @@ def get_standard_names(target_name,logger):
     return ["Sym", "Symetry", "Sym-metry","symmetry"]
 
   elif target_name == "table":
-    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%"]
+    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%","Table Depth"]
     
   elif target_name == "comments":
     return ["Comments", "Remark", "Lab comment", "Cert comment", "Certificate comment", "Laboratory comment","Report Comments"]

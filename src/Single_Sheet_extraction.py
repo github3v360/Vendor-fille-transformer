@@ -26,12 +26,16 @@ def extract_from_single_sheet(df,ws,debug,logger):
 
     # Declaring the target column (required columns)
     target_columns = ['clarity','carat','color','shape',"fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth",
-    "price per carat","discount","total","rap price total","comments"]
+    "price per carat","discount","total","rap price total","comments",'report_no']
 
     if 'report_no' not in df_with_links.columns:
-        logger.info("Report No. not found in Link")
-        target_columns.append('report_no')
-
+        logger.info("Report No. Could not be found in Link")
+        report_no_from_link = None
+    else:
+        report_no_from_link = df_cleaned['report_no']
+        df_cleaned.drop("report_no",axis=1,inplace=True)
+        link_columns_name.remove('report_no')
+        logger.info("Report No. discovered in the link")
 
     # Initializing dictionary to store the probabilty of target columns
     prob_dict = dict.fromkeys(target_columns,-1)
@@ -111,7 +115,7 @@ def extract_from_single_sheet(df,ws,debug,logger):
 
     remaining_columns_df = pd.DataFrame()
     list_of_dicts = []
-    for index, row in df_cleaned.iterrows():
+    for _, row in df_cleaned.iterrows():
         d = {}
         for col in cols:
             if type(col) != str:
@@ -124,6 +128,10 @@ def extract_from_single_sheet(df,ws,debug,logger):
     # ==== Stage 3 (Post-Processing the Data) ==== 
     # To transform non-standard values to standard values
     fetched_columns = list(df_pre_processed.columns)
+
+    df_pre_processed['report_no_from_link'] = report_no_from_link
+    df_pre_processed['report_no'] = df_pre_processed['report_no'] if 'report_no' in df_pre_processed else None
+    
     df_pre_processed = post_processing_caller.post_processing_function(fetched_columns,df_pre_processed,magic_numbers,prob_dict)
     
     target_columns+=['ratio','depth %']
@@ -133,8 +141,11 @@ def extract_from_single_sheet(df,ws,debug,logger):
     df_processed=df_pre_processed
 
     # Add links
-    df_processed[link_columns_name] = df_with_links[link_columns_name]
+    df_processed[link_columns_name] = df_cleaned[link_columns_name]
     df_processed = pd.concat([df_processed, remaining_columns_df], axis=1)
+
+    if 'report_no' in df_processed.columns:
+        logger.info(f"The total number of columns without a report number is {df_processed['report_no'].isna().sum()}.")
 
     # ==== end of all stages ====
     logger.info("-" * 75)
