@@ -99,6 +99,14 @@ def helloFirestore(event, context):
 
     log_buffer = io.StringIO()
     logging.basicConfig(level=logging.INFO, stream=log_buffer)
+
+    metaData=dict()
+    metaData['CREATEDAT']=dt.fromtimestamp(int(event['value']['fields']['CREATEDAT']['integerValue'])/1000.0)
+    metaData['VENDORNAME'] = event['value']['fields']['VENDORNAME']['stringValue']
+    print("=====hi==========")
+    print(metaData)
+    print('========hello======')
+    print(metaData['CREATEDAT'].strftime("%d/%m/%Y"))
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
