@@ -6,6 +6,7 @@ import os
 import time
 import shutil
 import logging
+from src.utils import merge_files
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -28,16 +29,20 @@ def main():
         shutil.rmtree(out_dir)
     os.makedirs(out_dir)
 
+    dummy_df = pd.DataFrame(columns=['clarity','carat','color','shape',"fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth",
+    "price per carat","discount","total","rap price total","comments","report_no"])
 
     for test_file_name in test_file_names:
-        # if test_file_name != "KAPU BR.xlsx":
+        # if test_file_name != "WishList-ROUND GIA(ADC).xlsx":
         #     continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
         print(f"====File name : {test_file_name} ======")
         start = time.time()
         try:
-            out_df = Extraction_of_entire_file.extract_entire_file(file_path,False,logger)
+            vendor_name = test_file_name[:-5]
+            out_df = Extraction_of_entire_file.extract_entire_file(file_path,False,logger,vendor_name)
+            dummy_df = pd.concat([out_df,dummy_df])
         except:
             logger.exception('Failed Due to: ')
             logger.info(f"Logic Failed for {test_file_name} file")
@@ -48,7 +53,16 @@ def main():
         logger.info(f"'Total time taken : ' {end - start}")
         out_file_name = test_file_name[:test_file_name.index(".x")] + "_output" +".csv"
         out_file_path = os.path.join(out_dir,out_file_name)
-        out_df.to_csv(out_file_path)
+        out_df.to_csv(out_file_path,index=False)
+
+    out_file_name = "Master_File" +".csv"
+    out_file_path = os.path.join(out_dir,out_file_name)
+    dummy_df.to_csv(out_file_path,index=False)
+
+    # ans = input("Do you want to merge based on date: (Y/N)?")
+    # if ans == 'Y':
+    #     merge_files.merge_based_on_date(logger)
+    # logger.info('Process Completed')
 
     logger.info('Process Completed')
     

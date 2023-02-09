@@ -6,7 +6,7 @@ import os
 from src import hyperlink_extraction, post_processing_caller
 
 
-def extract_from_single_sheet(df,ws,debug,logger):
+def extract_from_single_sheet(df,ws,debug,logger,Date,test_file_name):
     
     logger.info("-" * 75)
     # ==== Stage 1 (Cleaning the Data) ====
@@ -147,6 +147,8 @@ def extract_from_single_sheet(df,ws,debug,logger):
     if 'report_no' in df_processed.columns:
         logger.info(f"The total number of columns without a report number is {df_processed['report_no'].isna().sum()}.")
 
+    df_processed['Date'] = pd.Series([Date] * len(df_processed))
+    df_processed['Vendor'] = pd.Series([test_file_name] * len(df_processed))
     # ==== end of all stages ====
     logger.info("-" * 75)
     logger.info(df_processed.head(5))

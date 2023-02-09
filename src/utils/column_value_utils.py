@@ -93,7 +93,7 @@ def get_target_column_unique_values(target_name,logger):
     target_unique_values = ["VSBDJ003","1627905","244507","J841722022A","589452","921905043","1.00W863776","2121000601"]
 
   elif target_name == "report_no":
-    target_unique_values = ["5673832784","4851297767","4851269742","52364789152","45862177986","45841253698"]
+    target_unique_values = [5673832784,4851297767,4851269742,52364789152,45862177986,45841253698]
     
   else:
     logger.exception("The function could not find this target name")
@@ -149,10 +149,19 @@ def get_score_from_range(rangeA,rangeB,values,n):
   
   return total / n
 
-def convert_to_int(value):
-    if pd.isna(value):
-        return float('nan') # or any default value you prefer
-    return int(value) if isinstance(value, float) else value
+def convert_to_int(value,count_of_rows):
+    new_list = []
+    for i in value:
+        if pd.isna(i):
+            count_of_rows = count_of_rows - 1
+        else:
+            if isinstance(i, float): 
+                try:
+                    i = int(i)
+                except:
+                    pass
+            new_list.append(i)
+    return new_list,count_of_rows 
 
 def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_column_unique_values,target_name):
 
@@ -210,16 +219,22 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_co
 
   
   elif target_name == 'report_no':
-    x = convert_to_int(column_unique_values[-1])
-    if not pd.isna(x) and str(x).isalnum() and len(str(x)) >= 10:
-        l = len(column_unique_values)
-        if l == count_of_rows:
+    updated_unique_values_list,count = convert_to_int(column_unique_values,count_of_rows)
+
+    x = updated_unique_values_list[-1]
+
+    # print(x, type(x), str(x).isalnum(), len(str(x)) >= 10, len(updated_unique_values_list), count)
+
+    if (not pd.isna(x)) and str(x).isalnum() and len(str(x)) >= 10:
+        l = len(updated_unique_values_list)
+        if l == count:
             print("Equal values found")
-            return 1
+            return 10
         else:
             return 0
     else:
         return 0
+
   # Writing General logic for string data type considering target data type will always be correct
   elif target_data_type[0] == str:
       
@@ -280,11 +295,7 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_co
     elif target_name == 'rap price total':
       rangeA = 10000
       rangeB = 100000
-
-    elif target_name == 'Report No':
-      rangeA = 10000
-      rangeB = 1000000000
-
+      
     return get_score_from_range(rangeA,rangeB,column_unique_values,n)
   
      
