@@ -74,7 +74,7 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
   elif target_name == "Stock Ref":
       sim_score *= magic_numbers['stockref_normalizing_factor_for_col_name']
 
-  elif target_name == "Report No":
+  elif target_name == "report_no":
       sim_score *= magic_numbers['report_normalizing_factor_for_col_name']
       
   # elif target_name == "Cert":
@@ -159,7 +159,7 @@ def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbe
   elif target_name == "Stock Ref":
     final_similarity_score = sim_score_name + sim_score_val * magic_numbers['stockref_normalizing_factor_for_col_value']
 
-  elif target_name == "Report No":
+  elif target_name == "report_no":
     final_similarity_score = sim_score_name + sim_score_val * magic_numbers['report_normalizing_factor_for_col_value']
 
 #   elif target_name == "Cert":

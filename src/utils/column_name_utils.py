@@ -46,7 +46,7 @@ def get_standard_names(target_name,logger):
     return ["Sym", "Symetry", "Sym-metry","symmetry"]
 
   elif target_name == "table":
-    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%"]
+    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%","Table Depth"]
     
   elif target_name == "comments":
     return ["Comments", "Remark", "Lab comment", "Cert comment", "Certificate comment", "Laboratory comment","Report Comments"]
@@ -66,9 +66,12 @@ def get_standard_names(target_name,logger):
   elif target_name == "Stock Ref":
     return ["ReferenceNum", "ReferenceNumber", "Stock", "Stock Num", "Stock_no", "StockNo", "StockNum", "StockNumber", "VenderStockNumber","Refno","Packet No"]
      
-  elif target_name == "Report No":
-    return  ['REPORTNO','REPORT NO','REP NO','REPORT #','CERT#','CERTIFICATE','CERTIFICATE NO','CERTIFICATE #','CERTI NO.','REPORT','CERT #','CERT NO.','CERTNO','CERT. NO','GIA OR FM','REP_NO','CERT_NO','CERT.NO','VIEW CERTIFICATE','CERT NO','CERTINO']
-
+  elif target_name == "report_no":
+    return ['REPORTNO','REPORT NO','REP NO','REPORT #','CERT#','CERTIFICATE','CERTIFICATE NO','CERTIFICATE #','CERTI NO.','REPORT','CERT #','CERT NO.','CERTNO','CERT. NO','GIA OR FM','REP_NO','CERT_NO','CERT.NO','VIEW CERTIFICATE','CERT NO','CERTINO']
+    # m = []
+    # for i in x:
+    #     m.append(i + "_link")
+    # return m
 #   elif target_name == "Cert":
 #     return  ['CERT','LAB','LAB NAME','ONL. CERT','CRT','CERT.','CERTIFIED LAB']
     

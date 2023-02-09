@@ -157,4 +157,23 @@ def transform_discount_column(disc_val):
     if disc_val < 0:
         return disc_val*(-1)
     return disc_val
+
+def transform_report_no_column(report_no,report_no_from_link):
+
+    '''
+    report_no : The report number extracted normally from the sheet
+    report_no_from_link : The report number extracted from the link
+
+    return: The function will return the report number based on the comparsion
+    between report_no and report_no_from_link
+    '''
+
+    if report_no == report_no_from_link:
+        return report_no
+
+    if report_no is not None:
+        return report_no
     
+    if report_no_from_link is None:
+        return None
+    return report_no_from_link

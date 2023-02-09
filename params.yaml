@@ -58,8 +58,7 @@ magic_numbers:
   stockref_normalizing_factor_for_col_name: 0.5
   stockref_normalizing_factor_for_col_value: 0.5
 
-  report_normalizing_factor_for_col_name: 0.9
-  report_normalizing_factor_for_col_value: 0.1
+  report_normalizing_factor_for_col_name: 0.5
+  report_normalizing_factor_for_col_value: 0.5
 
-  # cert_normalizing_factor_for_col_name: 0.5
-  # cert_normalizing_factor_for_col_value: 0.5
+  threshold_for_selection: 0.60

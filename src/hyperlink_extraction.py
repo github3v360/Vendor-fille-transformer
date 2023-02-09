@@ -3,6 +3,7 @@ import openpyxl
 import os
 import pandas as pd
 import re
+import urllib.parse
 
 def Find(string):
  
@@ -14,17 +15,30 @@ def Find(string):
     return links[0] if links else None
 
 def extract_report_number(url):
-    if url is None:
-        return None
 
-    report_number = re.search("(reportno|report_no)=(\d+)", url)
-
-    if report_number is None:
-        report_number = re.search(r'/certificate/(\d+)', url)
-        if report_number is None:
+    if type(url) != str:
+        try:
+            url = str(url)
+        except:
             return None
-        return report_number.group(1)
-    return report_number.group(2)
+
+    parsed_url = urllib.parse.urlparse(url)
+    query = urllib.parse.parse_qs(parsed_url.query)
+    if 'reportno' in query:
+        report_no = query['reportno'][0]
+        return report_no
+    else:
+        match = re.search(r"([\w\.]+)\.pdf$", parsed_url.path)
+        if match:
+            report_no = match.group(1)
+            return report_no
+        else:
+            match = re.search(r"/diamond-detail/([\w\d]+)", parsed_url.path)
+            if match:
+                report_no = match.group(1)
+                return report_no
+            else:
+                return None
 
 def add_hyperlink_columns(df,ws,correct_row_idx):
 
@@ -34,7 +48,7 @@ def add_hyperlink_columns(df,ws,correct_row_idx):
 
     for cur_col in range(1,len(columns_name)+1):
 
-        sample_cell = ws.cell(row = 12, column = cur_col)
+        sample_cell = ws.cell(row = 10, column = cur_col)
         
         if sample_cell.value is not None:
             cur_link = sample_cell.hyperlink
