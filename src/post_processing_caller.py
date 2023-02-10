@@ -17,7 +17,7 @@ def post_processing_function(fetched_columns,df_pre_processed,magic_numbers,prob
 
         flag = True
         try:
-            temp = float(df_pre_processed['length'].iloc[20])
+            _ = float(df_pre_processed['length'].iloc[20])
             flag = False
         except:
             pass

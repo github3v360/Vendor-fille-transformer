@@ -1,4 +1,4 @@
-from src import Single_Sheet_extraction
+from src import Single_Sheet_extraction, new_single_sheet_exxtraction
 import pandas as pd
 import openpyxl , datetime, random
 from openpyxl import load_workbook
@@ -34,7 +34,7 @@ def extract_entire_file(file_path,debug,logger,test_file_name):
             continue
 
         # Data Extraction from current sheet
-        out_df = Single_Sheet_extraction.extract_from_single_sheet(df,wb_xl[sheet_name],debug,logger,now,test_file_name)
+        out_df = new_single_sheet_exxtraction.extract_from_single_sheet(df,wb_xl[sheet_name],debug,logger,now,test_file_name)
 
         # Concatenation of global dataframe with out_df
         if global_df is None:

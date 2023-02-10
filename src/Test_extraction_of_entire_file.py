@@ -33,8 +33,8 @@ def main():
     "price per carat","discount","total","rap price total","comments","report_no"])
 
     for test_file_name in test_file_names:
-        # if test_file_name != "WishList-ROUND GIA(ADC).xlsx":
-        #     continue
+        if test_file_name != "WishList-ROUND GIA(ADC).xlsx":
+            continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
         print(f"====File name : {test_file_name} ======")

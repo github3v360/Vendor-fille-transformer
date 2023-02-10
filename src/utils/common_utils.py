@@ -53,3 +53,23 @@ def assure_data_type(values):
                 pass
             out_vals[idx] = val
     return out_vals
+
+def initialize_prob_dict(target_columns):
+    prob_dict = dict.fromkeys(target_columns, -1)
+    return prob_dict
+
+def get_magic_numbers():
+    params = read_yaml("params.yaml")
+    magic_numbers = params['magic_numbers']
+    return magic_numbers
+
+def get_report_no_extracted_from_link(df_cleaned, logger,link_columns_name):
+    if 'report_no' not in df_cleaned.columns:
+        logger.info("Report No. Could not be found in Link")
+        report_no_from_link = None
+    else:
+        report_no_from_link = df_cleaned['report_no']
+        df_cleaned.drop("report_no", axis=1, inplace=True)
+        link_columns_name.remove('report_no')
+        logger.info("Report No. discovered in the link")
+    return report_no_from_link,link_columns_name
