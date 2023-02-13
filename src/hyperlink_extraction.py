@@ -4,116 +4,46 @@ import os
 import pandas as pd
 import re
 import urllib.parse
+from src.utils import hyperlink_extraction_utils
 
-def Find(string):
- 
-    # Use a regular expression pattern to match URLs
-    pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-    links = re.findall(pattern, string)
+class HyperlinkExtractor:
+    def __init__(self, ws, correct_row_idx, df):
+        self.ws = ws
+        self.correct_row_idx = correct_row_idx
+        self.df = df
+        self.columns_name = list(df.columns)
+        self.cols_link = hyperlink_extraction_utils.get_hyperlink_columns(df, ws, self.columns_name)
+        self.total_link_columns = len(self.cols_link)
+        self.df_link = pd.DataFrame()
+        self.new_columns = []
+        
+    def add_hyperlink_columns(self):
+        if self.total_link_columns == 0:
+            return self.df, []
+        for j in range(len(self.cols_link)):
+            self.df_link[self.df.columns[self.cols_link[j][1]-1] + "_link"] = [None]*len(self.df)
+        self.df_link['report_no'] = [None]*len(self.df)
+        self.df_link = self.iteratively_extract_link_and_report_number(0)
+        self.df_link.dropna(axis=1, how='all', inplace=True)
+        self.df = pd.concat([self.df, self.df_link], axis=1)
+        self.new_columns = list(self.df_link.columns)
+        return self.df, self.new_columns
     
-    # Return the first link if any are found, or None if not
-    return links[0] if links else None
-
-def extract_report_number(url):
-
-    if type(url) != str:
-        try:
-            url = str(url)
-        except:
+    def iteratively_extract_link_and_report_number(self, t):
+        for i in range(self.correct_row_idx+3, self.ws.max_row+1):
+            for j in range(len(self.cols_link)):
+                cur_cell = self.ws.cell(row=i, column=self.cols_link[j][1])
+                extracted_link = self.extract_link_from_current_cell(cur_cell)
+                self.df_link[self.df.columns[self.cols_link[j][1]-1] + "_link"].iloc[t] = extracted_link
+                if self.df_link['report_no'].iloc[t] is None:
+                    self.df_link['report_no'].iloc[t] = hyperlink_extraction_utils.extract_report_number(extracted_link)
+            t += 1
+        return self.df_link
+    
+    def extract_link_from_current_cell(self, cur_cell):
+        if cur_cell.value is None and cur_cell.hyperlink is None:
             return None
-
-    parsed_url = urllib.parse.urlparse(url)
-    query = urllib.parse.parse_qs(parsed_url.query)
-    if 'reportno' in query:
-        report_no = query['reportno'][0]
-        return report_no
-    else:
-        match = re.search(r"([\w\.]+)\.pdf$", parsed_url.path)
-        if match:
-            report_no = match.group(1)
-            return report_no
-        else:
-            match = re.search(r"/diamond-detail/([\w\d]+)", parsed_url.path)
-            if match:
-                report_no = match.group(1)
-                return report_no
-            else:
-                return None
-
-def add_hyperlink_columns(df,ws,correct_row_idx):
-
-    columns_name = list(df.columns)
-    
-    cols_link = []
-
-    for cur_col in range(1,len(columns_name)+1):
-
-        sample_cell = ws.cell(row = 10, column = cur_col)
-        
-        if sample_cell.value is not None:
-            cur_link = sample_cell.hyperlink
-
-            if cur_link is not None:
-                if cur_link.target is not None:
-                    cols_link.append((columns_name[cur_col-1],cur_col))
-
-            else:
-                if type(sample_cell.value) == str:
-                    if Find(sample_cell.value) is not None:
-                        cols_link.append((columns_name[cur_col-1],cur_col))
-    
-    df_link = pd.DataFrame()
-
-    total_link_columns = len(cols_link)
-
-    if total_link_columns == 0:
-        return df,[]
-
-    for j in range(len(cols_link)):
-        df_link[df.columns[cols_link[j][1]-1] + "_link"] = [None]*len(df)
-
-    # Initializing report number column
-    df_link['report_no'] = [None]*len(df)
-
-    t = 0
-
-    for i in range(correct_row_idx+3,ws.max_row+1):
-        
-        for j in range(len(cols_link)):
-
-            cur_cell = ws.cell(row=i,column=cols_link[j][1])
-            
-            # If completely empty simply return None
-            if cur_cell.value is None and cur_cell.hyperlink is None:
-
-                try:
-                    df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = None
-                except:
-                    pass
-                continue
-
-            # If hyperlink is not None
-            cur_hyperlink_value = cur_cell.hyperlink
-
-            if cur_hyperlink_value is not None:
-                
-                # If hyperlink is not given
-                if cur_hyperlink_value.target is not None:
-                    extracted_link = cur_hyperlink_value.target
-                    df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = cur_hyperlink_value.target
-
-            # If hyperlink is None or hyperlink.target is None
-            else:
-                extracted_link = Find(cur_cell.value)
-            
-            df_link[df.columns[cols_link[j][1]-1] + "_link"].iloc[t] = extracted_link
-            if df_link['report_no'].iloc[t] is None:
-                df_link['report_no'].iloc[t] = extract_report_number(extracted_link)
-            
-        t+=1
-    
-    # Drop column if entirely empty
-    df_link.dropna(axis=1, how='all', inplace=True)
-    
-    df = pd.concat([df,df_link],axis=1)
-    return df,list(df_link.columns)
+        cur_hyperlink_value = cur_cell.hyperlink
+        if cur_hyperlink_value is not None and cur_hyperlink_value.target is not None:
+            return cur_hyperlink_value.target
+        return hyperlink_extraction_utils.Find(cur_cell.value)
