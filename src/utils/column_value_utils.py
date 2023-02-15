@@ -2,6 +2,7 @@ import os
 import pickle 
 import numpy as np
 import logging
+import pandas as pd
 
 
 def get_target_column_unique_values(target_name,logger):
@@ -91,24 +92,8 @@ def get_target_column_unique_values(target_name,logger):
   elif target_name == "Stock Ref":
     target_unique_values = ["VSBDJ003","1627905","244507","J841722022A","589452","921905043","1.00W863776","2121000601"]
 
-  elif target_name == "Report No":
-    target_unique_values = [5673832,7463526,6526352,6283620,4233562,8362432,873625]
-
-#   elif target_name == "Cert":
-#       target_unique_values = ["GIA" ,"G.I.A", "G","AGS", "AGSL", "AGS0", "A","CGL", "Central Gem Laboratory",
-# "DCLA",
-# "GCAL",
-# "GSI, GS, Gemscience","HRD","HRD", "H",
-# "IGI", "I",
-# "NGTC",
-# "None", "N", "X", "NO", "NON","NC", "NonCert",
-# "Other", "Own","PGS",
-# "VGR",
-# "RDC",
-# "RDR",
-# "GHI",
-# "DBGIS",
-# "SGL"]
+  elif target_name == "report_no":
+    target_unique_values = [5673832784,4851297767,4851269742,52364789152,45862177986,45841253698]
     
   else:
     logger.exception("The function could not find this target name")
@@ -164,7 +149,21 @@ def get_score_from_range(rangeA,rangeB,values,n):
   
   return total / n
 
-def similarity_score_from_col_values(column_unique_values,taget_column_unique_values,target_name):
+def convert_to_int(value,count_of_rows):
+    new_list = []
+    for i in value:
+        if pd.isna(i):
+            count_of_rows = count_of_rows - 1
+        else:
+            if isinstance(i, float): 
+                try:
+                    i = int(i)
+                except:
+                    pass
+            new_list.append(i)
+    return new_list,count_of_rows 
+
+def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_column_unique_values,target_name):
 
   """
      This function calculates the similarity score between a column and a target column.
@@ -190,7 +189,6 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
 
   if n==0:
       return 0
-
   # ===== Special Logics ===========
 
   if target_name in ["length","width","depth"]:
@@ -218,6 +216,24 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     
     else:
       return 0
+
+  
+  elif target_name == 'report_no':
+    updated_unique_values_list,count = convert_to_int(column_unique_values,count_of_rows)
+
+    x = updated_unique_values_list[-1]
+
+    # print(x, type(x), str(x).isalnum(), len(str(x)) >= 10, len(updated_unique_values_list), count)
+
+    if (not pd.isna(x)) and str(x).isalnum() and len(str(x)) >= 10:
+        l = len(updated_unique_values_list)
+        if l == count:
+            print("Equal values found")
+            return 10
+        else:
+            return 0
+    else:
+        return 0
 
   # Writing General logic for string data type considering target data type will always be correct
   elif target_data_type[0] == str:
@@ -279,11 +295,7 @@ def similarity_score_from_col_values(column_unique_values,taget_column_unique_va
     elif target_name == 'rap price total':
       rangeA = 10000
       rangeB = 100000
-
-    elif target_name == 'Report No':
-      rangeA = 10000
-      rangeB = 1000000000
-
+      
     return get_score_from_range(rangeA,rangeB,column_unique_values,n)
   
      
