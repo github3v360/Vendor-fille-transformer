@@ -13,7 +13,7 @@ class CleanDataAndExtractLink:
         df_corrected_headers, correct_row_idx = data_cleaner.correct_df_headers(self.df)
 
         # Extracting the hyperlink and report number from the link
-        hyperlink_extractor = hyperlink_extraction.HyperlinkExtractor(df_corrected_headers, self.ws, correct_row_idx)
+        hyperlink_extractor = hyperlink_extraction.HyperlinkExtractor(self.ws, correct_row_idx,df_corrected_headers)
         df_with_links, link_columns_name = hyperlink_extractor.add_hyperlink_columns()
 
         # Dropping Empty Rows and columns
