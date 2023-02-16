@@ -45,18 +45,20 @@ class DataProcessor:
         return self.remaining_columns_df
     
     def get_unique_values(self, df_cleaned, cur_df_cleaned_column_name):
-        try:
-            cur_df_cleaned_column_unique_values = list(self.df_cleaned[cur_df_cleaned_column_name].unique())
-            cur_df_cleaned_column_unique_values = common_utils.assure_data_type(cur_df_cleaned_column_unique_values)
-            total_none_values = df_cleaned[cur_df_cleaned_column_name].isna().sum() 
-            if total_none_values == 0:
-                count_of_rows = df_cleaned.shape[0]
-            else:
-                count_of_rows = df_cleaned.shape[0] - total_none_values + 1
-            cur_df_cleaned_column_name = cur_df_cleaned_column_name.lower()
-            return cur_df_cleaned_column_unique_values, cur_df_cleaned_column_name, count_of_rows
-        except:
-            return None, None
+        
+        cur_df_cleaned_column_unique_values = list(self.df_cleaned[cur_df_cleaned_column_name].unique())
+        cur_df_cleaned_column_unique_values = common_utils.assure_data_type(cur_df_cleaned_column_unique_values)
+        
+        # Getting the total row excluding the row with None values
+        total_none_values = df_cleaned[cur_df_cleaned_column_name].isna().sum() 
+        if total_none_values == 0:
+            self.count_of_rows = df_cleaned.shape[0]
+        else:
+            self.count_of_rows = df_cleaned.shape[0] - total_none_values + 1
+
+        cur_df_cleaned_column_name = cur_df_cleaned_column_name.lower()
+
+        return cur_df_cleaned_column_unique_values, cur_df_cleaned_column_name
 
     def Iterate_And_Get_Desired_Column_By_Probability(self):
 
@@ -83,7 +85,11 @@ class DataProcessor:
             for idx,cur_df_cleaned_column_name in enumerate(df_cleaned_columns_name):
             
                 # Getting the current column of cleaned dataframe unique values
-                cur_df_cleaned_column_unique_values, cur_df_cleaned_column_name, count_of_rows = self.get_unique_values(self.df_cleaned, cur_df_cleaned_column_name)
+                try:
+                    cur_df_cleaned_column_unique_values, cur_df_cleaned_column_name = self.get_unique_values(self.df_cleaned, cur_df_cleaned_column_name)
+                except:
+                    continue
+
 
                 # storing the final similarity score (probability)
                 # of the current column in the cleaned dataframe (df_cleaned) 

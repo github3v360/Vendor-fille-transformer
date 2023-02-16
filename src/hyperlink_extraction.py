@@ -32,11 +32,13 @@ class HyperlinkExtractor:
     def iteratively_extract_link_and_report_number(self, t):
         for i in range(self.correct_row_idx+3, self.ws.max_row+1):
             for j in range(len(self.cols_link)):
-                cur_cell = self.ws.cell(row=i, column=self.cols_link[j][1])
-                extracted_link = self.extract_link_from_current_cell(cur_cell)
-                self.df_link[self.df.columns[self.cols_link[j][1]-1] + "_link"].iloc[t] = extracted_link
-                if self.df_link['report_no'].iloc[t] is None:
-                    self.df_link['report_no'].iloc[t] = hyperlink_extraction_utils.extract_report_number(extracted_link)
+                try:
+                    cur_cell = self.ws.cell(row=i, column=self.cols_link[j][1])
+                    extracted_link = self.extract_link_from_current_cell(cur_cell)
+                    self.df_link[self.df.columns[self.cols_link[j][1]-1] + "_link"].iloc[t] = extracted_link
+                    self.extract_report_number_from_cur_cell(t,extracted_link)
+                except:
+                    continue
             t += 1
         return self.df_link
     
@@ -47,3 +49,7 @@ class HyperlinkExtractor:
         if cur_hyperlink_value is not None and cur_hyperlink_value.target is not None:
             return cur_hyperlink_value.target
         return hyperlink_extraction_utils.Find(cur_cell.value)
+    
+    def extract_report_number_from_cur_cell(self,t,extracted_link):
+        if self.df_link['report_no'].iloc[t] is None:
+            self.df_link['report_no'].iloc[t] = hyperlink_extraction_utils.extract_report_number(extracted_link)

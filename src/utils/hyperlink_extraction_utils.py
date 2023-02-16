@@ -44,7 +44,7 @@ def get_hyperlink_columns(df, ws, columns_name):
     cols_link = []
     
     for cur_col in range(1,len(columns_name)+1):
-        sample_cell = ws.cell(row = 10, column = cur_col)
+        sample_cell = ws.cell(row = 6, column = cur_col)
         
         if sample_cell.value is not None:
             cur_link = sample_cell.hyperlink
