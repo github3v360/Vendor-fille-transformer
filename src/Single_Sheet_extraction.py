@@ -70,6 +70,13 @@ def extract_from_single_sheet(df,ws,debug,logger,Date,test_file_name):
             try:
                 cur_df_cleaned_column_unique_values = list(df_cleaned[cur_df_cleaned_column_name].unique())
                 cur_df_cleaned_column_unique_values = common_utils.assure_data_type(cur_df_cleaned_column_unique_values)
+                
+                total_none_values = df_cleaned[cur_df_cleaned_column_name].isna().sum() 
+                if total_none_values == 0:
+                    count_of_rows = df_cleaned.shape[0]
+                else:
+                    count_of_rows = df_cleaned.shape[0] - total_none_values + 1
+                    
                 cur_df_cleaned_column_name = cur_df_cleaned_column_name.lower()
             except:
                 continue
