@@ -113,6 +113,9 @@ def get_most_common_type(values):
         tuple: A tuple containing the data type that occurs most frequently in the list and the count of that data type.
     """
     # Initialize a dictionary to count the occurrences of each data type
+
+    if len(values) == 0:
+        return (None, 0)
     type_counts = {
         int: 0,
         float: 0,
@@ -163,6 +166,32 @@ def convert_to_int(value,count_of_rows):
             new_list.append(i)
     return new_list,count_of_rows 
 
+def cal_measurement_columns(count_of_rows,column_unique_values,taget_column_unique_values,target_name,input_data_type,n):
+    
+    if input_data_type[0] == str:
+      get_val = None
+      for val in column_unique_values:
+        if val is not None and type(val) == str:
+          get_val = val
+          break
+      if get_val is None:
+        return 0
+      if "*" in get_val:
+        return 1
+      get_val = get_val.replace("x","*")
+      get_val = get_val.replace("X","*")
+      try:
+        _ = eval(get_val)
+        return 1
+      except:
+        return 0
+    
+    elif input_data_type[0] == float:
+      return get_score_from_range(1,10,column_unique_values,n)
+    
+    else:
+      return 0
+
 def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_column_unique_values,target_name):
 
   """
@@ -192,32 +221,8 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_co
   # ===== Special Logics ===========
 
   if target_name in ["length","width","depth"]:
-
-    if input_data_type[0] == str:
-      get_val = None
-      for val in column_unique_values:
-        if val is not None and type(val) == str:
-          get_val = val
-          break
-      if get_val is None:
-        return 0
-      if "*" in get_val:
-        return 1
-      get_val = get_val.replace("x","*")
-      get_val = get_val.replace("X","*")
-      try:
-        _ = eval(get_val)
-        return 1
-      except:
-        return 0
-    
-    elif input_data_type[0] == float:
-      return get_score_from_range(1,10,column_unique_values,n)
-    
-    else:
-      return 0
-
-  
+      return cal_measurement_columns(count_of_rows,column_unique_values,taget_column_unique_values,target_name,input_data_type,n)
+      
   elif target_name == 'report_no':
     updated_unique_values_list,count = convert_to_int(column_unique_values,count_of_rows)
 
@@ -297,5 +302,3 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_co
       rangeB = 100000
       
     return get_score_from_range(rangeA,rangeB,column_unique_values,n)
-  
-     

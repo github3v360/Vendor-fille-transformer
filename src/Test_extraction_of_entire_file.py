@@ -33,15 +33,16 @@ def main():
     "price per carat","discount","total","rap price total","comments","report_no"])
 
     for test_file_name in test_file_names:
-        if test_file_name != "WishList-ROUND GIA(ADC).xlsx":
-            continue
+        # if test_file_name != "JBBROTHER.xlsx":
+        #     continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
         print(f"====File name : {test_file_name} ======")
         start = time.time()
         try:
             vendor_name = test_file_name[:-5]
-            out_df = Extraction_of_entire_file.extract_entire_file(file_path,False,logger,vendor_name)
+            extractor = Extraction_of_entire_file.Entire_file_extractor(file_path,False,logger,vendor_name)
+            out_df = extractor.extract()
             dummy_df = pd.concat([out_df,dummy_df])
         except:
             logger.exception('Failed Due to: ')

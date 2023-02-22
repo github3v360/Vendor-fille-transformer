@@ -83,7 +83,7 @@ def modify_sim_score_of_name(sim_score, target_name,magic_numbers):
   else:
     raise Exception("The function could not find this target name")
   
-  return sim_score
+  return round(sim_score,3)
 
 def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbers):
   """
@@ -168,4 +168,4 @@ def merge_similarity_score(sim_score_name,sim_score_val, target_name,magic_numbe
   else:
     raise Exception("The function could not find this target name")
   
-  return final_similarity_score
+  return round(final_similarity_score,3)

@@ -1,28 +1,35 @@
-from src.utils import data_cleaner
-import unittest
 import pandas as pd
+import unittest
+from src.utils import data_cleaner
 
 class TestCorrectDFHeaders(unittest.TestCase):
-  def test_correct_df_headers(self):
 
-    # Test 1: Check if headers are already correct
-    df = pd.DataFrame([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]],
-                      columns=['srno', 'color', 'cut', 'shape'])
-    expected_output = pd.DataFrame([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]],
-                                   columns=['srno', 'color', 'cut', 'shape'])
-    corrected_df_headers = data_cleaner.correct_df_headers(df)
-    self.assertTrue(corrected_df_headers.equals(expected_output))
+    def test_correct_df_headers(self):
+        # Test case 1: Test with a dataframe with correct headers
+        df1 = pd.DataFrame({'srno': [1, 2], 'color': ['red', 'blue'], 'clarity': ['VS1', 'VVS2'], 'carat': [0.23, 0.54], 'price': [326, 352]})
+        expected_df1 = pd.DataFrame({'srno': [1, 2], 'color': ['red', 'blue'], 'clarity': ['VS1', 'VVS2'], 'carat': [0.23, 0.54], 'price': [326, 352]})
+        expected_row_idx1 = -1
+        result_df1, result_row_idx1 = data_cleaner.correct_df_headers(df1)
+        self.assertTrue(expected_df1.equals(result_df1))
+        self.assertEqual(expected_row_idx1, result_row_idx1)
 
-    # Test 2: Check if headers are incorrect and needs to be corrected
-    df = pd.DataFrame([[1, 2, 3, 4],['srno', 'color', 'cut', 'shape'], [5, 6, 7, 8], [9, 10, 11, 12]],
-                      columns=['unnamed 0', 'Djso', 'unnamed 1', 'unnamed 2'])
-    expected_output = pd.DataFrame([[5, 6, 7, 8], [9, 10, 11, 12]],
-                                   columns=['srno', 'color', 'cut', 'shape'])
+        # Test case 2: Test with a dataframe with incorrect headers
+        df2 = pd.DataFrame({'Unnamed: 0': [1, 2], 'Djso': ['red', 'blue'], 'Unnamed: 1': ['VS1', 'VVS2'], 'unnamed: 2': [0.23, 0.54], 'unnamed: 3': [326, 352]})
+        expected_df2 = pd.DataFrame({'srno': [1, 2], 'color': ['red', 'blue'], 'clarity': ['VS1', 'VVS2'], 'carat': [0.23, 0.54], 'price': [326, 352]})
+        expected_row_idx2 = 0
+        result_df2, result_row_idx2 = data_cleaner.correct_df_headers(df2)
+        print(result_df2)
+        self.assertTrue(expected_df2.equals(result_df2))
+        self.assertEqual(expected_row_idx2, result_row_idx2)
 
-    corrected_df_headers = data_cleaner.correct_df_headers(df)
-    corrected_df_headers = corrected_df_headers.reset_index(drop=True)
+        # Test case 3: Test with a dataframe with incorrect headers and no rows with correct headers
+        df3 = pd.DataFrame({'Unnamed: 0': [1, 2], 'Djso': ['red', 'blue'], 'Unnamed: 1': ['VS1', 'VVS2'], 'unnamed: 2': [0.23, 0.54], 'unnamed: 3': [326, 352]})
+        expected_df3 = pd.DataFrame({})
+        expected_row_idx3 = -1
+        result_df3, result_row_idx3 = data_cleaner.correct_df_headers(df3.iloc[0:3])
+        print(result_df3)
+        self.assertTrue(expected_df3.equals(result_df3))
+        self.assertEqual(expected_row_idx3, result_row_idx3)
 
-    self.assertTrue(all(corrected_df_headers == expected_output))
-    
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

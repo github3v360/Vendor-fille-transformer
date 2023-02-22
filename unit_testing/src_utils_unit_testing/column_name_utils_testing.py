@@ -4,80 +4,161 @@ import os
 from src.utils import column_name_utils 
 import unittest
 
-
-class TestSimilarityScoreFromColName(unittest.TestCase):
-    def test_similarity_score_from_col_name(self):
-        self.assertEqual(column_name_utils.similarity_score_from_col_name("column1", ["column1", "column2", "column3"]), 1.0)
-        self.assertLessEqual(column_name_utils.similarity_score_from_col_name("shape", ["color", "carat","clarity"]), 0.2)
-        self.assertGreaterEqual(column_name_utils.similarity_score_from_col_name("col1", ["column1", "column2", "column3"]), 0.5)
-        self.assertEqual(column_name_utils.similarity_score_from_col_name("Shape", ["Shape", "tape"]), 1.0)
-        self.assertGreaterEqual(column_name_utils.similarity_score_from_col_name("column1", ["col1", "col2", "col3"]), 0.5)
-        self.assertGreaterEqual(column_name_utils.similarity_score_from_col_name("carat", ["Ct.", "shape", "color"]), 0.15)
-        self.assertGreaterEqual(column_name_utils.similarity_score_from_col_name("carat", ["weight", "clor", "cot"]), 0.3)
-        self.assertGreaterEqual(column_name_utils.similarity_score_from_col_name("color", ["colour", "cl.", "co"]), 0.5)
-        self.assertGreaterEqual(column_name_utils.similarity_score_from_col_name("shape", ["shap", "sh.", "carat"]), 0.4)
+import logging
 
 class TestGetStandardNames(unittest.TestCase):
+    
+    def setUp(self):
+        self.logger = logging.getLogger(__name__)
+    
     def test_clarity(self):
-        std_names = column_name_utils.get_standard_names("clarity")
-        self.assertEqual(std_names, ["clarity","purity","Clar", "Clearity"])
+        expected = ["clarity","purity","Clar", "Clearity"]
+        result = column_name_utils.get_standard_names("clarity", self.logger)
+        self.assertEqual(result, expected)
     
     def test_color(self):
-        std_names = column_name_utils.get_standard_names("color")
-        self.assertEqual(std_names, ["color","colour","Colr","col"])
-        
+        expected = ["color","colour","Colr","col"]
+        result = column_name_utils.get_standard_names("color", self.logger)
+        self.assertEqual(result, expected)
+    
     def test_shape(self):
-        std_names = column_name_utils.get_standard_names("shape")
-        self.assertEqual(std_names, ["shape","shp"])
-        
+        expected = ["shape","shp"]
+        result = column_name_utils.get_standard_names("shape", self.logger)
+        self.assertEqual(result, expected)
+    
     def test_carat(self):
-        std_names = column_name_utils.get_standard_names("carat")
-        self.assertEqual(std_names, ["Carat", "CaratSize", "CaratWeight", "Ct", "CtSize", "CtWeight", "Weight", "Sz", "cts",  "crtwt","size"])
+        expected = ["Carat", "CaratSize", "CaratWeight", "Ct", "CtSize", "CtWeight", "Weight", "Sz", "cts",  "crtwt","size"]
+        result = column_name_utils.get_standard_names("carat", self.logger)
+        self.assertEqual(result, expected)
     
     def test_fluorescent(self):
-        std_names = column_name_utils.get_standard_names("fluorescent")
-        self.assertEqual(std_names, ["fluor","flour","fluorescent","Flr", "FlrIntensity", "Fluo Intensity", "Fluor Intensity", "Fluorescence", "Fluorescence Intensity", "FluorescenceIntensity", "FluorIntensity"])
+        expected = ["fluor","flour","fluorescent","Flr", "FlrIntensity", "Fluo Intensity", "Fluor Intensity", "Fluorescence", "Fluorescence Intensity", "FluorescenceIntensity", "FluorIntensity"]
+        result = column_name_utils.get_standard_names("fluorescent", self.logger)
+        self.assertEqual(result, expected)
+    
+    def test_raprate(self):
+        expected = ["Rap",'Rapprice']
+        result = column_name_utils.get_standard_names("raprate", self.logger)
+        self.assertEqual(result, expected)
+    
+    def test_length(self):
+        expected = ["M1","Measurement","Diameter","length"]
+        result = column_name_utils.get_standard_names("length", self.logger)
+        self.assertEqual(result, expected)
 
+    def test_depth(self):
+        expected = ["M3","Measure","Diameter","depth","height"]
+        result = column_name_utils.get_standard_names("depth", None)
+        self.assertEqual(result, expected)
+        
     def test_cut(self):
-        std_names = column_name_utils.get_standard_names("cut")
-        self.assertEqual(std_names, ["Cut", "CutGrade"])
-
+        expected = ["Cut", "CutGrade"]
+        result = column_name_utils.get_standard_names("cut", None)
+        self.assertEqual(result, expected)
+        
     def test_polish(self):
-        std_names = column_name_utils.get_standard_names("polish")
-        self.assertEqual(std_names, ["Finish", "Pol","polish"])
-
-    def test_sym(self):
-        std_names = column_name_utils.get_standard_names("symmetry")
-        self.assertEqual(std_names, ["Sym", "Symetry", "Sym-metry","symmetry"])
+        expected = ["Finish", "Pol","polish"]
+        result = column_name_utils.get_standard_names("polish", None)
+        self.assertEqual(result, expected)
+        
+    def test_symmetry(self):
+        expected = ["Sym", "Symetry", "Sym-metry","symmetry"]
+        result = column_name_utils.get_standard_names("symmetry", None)
+        self.assertEqual(result, expected)
         
     def test_table(self):
-        std_names = column_name_utils.get_standard_names("table")
-        self.assertEqual(std_names, ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%"])
-
-    def test_ppc(self):
-        std_names = column_name_utils.get_standard_names("price per carat")
-        self.assertEqual(std_names, ["PerCarat", "PerCt", "Prc", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt", "Px","price/carat"])
-
+        expected = ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%","Table Depth"]
+        result = column_name_utils.get_standard_names("table", None)
+        self.assertEqual(result, expected)
+        
+    def test_comments(self):
+        expected = ["Comments", "Remark", "Lab comment", "Cert comment", "Certificate comment", "Laboratory comment","Report Comments"]
+        result = column_name_utils.get_standard_names("comments", None)
+        self.assertEqual(result, expected)
+        
+    def test_price_per_carat(self):
+        expected = ["PerCarat", "PerCt", "Prc", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt", "Px","price/carat"]
+        result = column_name_utils.get_standard_names("price per carat", None)
+        self.assertEqual(result, expected)
+        
     def test_discount(self):
-        std_names = column_name_utils.get_standard_names("discount")
-        self.assertEqual(std_names, ["disc","disc%","RapNet Discount %", "PctRapNetDiscount", "Rap netDisc", "RapnetDiscount", "RapnetDiscountPct", "RapnetDiscountPercent", "RapnetDiscPct", "RapnetDpx", "RapnetRapPct", "RDisc", "RDiscount", "RDiscountPct", "RDiscountPercent", "RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price","per"])
-
-    def test_invalid_name(self):
-        with self.assertRaises(Exception):
-            column_name_utils.get_standard_names("invalid_name")
+        expected = ["disc","disc%","RapNet Discount %", "PctRapNetDiscount", "Rap netDisc", "RapnetDiscount", "RapnetDiscountPct", "RapnetDiscountPercent", "RapnetDiscPct", "RapnetDpx", "RapnetRapPct", "RDisc", "RDiscount", "RDiscountPct", "RDiscountPercent", "RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price","per"]
+        result = column_name_utils.get_standard_names("discount", None)
+        self.assertEqual(result, expected)
+        
+    def test_total(self):
+        expected = ["amount","total","total price"]
+        result = column_name_utils.get_standard_names("total", None)
+        self.assertEqual(result, expected)
+        
+    def test_rap_price_total(self):
+        expected = ["rap total","rap value"]
+        result = column_name_utils.get_standard_names("rap price total", None)
+        self.assertEqual(result, expected)
+        
+    def test_stock_ref(self):
+        expected = ["ReferenceNum", "ReferenceNumber", "Stock", "Stock Num", "Stock_no", "StockNo", "StockNum", "StockNumber", "VenderStockNumber","Refno","Packet No"]
+        result = column_name_utils.get_standard_names("Stock Ref", None)
+        self.assertEqual(result, expected)
+    
+    def test_unknown_target_name(self):
+        with self.assertLogs() as cm:
+            result = column_name_utils.get_standard_names("unknown", self.logger)
+            self.assertEqual(result, None)
+            self.assertTrue("The function could not find other satndard names for this target name" in cm.output[0])
 
 class TestStringSimilarity(unittest.TestCase):
-    def test_string_similarity(self):
-        self.assertAlmostEqual(column_name_utils.string_similarity("Hello", "Hello"), 1.0)
-        self.assertAlmostEqual(column_name_utils.string_similarity("Hello", "heLLo"), 1.0)
-        self.assertGreaterEqual(column_name_utils.string_similarity("Hello", "Helo"), 0.6)
-        self.assertGreaterEqual(column_name_utils.string_similarity("Hello", "Hullo"), 0.6)
-        self.assertGreaterEqual(column_name_utils.string_similarity(" ", "None"), 0.0)
-        self.assertEqual(column_name_utils.string_similarity("Hello", "Bye"), 0.0)
-        self.assertEqual(column_name_utils.string_similarity(1, "1"), 1.0)
-        self.assertEqual(column_name_utils.string_similarity(1, "Bye"), 0.0)
-        self.assertEqual(column_name_utils.string_similarity(1.23, "1.23"), 1.0)
-        self.assertGreaterEqual(column_name_utils.string_similarity(1.2, "1.23"), 0.6)
 
-if __name__ == "__main__":
+    def test_same_strings(self):
+        self.assertEqual(column_name_utils.string_similarity("hello", "hello"), 1.0)
+    
+    def test_different_strings(self):
+        self.assertLess(column_name_utils.string_similarity("hello", "world"), 0.5)
+    
+    def test_capitalization(self):
+        self.assertEqual(column_name_utils.string_similarity("Hello", "hello"), 1.0)
+    
+    def test_numeric_input(self):
+        self.assertEqual(column_name_utils.string_similarity(123, "123"), 1.0)
+    
+    def test_none_input(self):
+        self.assertEqual(column_name_utils.string_similarity(None, "hello"), 0.0)
+        self.assertEqual(column_name_utils.string_similarity("hello", None), 0.0)
+    
+    def test_unicode_input(self):
+        self.assertEqual(column_name_utils.string_similarity("héllo", "hello"), 0.8)
+
+class TestSimilarityfromColumnName(unittest.TestCase):
+
+    def test_similarity_score_from_col_name(self):
+        # Test case 1: Exact match
+        column_name = 'clarity'
+        std_names = ['clarity','purity','Clar', 'Clearity']
+        assert column_name_utils.similarity_score_from_col_name(column_name, std_names) == 1
+        
+        # Test case 2: Partial match
+        column_name = 'clrty'
+        std_names = ['clarity','purity','Clar', 'Clearity']
+        result = column_name_utils.similarity_score_from_col_name(column_name, std_names)
+        assert  result == 0.714
+        
+        # Test case 3: No match
+        column_name = 'weight'
+        std_names = ['clarity','purity','Clar', 'Clearity']
+        result = column_name_utils.similarity_score_from_col_name(column_name, std_names)
+        assert  result == 0.25
+        
+        # Test case 4: Same strings with different cases
+        column_name = 'Color'
+        std_names = ['color','colour','Colr','col']
+        result = column_name_utils.similarity_score_from_col_name(column_name, std_names)
+        assert  result == 1
+        
+        # Test case 5: Similar strings
+        column_name = 'lenght'
+        std_names = ['M1','Measurement','Diameter','length']
+        result = column_name_utils.similarity_score_from_col_name(column_name, std_names)
+        assert  result == 0.667
+
+if __name__ == '__main__':
     unittest.main()

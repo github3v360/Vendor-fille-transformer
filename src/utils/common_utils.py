@@ -20,14 +20,17 @@ def get_highest_prob_column(probs, cols):
     Returns:
         str: The column name with the highest probability.
     """
-    # Zip the probabilities and column names into a list of tuples
-    prob_cols = zip(probs, cols)
-    
-    # Sort the list of tuples in descending order of probability
-    sorted_prob_cols = sorted(prob_cols, key= lambda item: item[0] ,reverse=True)
-    
-    # Return the column name with the highest probability
-    return sorted_prob_cols[0][1],sorted_prob_cols[0][0]
+    try:
+        # Zip the probabilities and column names into a list of tuples
+        prob_cols = zip(probs, cols)
+
+        # Sort the list of tuples in descending order of probability
+        sorted_prob_cols = sorted(prob_cols, key= lambda item: item[0] ,reverse=True)
+
+        # Return the column name with the highest probability
+        return sorted_prob_cols[0][1],sorted_prob_cols[0][0]
+    except:
+        return None,None
 
 def assure_data_type(values):
 

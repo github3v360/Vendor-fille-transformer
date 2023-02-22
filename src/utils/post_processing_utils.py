@@ -100,9 +100,12 @@ def transform_measurement_column(cur_val_l,cur_val_d):
   cur_val_l = cur_val_l.split("*")
 
   cur_val_l_len = 0
-  for val in cur_val_l:
-      cur_val_l[cur_val_l_len] = float(val)
-      cur_val_l_len+=1
+  try:
+      for val in cur_val_l:
+        cur_val_l[cur_val_l_len] = float(val)
+        cur_val_l_len+=1
+  except:
+      return [None,None,None]
 
   cur_val_l.sort(reverse=True)  
   
@@ -153,10 +156,13 @@ def transform_cut_column(cut_val,magic_numbers):
       return None
 
 def transform_discount_column(disc_val):
-    disc_val = float(disc_val)
-    if disc_val < 0:
-        return disc_val*(-1)
-    return disc_val
+    try:
+        disc_val = float(disc_val)
+        if disc_val < 0:
+            return disc_val*(-1)
+        return disc_val
+    except:
+        return 0.0
 
 def transform_report_no_column(report_no,report_no_from_link):
 

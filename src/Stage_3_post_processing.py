@@ -1,5 +1,5 @@
 import pandas as pd
-from src import post_processing_caller
+from src import StandardValueConverterAndCalculation
 
 class PostProcessingData:
     def __init__(self, df_pre_processed, df_cleaned, report_no_from_link, magic_numbers,
@@ -24,7 +24,8 @@ class PostProcessingData:
 
     def transform_values(self, df):
         fetched_columns = list(df.columns)
-        df = post_processing_caller.post_processing_function(fetched_columns, df, self.magic_numbers, self.prob_dict)
+        value_transformer = StandardValueConverterAndCalculation.PostProcessing(fetched_columns, df, self.magic_numbers, self.prob_dict)
+        df = value_transformer.process()
         return df
 
     def log_missing_target_columns(self, df, target_columns):

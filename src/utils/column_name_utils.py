@@ -143,4 +143,4 @@ def similarity_score_from_col_name(column_name,std_names):
     
     # We calculate the string similarity of column name with standard names and return only the highest similarity 
     probs = [string_similarity(column_name,name) for name in std_names]
-    return max(probs)
+    return round(max(probs),3)
