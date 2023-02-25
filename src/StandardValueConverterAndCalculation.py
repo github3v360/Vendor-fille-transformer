@@ -69,15 +69,15 @@ class PostProcessing:
     def process(self):
 
         if "shape" in self.fetched_columns:
-            self.df_pre_processed['shape'] = self.df_pre_processed.apply(lambda x: post_processing_utils.transform_shape_column(x['shape'], self.magic_numbers), axis=1)
+            self.df_pre_processed['shape'] = self.df_pre_processed.apply(lambda x: post_processing_utils.transform_column(x['shape'], self.magic_numbers,'shape'), axis=1)
         
         if "fluorescent" in self.fetched_columns:
-            self.df_pre_processed['fluorescent'] = self.df_pre_processed.apply(lambda x: post_processing_utils.transform_fluor_column(x['fluorescent'], self.magic_numbers), axis=1)
+            self.df_pre_processed['fluorescent'] = self.df_pre_processed.apply(lambda x: post_processing_utils.transform_column(x['fluorescent'], self.magic_numbers,'fluor'), axis=1)
         
         self.df_pre_processed = self.cal_measurement_columns()
         
         if "cut" in self.fetched_columns:
-            self.df_pre_processed['cut'] = self.df_pre_processed.apply(lambda x: post_processing_utils.transform_cut_column(x['cut'], self.magic_numbers), axis=1)
+            self.df_pre_processed['cut'] = self.df_pre_processed.apply(lambda x: post_processing_utils.transform_column(x['cut'], self.magic_numbers,'cut'), axis=1)
         
         self.df_pre_processed = self.cal_price_columns()
         
