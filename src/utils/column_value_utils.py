@@ -264,47 +264,35 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_co
   
     # Here now the probability is calculated on the basis of the range of value
 
-    if target_name == 'carat':
-      rangeA = 0.1
-      rangeB = 10
-  
-    elif target_name == 'raprate':
-      rangeA = 1000
-      rangeB = 100000
-      
-    elif target_name == 'table':
-      rangeA = 50
-      rangeB = 73
-    
-    elif target_name == 'price per carat':
-      rangeA = 5000
-      rangeB = 30000
+    # Define the target_name to range mapping
+    target_range_map = {
+        'carat': (0.1, 10),
+        'raprate': (1000, 100000),
+        'table': (50, 73),
+        'price per carat': (5000, 30000),
+        'discount': (-99, 99),
+        'total': (10000, 100000),
+        'rap price total': (10000, 100000)
+    }
 
-    elif target_name == 'discount':
-      rangeA = -99
-      rangeB = 99
+    # Check if target_name exists in the mapping
+    if target_name in target_range_map:
+        # Get the range for target_name
+        rangeA, rangeB = target_range_map[target_name]
 
       # Additional Logic for Discount
-      # Discount columns are the only  ccolumns with negative number so we can take advantage of that
+      # Discount columns are the only  columns with negative number
+      # so we can take advantage of that
+        if target_name == 'discount':
+            for val in column_unique_values:
+                if val is None:
+                    continue
+                if type(val) not in [int, float]:
+                    try:
+                        val = float(val)
+                    except:
+                        continue
+                if val < 0:
+                    return 1000
 
-      for val in column_unique_values:
-
-          if val is None:
-              continue
-          if type(val) not in [int,float]:
-              try:
-                  val =float(val)
-              except:
-                  continue
-          if val  < 0:
-              return 1000    
-    
-    elif target_name == 'total':
-      rangeA = 10000
-      rangeB = 100000
-
-    elif target_name == 'rap price total':
-      rangeA = 10000
-      rangeB = 100000
-      
-    return get_score_from_range(rangeA,rangeB,column_unique_values,n)
+        return get_score_from_range(rangeA, rangeB, column_unique_values, n)
