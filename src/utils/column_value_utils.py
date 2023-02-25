@@ -107,6 +107,10 @@ def get_most_common_type(values):
     return (most_common_type, type_counts[most_common_type])
 
 def get_score_from_range(rangeA,rangeB,values,n):
+  '''
+  This function will return the total number of value in "values" 
+  which fall under the range [rangeA,rangeB]
+  '''
   total = 0
   for value in values:
 
@@ -118,10 +122,14 @@ def get_score_from_range(rangeA,rangeB,values,n):
     
     if value >= rangeA and value <= rangeB:
       total+=1
-  
+
   return total / n
 
-def convert_to_int(value,count_of_rows):
+def convert_to_int_and_update_rows_count(value,count_of_rows):
+    '''
+    This function will convert values to int if possible
+    and update the count_of_rows if encountered with any None value
+    '''
     new_list = []
     for i in value:
         if pd.isna(i):
@@ -137,24 +145,55 @@ def convert_to_int(value,count_of_rows):
 
 def cal_measurement_columns(count_of_rows,column_unique_values,taget_column_unique_values,target_name,input_data_type,n):
     
+    '''
+    This function will calculate the probability that a column
+    belongs to measurement columns (length,width and depth)
+
+    Measurement columns can either contain this type of string "2*3*4"
+    or it will simply contain values "2.8" 
+
+    Both the cases were handled here
+    
+    '''
+
+    # if input data type is string
     if input_data_type[0] == str:
+
+      # Initialie the experiment value to None
       get_val = None
+
+      # Iterate over all the values until we get 
+      # a value which not None and has data type of string
       for val in column_unique_values:
         if val is not None and type(val) == str:
           get_val = val
           break
+      
+      # If we don't get any value which not None and has data type
+      # of string we return probability as 0
       if get_val is None:
         return 0
+      
+      # If there is "*" in get_val we will return the probablity as one
+      # since measurement column is the only column which will contain "*"
       if "*" in get_val:
         return 1
+
+      # Below lines code will replace "x" and "X" to "*"
+      # Then it will check that after replacing it is a 
+      # mathematical expression like this "2*5*8" or not
+      # if yes return 1 else 0
+
       get_val = get_val.replace("x","*")
       get_val = get_val.replace("X","*")
+      
       try:
         _ = eval(get_val)
         return 1
       except:
         return 0
     
+    # if input data type is float
     elif input_data_type[0] == float:
       return get_score_from_range(1,10,column_unique_values,n)
     
@@ -193,11 +232,9 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,taget_co
       return cal_measurement_columns(count_of_rows,column_unique_values,taget_column_unique_values,target_name,input_data_type,n)
       
   elif target_name == 'report_no':
-    updated_unique_values_list,count = convert_to_int(column_unique_values,count_of_rows)
+    updated_unique_values_list,count = convert_to_int_and_update_rows_count(column_unique_values,count_of_rows)
 
     x = updated_unique_values_list[-1]
-
-    # print(x, type(x), str(x).isalnum(), len(str(x)) >= 10, len(updated_unique_values_list), count)
 
     if (not pd.isna(x)) and str(x).isalnum() and len(str(x)) >= 10:
         l = len(updated_unique_values_list)

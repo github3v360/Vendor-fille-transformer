@@ -6,6 +6,11 @@ import re
 import urllib.parse
 
 def Find(string):
+
+    ''' 
+    This function will fetch the url from the
+    string if possible
+    '''
  
     # Use a regular expression pattern to match URLs
     pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
@@ -15,6 +20,11 @@ def Find(string):
     return links[0] if links else None
 
 def extract_report_number(url):
+
+    '''
+    This function will extract the report number from 
+    the url
+    '''
 
     if type(url) != str:
         try:
@@ -41,6 +51,11 @@ def extract_report_number(url):
                 return None
 
 def get_hyperlink_columns(df, ws, columns_name):
+    '''
+    This function will find name and index of all the 
+    columns which contains the hyperlink
+    '''
+
     cols_link = []
     
     for cur_col in range(1,len(columns_name)+1):

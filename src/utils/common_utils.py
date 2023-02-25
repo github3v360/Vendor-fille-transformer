@@ -59,15 +59,28 @@ def assure_data_type(values):
     return out_vals
 
 def initialize_prob_dict(target_columns):
+    '''
+    This function will intialize 
+    the probability dictionary to -1
+    '''
     prob_dict = dict.fromkeys(target_columns, -1)
     return prob_dict
 
 def get_magic_numbers():
+    '''
+    This function will return all the magic numbers
+    in the form of dictionary by reading the params.yaml file
+    '''
     params = read_yaml("params.yaml")
     magic_numbers = params['magic_numbers']
     return magic_numbers
 
 def get_report_no_extracted_from_link(df_cleaned, logger,link_columns_name):
+    ''' 
+    This function will store all the report number extracted from the link
+    in to a list if possible
+    It will also update the link_columns_name
+    '''
     if 'report_no' not in df_cleaned.columns:
         logger.info("Report No. Could not be found in Link")
         report_no_from_link = None
