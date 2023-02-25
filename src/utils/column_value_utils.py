@@ -4,104 +4,73 @@ import numpy as np
 import logging
 import pandas as pd
 
+def get_target_column_unique_values(target_name, logger):
+    """
+    This function will return the unique values of the target columns
 
-def get_target_column_unique_values(target_name,logger):
-  """
-  This function will return the unique values of the target columns
+    Args:
+    target_name (str): The name of the target column
 
-  Args:
-  target_name (str): The name of the target column
+    returns:
+    target_unique_values: List of unique values of the target columns
+    """
 
-  returns:
-  target_unique_values: List of unique values of the target columns
-  """
+    target_dict = {
+        "clarity": ("artifacts/pickle_files/clarity_list.pkl", True),
+        "carat": ([1.51, 2.1, 3.05, 4.01, 5.6], False),
+        "color": ("artifacts/pickle_files/color_list.pkl", True),
+        "shape": ("artifacts/pickle_files/shape.pkl", True),
+        "fluorescent": (
+            ["faint", "medium", "none", "f", "m", "n", "med", "non", "fnt"],
+            True,
+        ),
+        "raprate": ([12000.00, 21000.00, 11000.00, 18000.00, 16000.12], False),
+        "length": (["*", "x", "X", "+", "-"], False),
+        "width": (["*", "x", "X", "+", "-"], False),
+        "depth": (["*", "x", "X", "+", "-"], False),
+        "comments": ([",", "additional"], True),
+        "cut": (["I", "EX", "VG", "G", "F", "P", "EX+", "EX +"], True),
+        "polish": (["I", "EX", "VG", "G", "F", "P", "VG-EX", "G-VG", "F-G"], True),
+        "symmetry": (["I", "EX", "VG", "G", "F", "P", "VG-EX", "G-VG", "F-G"], True),
+        "table": (
+            [56.2, 57.6, 58.2, 59.5, 60.4, 61.3, 62.2, 63.2, 65.5, 70.3, 72.2],
+            False,
+        ),
+        "price per carat": ([5000, 7000, 8600, 10000, 12067, 16800], False),
+        "discount": ([-2, 1.0, 30.89, 70.65, -4.00, -50.00], False),
+        "total": ([5000.0, 56789.98, 76452.98, 54637.83], False),
+        "rap price total": ([5000.0, 56789.98, 76452.98, 54637.83], False),
+        "Stock Ref": (
+            [
+                "VSBDJ003",
+                "1627905",
+                "244507",
+                "J841722022A",
+                "589452",
+                "921905043",
+                "1.00W863776",
+                "2121000601",
+            ],
+            True,
+        ),
+        "report_no": (
+            [5673832784, 4851297767, 4851269742, 52364789152, 45862177986, 45841253698],
+            False,
+        ),
+    }
 
-  # This Flag will become true if the data type of unique values is string
-  flag = False
-
-  if target_name == "clarity":
-    clarity_file_path = os.path.join(os.path.join("artifacts","pickle_files"),"clarity_list.pkl")
-    with open(clarity_file_path,'rb') as f:
-      clarity_list = pickle.load(f)
-    target_unique_values = clarity_list
-    flag = True   
-  
-  elif target_name == 'carat':
-    
-    #picked some of the random values from the Target CSV File
-    target_unique_values = [1.51,2.1,3.05,4.01,5.6]
-  
-  elif target_name == "color":
-    color_file_path = os.path.join(os.path.join("artifacts","pickle_files"),"color_list.pkl")
-    with open(color_file_path,'rb') as f:
-      color_list = pickle.load(f)
-    target_unique_values = color_list
-    flag = True
-  
-  elif target_name == "shape":
-    shape_file_path = os.path.join(os.path.join("artifacts","pickle_files"),"shape.pkl")
-    with open(shape_file_path,'rb') as f:
-      shape_dict = pickle.load(f)
-    target_unique_values = list(shape_dict.keys())
-    flag = True
-  
-  elif target_name == "fluorescent":
-    target_unique_values = ["faint","medium","none","f","m","n","med","non","fnt"]
-    flag = True
-  
-  elif target_name == "raprate":
-    target_unique_values = [12000.00,21000.00,11000.00,18000.00,16000.12]
-
-  # The logic for these column in entirely different from others
-  # we will try to find arithmetic operators if column is string
-  elif target_name in ["length","width","depth"]:
-    return ["*","x","X","+","-"]
-
-  elif target_name == "comments":
-    # print(target_name)  
-    target_unique_values = [",","additional"]
-    flag = True
-  
-  elif target_name == "cut":
-    target_unique_values = ["I","EX","VG","G","F","P","EX+","EX +"]
-    flag = True
-
-  elif target_name == "polish":
-    target_unique_values = ["I","EX","VG","G","F","P","VG-EX","G-VG","F-G"]
-    flag = True
-
-  elif target_name == "symmetry":
-    target_unique_values = ["I","EX","VG","G","F","P","VG-EX","G-VG","F-G"]
-    flag = True
-    
-  elif target_name == "table":
-    target_unique_values = [56.2,57.6,58.2,59.5,60.4,61.3,62.2,63.2,65.5,70.3,72.2]
-
-  elif target_name == "price per carat":
-    target_unique_values = [5000, 7000,8600,10000,12067,16800]
-
-  elif target_name == "discount":
-    target_unique_values = [-2,1.0,30.89,70.65,-4.00,-50.00]
-
-  elif target_name == "total":
-    target_unique_values = [5000.0, 56789.98,76452.98,54637.83]
-
-  elif target_name == "rap price total":
-    target_unique_values = [5000.0, 56789.98,76452.98,54637.83]
-
-  elif target_name == "Stock Ref":
-    target_unique_values = ["VSBDJ003","1627905","244507","J841722022A","589452","921905043","1.00W863776","2121000601"]
-
-  elif target_name == "report_no":
-    target_unique_values = [5673832784,4851297767,4851269742,52364789152,45862177986,45841253698]
-    
-  else:
-    logger.exception("The function could not find this target name")
-  
-  if flag:
-    target_unique_values = [value.lower() for value in target_unique_values]
-
-  return target_unique_values
+    try:
+        value, flag = target_dict[target_name]
+        if isinstance(value, str):
+            with open(value, "rb") as f:
+                target_unique_values = pickle.load(f)
+        else:
+            target_unique_values = value
+        if flag:
+            target_unique_values = [value.lower() for value in target_unique_values]
+        return target_unique_values
+    except:
+        logger.exception("The function could not find this target name")
 
 def get_most_common_type(values):
     """Returns the data type that occurs most frequently in a list of values, along with the count of that data type.

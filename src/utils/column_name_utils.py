@@ -1,146 +1,178 @@
 import logging
+from difflib import SequenceMatcher
 
-def get_standard_names(target_name,logger):
-  ''' 
-  This function will return the other standard(nick) names of the target name
-  Args:
-        target_name: The original name of the target column
-  Returns:
-  list: List of all other standard names of the target name.
-  '''
-  if target_name == "clarity":
-   return ["clarity","purity","Clar", "Clearity"]
-  
-  elif target_name == "color":
-    return ["color","colour","Colr","col"]
-    
-  elif target_name == "shape":
-    return ["shape","shp"]
-    
-  elif target_name == "carat":
-    return ["Carat", "CaratSize", "CaratWeight", "Ct", "CtSize", "CtWeight", "Weight", "Sz", "cts",  "crtwt","size"]
-    
-  
-  elif target_name == "fluorescent":
-    return ["fluor","flour","fluorescent","Flr", "FlrIntensity", "Fluo Intensity", "Fluor Intensity", "Fluorescence", "Fluorescence Intensity", "FluorescenceIntensity", "FluorIntensity"]
-  
-  elif target_name == "raprate":
-    return ["Rap",'Rapprice']
-  
-  elif target_name == "length":
-    return ["M1","Measurement","Diameter","length"]
-
-  elif target_name == "width":
-    return ["M2","Measurement","Diameter","width"]
-
-  elif target_name == "depth":
-    return ["M3","Measure","Diameter","depth","height"]
-  
-  elif target_name == "cut":      
-    return ["Cut", "CutGrade"]
-
-  elif target_name == "polish":
-    return ["Finish", "Pol","polish"]  
-
-  elif target_name == "symmetry":
-    return ["Sym", "Symetry", "Sym-metry","symmetry"]
-
-  elif target_name == "table":
-    return ["Table", "Table Percent", "TablePct", "TablePercent", "Tbl","Table%","Table Depth"]
-    
-  elif target_name == "comments":
-    return ["Comments", "Remark", "Lab comment", "Cert comment", "Certificate comment", "Laboratory comment","Report Comments"]
-   
-  elif target_name == "price per carat":
-    return ["PerCarat", "PerCt", "Prc", "PriceCarat", "PriceCt", "PricePerCarat", "PricePerCt", "Px","price/carat"]
-
-  elif target_name == "discount":
-    return ["disc","disc%","RapNet Discount %", "PctRapNetDiscount", "Rap netDisc", "RapnetDiscount", "RapnetDiscountPct", "RapnetDiscountPercent", "RapnetDiscPct", "RapnetDpx", "RapnetRapPct", "RDisc", "RDiscount", "RDiscountPct", "RDiscountPercent", "RDiscPct", "RDpx", "RRapPct", "RapNet Discount Price","per"]
-  
-  elif target_name == "total":
-    return ["amount","total","total price"]
-  
-  elif target_name == "rap price total":
-    return ["rap total","rap value"]
-  
-  elif target_name == "Stock Ref":
-    return ["ReferenceNum", "ReferenceNumber", "Stock", "Stock Num", "Stock_no", "StockNo", "StockNum", "StockNumber", "VenderStockNumber","Refno","Packet No"]
-     
-  elif target_name == "report_no":
-    return ['REPORTNO','REPORT NO','REP NO','REPORT #','CERT#','CERTIFICATE','CERTIFICATE NO','CERTIFICATE #','CERTI NO.','REPORT','CERT #','CERT NO.','CERTNO','CERT. NO','GIA OR FM','REP_NO','CERT_NO','CERT.NO','VIEW CERTIFICATE','CERT NO','CERTINO']
-    # m = []
-    # for i in x:
-    #     m.append(i + "_link")
-    # return m
-#   elif target_name == "Cert":
-#     return  ['CERT','LAB','LAB NAME','ONL. CERT','CRT','CERT.','CERTIFIED LAB']
-    
-  else:
-    logger.exception("The function could not find other satndard names for this target name")
-
-def string_similarity(string1, string2):
-    """Calculates the similarity between two strings using the Levenshtein distance algorithm.
-    
-    Args:
-        string1 (str): The first string.
-        string2 (str): The second string.
-        
-    Returns:
-        float: A value between 0 and 1 representing the similarity between the two strings, with 1 being a perfect match.
+def get_standard_names(target_name, logger):
     """
-    # Convert to string type if the string1 and string2 is of other type
-    if type(string1) != str:
-      string1 = str(string1)
-    
-    if type(string2) != str:
-      string2 = str(string2)
+    This function will return the other standard(nick) names of the target name
+    Args:
+          target_name: The original name of the target column
+    Returns:
+    list: List of all other standard names of the target name.
+    """
+    name_dict = {
+        "clarity": ["clarity", "purity", "Clar", "Clearity"],
+        "color": ["color", "colour", "Colr", "col"],
+        "shape": ["shape", "shp"],
+        "carat": [
+            "Carat",
+            "CaratSize",
+            "CaratWeight",
+            "Ct",
+            "CtSize",
+            "CtWeight",
+            "Weight",
+            "Sz",
+            "cts",
+            "crtwt",
+            "size",
+        ],
+        "fluorescent": [
+            "fluor",
+            "flour",
+            "fluorescent",
+            "Flr",
+            "FlrIntensity",
+            "Fluo Intensity",
+            "Fluor Intensity",
+            "Fluorescence",
+            "Fluorescence Intensity",
+            "FluorescenceIntensity",
+            "FluorIntensity",
+        ],
+        "raprate": ["Rap", "Rapprice"],
+        "length": ["M1", "Measurement", "Diameter", "length"],
+        "width": ["M2", "Measurement", "Diameter", "width"],
+        "depth": ["M3", "Measure", "Diameter", "depth", "height"],
+        "cut": ["Cut", "CutGrade"],
+        "polish": ["Finish", "Pol", "polish"],
+        "symmetry": ["Sym", "Symetry", "Sym-metry", "symmetry"],
+        "table": [
+            "Table",
+            "Table Percent",
+            "TablePct",
+            "TablePercent",
+            "Tbl",
+            "Table%",
+            "Table Depth",
+        ],
+        "comments": [
+            "Comments",
+            "Remark",
+            "Lab comment",
+            "Cert comment",
+            "Certificate comment",
+            "Laboratory comment",
+            "Report Comments",
+        ],
+        "price per carat": [
+            "PerCarat",
+            "PerCt",
+            "Prc",
+            "PriceCarat",
+            "PriceCt",
+            "PricePerCarat",
+            "PricePerCt",
+            "Px",
+            "price/carat",
+        ],
+        "discount": [
+            "disc",
+            "disc%",
+            "RapNet Discount %",
+            "PctRapNetDiscount",
+            "Rap netDisc",
+            "RapnetDiscount",
+            "RapnetDiscountPct",
+            "RapnetDiscountPercent",
+            "RapnetDiscPct",
+            "RapnetDpx",
+            "RapnetRapPct",
+            "RDisc",
+            "RDiscount",
+            "RDiscountPct",
+            "RDiscountPercent",
+            "RDiscPct",
+            "RDpx",
+            "RRapPct",
+            "RapNet Discount Price",
+            "per",
+        ],
+        "total": ["amount", "total", "total price"],
+        "rap price total": ["rap total", "rap value"],
+        "Stock Ref": [
+            "ReferenceNum",
+            "ReferenceNumber",
+            "Stock",
+            "Stock Num",
+            "Stock_no",
+            "StockNo",
+            "StockNum",
+            "StockNumber",
+            "VenderStockNumber",
+            "Refno",
+            "Packet No",
+        ],
+        "report_no": [
+            "REPORTNO",
+            "REPORT NO",
+            "REP NO",
+            "REPORT #",
+            "CERT#",
+            "CERTIFICATE",
+            "CERTIFICATE NO",
+            "CERTIFICATE #",
+            "CERTI NO.",
+            "REPORT",
+            "CERT #",
+            "CERT NO.",
+            "CERTNO",
+            "CERT. NO",
+            "GIA OR FM",
+            "REP_NO",
+            "CERT_NO",
+            "CERT.NO",
+            "VIEW CERTIFICATE",
+            "CERT NO",
+            "CERTINO",
+        ],
+    }
 
-    # Convert the strings to lowercase
-    string1 = string1.lower()
-    string2 = string2.lower()
-    
-    # Get the length of both strings
-    len1 = len(string1)
-    len2 = len(string2)
-    
-    # Initialize a matrix to store the edit distances
-    matrix = [[0 for j in range(len2 + 1)] for i in range(len1 + 1)]
-    
-    # Fill in the first row and column of the matrix
-    for i in range(len1 + 1):
-        matrix[i][0] = i
-    for j in range(len2 + 1):
-        matrix[0][j] = j
-    
-    # Fill in the rest of the matrix
-    for i in range(1, len1 + 1):
-        for j in range(1, len2 + 1):
-            if string1[i - 1] == string2[j - 1]:
-                cost = 0
-            else:
-                cost = 1
-            matrix[i][j] = min(matrix[i - 1][j] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j - 1] + cost)
-    
-    # Calculate the similarity score
-    distance = matrix[len1][len2]
-    max_len = max(len1, len2)
-    return 1 - (distance / max_len)
+    standard_names = name_dict.get(target_name)
 
-def similarity_score_from_col_name(column_name,std_names):
+    if standard_names is None:
+        logger.exception(
+            "The function could not find other satndard names for this target name"
+        )
+    return standard_names
 
+def string_similarity(str1, str2):
+    """
+    Computes the similarity between two strings using difflib.
+
+    Args:
+        str1 (str): The first string.
+        str2 (str): The second string.
+
+    Returns:
+        float: The similarity score between 0 and 1.
+    """
+    seq_matcher = SequenceMatcher(None, str1, str2)
+    return seq_matcher.ratio()
+
+def similarity_score_from_col_name(column_name, std_names):
     """This function calculates the similarity score between a column and a target column.
-    
+
     Args:
         column_name (str): The column name.
         std_names (list): The list of standard names of the target column.
-        
+
     Returns:
         str: The similarity score of the column and a target column
     """
     # if column name matches one of the standard name then we return similarity score as 1
     if column_name.lower() in std_names:
-      return 1 
-    
-    # We calculate the string similarity of column name with standard names and return only the highest similarity 
-    probs = [string_similarity(column_name,name) for name in std_names]
-    return round(max(probs),3)
+        return 1
+
+    # We calculate the string similarity of column name with standard names and return only the highest similarity
+    probs = [string_similarity(column_name, name) for name in std_names]
+    return round(max(probs), 3)

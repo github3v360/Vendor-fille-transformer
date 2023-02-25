@@ -36,7 +36,8 @@ def assure_data_type(values):
 
     '''
     This column will transform the string data type to float data type if possible
-    Since pandas DataFrame sometimes read dataframe column with float values and convert them in to string 
+    Since pandas DataFrame sometimes read dataframe column with float values and
+    convert them in to string 
     Therefore we need to reconvert the string to float
     '''
 

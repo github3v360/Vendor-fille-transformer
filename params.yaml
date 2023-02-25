@@ -12,6 +12,9 @@ magic_numbers:
   color_normalizing_factor_for_col_name: 0.5
   color_normalizing_factor_for_col_value: 0.5
 
+  shape_normalizing_factor_for_col_name: 0.5
+  shape_normalizing_factor_for_col_value: 0.5
+
   # This is used during post-processing stage
   # where we transform non-standard value to standard value.
   # There while using the string_similarity function we need this threshold parameter
