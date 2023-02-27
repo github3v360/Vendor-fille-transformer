@@ -9,6 +9,12 @@ class CleanDataAndExtractLink:
 
     def process(self):
 
+        """
+        This function will run all the required functions to correct the 
+        headers, extract the link, extract the report number from the extracted link
+        and clean the data(removing empty rows and columns).
+        """
+
         # Correcting the DataFrame Headers
         df_corrected_headers, correct_row_idx = data_cleaner.correct_df_headers(self.df)
 
