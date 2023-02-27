@@ -1,6 +1,3 @@
-from src.utils import data_cleaner
-from src import hyperlink_extraction
-
 class CleanDataAndExtractLink:
     def __init__(self, df, ws, logger):
         self.df = df
@@ -10,7 +7,7 @@ class CleanDataAndExtractLink:
     def process(self):
 
         """
-        This function will run all the required functions to correct the 
+        This function will run all the required functions to correct the
         headers, extract the link, extract the report number from the extracted link
         and clean the data(removing empty rows and columns).
         """
@@ -19,7 +16,10 @@ class CleanDataAndExtractLink:
         df_corrected_headers, correct_row_idx = data_cleaner.correct_df_headers(self.df)
 
         # Extracting the hyperlink and report number from the link
-        hyperlink_extractor = hyperlink_extraction.HyperlinkExtractor(self.ws, correct_row_idx,df_corrected_headers)
+        hyperlink_extractor = hyperlink_extraction.HyperlinkExtractor(
+            self.ws, correct_row_idx, df_corrected_headers
+        )
+
         df_with_links, link_columns_name = hyperlink_extractor.add_hyperlink_columns()
 
         # Dropping Empty Rows and columns
