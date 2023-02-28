@@ -52,14 +52,30 @@ class DataProcessor:
         cur_target_col_std_names,
         cur_target_col_unique_vals,
     ):
+        """
+        This function will calculate the probability of the current column
+        belonging to the current (particular) target column on the basis of
+        current column header name and its values 
+
+        final_similarity_score = (sim_score_from_col_name * w1)
+                                 + (sim_score_from_col_val * w2)
+        where,
+            sim_score_from_col_name = similarity score calculated from the column name
+            sim_score_from_col_val = similarity score calculated from the column values
+            w1 = weight given to the sim_score_from_col_name
+            w2 = weight given to the sim_score_from_col_val
+        """
+        # getting sim_score_from_col_name
         sim_score_from_cur_col_name = column_name_utils.similarity_score_from_col_name(
             cur_df_cleaned_column_name, cur_target_col_std_names
         )
 
+        # this will do (sim_score_from_col_name * w1) 
         sim_score_from_cur_col_name = score_modifier.modify_sim_score_of_name(
             sim_score_from_cur_col_name, cur_target_column, self.magic_numbers
         )
 
+        # getting sim_score_from_col_val
         similarity_score_of_value = column_value_utils.similarity_score_from_col_values(
             self.count_of_rows,
             cur_df_cleaned_column_unique_values,
@@ -67,6 +83,8 @@ class DataProcessor:
             cur_target_column,
         )
 
+        # this will calculate (sim_score_from_col_val * w2) and add
+        # it with "sim_score_from_col_name * w1" 
         final_similarity_score = score_modifier.merge_similarity_score(
             sim_score_from_cur_col_name,
             similarity_score_of_value,
@@ -77,6 +95,11 @@ class DataProcessor:
         return final_similarity_score
 
     def get_remaining_column(self):
+        """
+        This function will get the remaining columns which were not required 
+        to fetch. These remaining column will be stored in
+        a single column in a key-value format
+        """
         cols = self.df_cleaned.columns
         self.remaining_columns_df = pd.DataFrame()
         list_of_dicts = []
