@@ -15,29 +15,58 @@ class Entire_file_extractor:
         gap = random.randint(0, 10)
         now = (datetime.datetime.now() - datetime.timedelta(days=gap)).strftime("%d/%m/%Y")
 
+        # this is flag which will tell whether the file is excel or not
+        is_excel = False
+
         # Load the Pandas Data Frame with all sheets
-        wb = pd.read_excel(self.file_path, None)
+        if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
+            wb = pd.read_excel(self.file_path, None)
 
-        # Read Data file with openpyxl
-        wb_xl = load_workbook(self.file_path)
+            # Read Data file with openpyxl
+            wb_xl = load_workbook(self.file_path)
 
-        # Fetching all sheet names
-        sheet_names = list(wb.keys())
+            # Fetching all sheet names
+            sheet_names = list(wb.keys())
+
+            # setting is_excel flag to True
+            is_excel = True
+
+        elif self.file_path.endswith('.csv'):
+
+            # Reading a csv file
+            wb = pd.read_csv(self.file_path)
+
+            # Since csv files do not have multiple sheets 
+            # we will assign a random name
+            sheet_names = ['random_sheet']
+        
+        else:
+            self.logger.exception("This file format is not supported")
 
         # Initializing Global DataFrame which will store all the processed sheet
         global_df = None
 
         # Iterating through all the sheet
         for sheet_name in sheet_names:
-            # Fetching and storing the sheet
-            df = wb[sheet_name]
+
+            if is_excel:
+
+                # Fetching and storing the sheet
+                df = wb[sheet_name]
+                
+                # Getting openpyxl current sheet
+                cur_wb_xl = wb_xl[sheet_name]
+            
+            else:
+                df = wb
+                cur_wb_xl = None
 
             # Check if the sheet is empty
             if df.empty:
                 continue
 
             # Data Extraction from current sheet
-            extractor = Single_Sheet_extraction.ExtractFromSingleSheet(df, wb_xl[sheet_name], self.debug, self.logger, now, self.test_file_name)
+            extractor = Single_Sheet_extraction.ExtractFromSingleSheet(df, cur_wb_xl, self.debug, self.logger, now, self.test_file_name)
             out_df = extractor.process()
 
             # Concatenation of global dataframe with out_df

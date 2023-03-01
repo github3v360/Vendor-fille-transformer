@@ -12,12 +12,15 @@ class HyperlinkExtractor:
         self.correct_row_idx = correct_row_idx
         self.df = df
         self.columns_name = list(df.columns)
-        self.cols_link = hyperlink_extraction_utils.get_hyperlink_columns(df, ws, self.columns_name)
-        self.total_link_columns = len(self.cols_link)
+        self.cols_link = None
+        self.total_link_columns = 0
         self.df_link = pd.DataFrame()
         self.new_columns = []
         
     def add_hyperlink_columns(self):
+        if self.ws is None:return self.df,self.new_columns
+        self.cols_link = hyperlink_extraction_utils.get_hyperlink_columns(self.df, self.ws, self.columns_name)
+        self.total_link_columns = len(self.cols_link)
         if self.total_link_columns == 0:
             return self.df, []
         for j in range(len(self.cols_link)):
