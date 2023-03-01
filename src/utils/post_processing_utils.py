@@ -96,12 +96,12 @@ def transform_measurement_column(cur_val_l,cur_val_d):
   return cur_val_l
 
 def transform_discount_column(disc_val):
-  '''
-  This function will transform discount value.
-  It will convert the negative value to postive value
+    '''
+    This function will transform discount value.
+    It will convert the negative value to postive value
 
-  Example -: -40.38 to 40.38
-  '''
+    Example -: -40.38 to 40.38
+    '''
     try:
         disc_val = float(disc_val)
         if disc_val < 0:

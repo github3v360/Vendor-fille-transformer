@@ -70,11 +70,6 @@ class DataProcessor:
             cur_df_cleaned_column_name, cur_target_col_std_names
         )
 
-        # this will do (sim_score_from_col_name * w1) 
-        sim_score_from_cur_col_name = score_modifier.modify_sim_score_of_name(
-            sim_score_from_cur_col_name, cur_target_column, self.magic_numbers
-        )
-
         # getting sim_score_from_col_val
         similarity_score_of_value = column_value_utils.similarity_score_from_col_values(
             self.count_of_rows,
@@ -83,8 +78,8 @@ class DataProcessor:
             cur_target_column,
         )
 
-        # this will calculate (sim_score_from_col_val * w2) and add
-        # it with "sim_score_from_col_name * w1" 
+        # this will calculate final_similarity_score on the basis of
+        # the formula specified in above docstring
         final_similarity_score = score_modifier.merge_similarity_score(
             sim_score_from_cur_col_name,
             similarity_score_of_value,

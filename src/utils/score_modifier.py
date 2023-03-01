@@ -1,17 +1,20 @@
-def modify_sim_score_of_name(sim_score, target_name, magic_numbers):
+def merge_similarity_score(sim_score_name, sim_score_val, target_name, magic_numbers):
     """
-        This will modify the similarity score based on magic numbers to make the statistical model more robust
+    This functionm will merge similarity score calculated from column name and column values
+
+    final_similarity_score = ( normalizing_factors_for_col_name * sim_score_name ) +
+                             ( normalizing_factors_for_col_value * sim_score_value )
 
     Args:
-    target_name (str): The name of the target column
-    sim_score(float): similarity score
+    sim_score_name: similarity score calculated from name
+    sim_score_val: similarityb score calculated from value
+    target_name: The name of target column
     magic_numbers(dict) = magic numbers in form of dictionary
 
     returns:
-    sim_score: The modified similarity score
-    need_to_continue(bool): Stating that whether we need to calculate the similarity score from values or not
+    final_similarity_score
     """
-    normalizing_factors = {
+    normalizing_factors_for_col_name = {
         "clarity": "clarity_normalizing_factor_for_col_name",
         "carat": "carat_normalizing_factor_for_col_name",
         "color": "color_normalizing_factor_for_col_name",
@@ -34,26 +37,7 @@ def modify_sim_score_of_name(sim_score, target_name, magic_numbers):
         "report_no": "report_normalizing_factor_for_col_name"
     }
 
-    normalizing_factor = normalizing_factors.get(target_name)
-    if normalizing_factor is None:
-        raise Exception("The function could not find this target name")
-
-    return round(sim_score * magic_numbers[normalizing_factor], 3)
-
-def merge_similarity_score(sim_score_name, sim_score_val, target_name, magic_numbers):
-    """
-    This functionm will merge similarity score calculated from column name and column values
-
-    Args:
-    sim_score_name: Modified similarity score calculated from name
-    sim_score_val: similarityb score calculated from value
-    target_name: The name of target column
-    magic_numbers(dict) = magic numbers in form of dictionary
-
-    returns:
-    final_similarity_score
-    """
-    normalizing_factors = {
+    normalizing_factors_for_col_value = {
         "clarity": "clarity_normalizing_factor_for_col_value",
         "carat": "carat_normalizing_factor_for_col_value",
         "color": "color_normalizing_factor_for_col_value",
@@ -75,8 +59,12 @@ def merge_similarity_score(sim_score_name, sim_score_val, target_name, magic_num
         "Stock Ref": "stockref_normalizing_factor_for_col_value",
         "report_no": "report_normalizing_factor_for_col_value"
     }
-    if target_name not in normalizing_factors:
+
+    if target_name not in normalizing_factors_for_col_name:
         raise Exception("The function could not find this target name")
-    normalizing_factor = magic_numbers.get(normalizing_factors[target_name])
-    final_similarity_score = sim_score_name + sim_score_val * (normalizing_factor or 1)
+
+    w1 = magic_numbers.get(normalizing_factors_for_col_name[target_name])
+    w2 = magic_numbers.get(normalizing_factors_for_col_value[target_name])
+
+    final_similarity_score = (w1 * sim_score_name) + (sim_score_val * w2)
     return round(final_similarity_score, 3)
