@@ -109,7 +109,7 @@ class DataProcessor:
         self.remaining_columns_df["Extra Column"] = list_of_dicts
         return self.remaining_columns_df
 
-    def get_unique_values(self, df_cleaned, cur_df_cleaned_column_name):
+    def get_current_column_values(self, df_cleaned, cur_df_cleaned_column_name):
         """
         This function will used by "Iterate_And_Get_Desired_Column_By_Probability"
         function to get the values of the current column and also get the number 
@@ -174,7 +174,7 @@ class DataProcessor:
                     (
                         cur_df_cleaned_column_unique_values,
                         cur_df_cleaned_column_name,
-                    ) = self.get_unique_values(
+                    ) = self.get_current_column_values(
                         self.df_cleaned, cur_df_cleaned_column_name
                     )
                 except:
