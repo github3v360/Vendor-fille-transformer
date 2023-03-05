@@ -1,21 +1,26 @@
+'''
+This module contains utility functions for common use.
+'''
 import yaml
- 
+
 def read_yaml(path_to_yaml: str) -> dict:
-  """
-  A function to read yaml file and return dictionary
-  Args (str) : path to yaml file
-  returns: A dictionary of the yaml file
-  """
-  with open(path_to_yaml) as yaml_file:
-    content = yaml.safe_load(yaml_file)
-    return content
+    """
+    A function to read yaml file and return dictionary
+    Args  : path to yaml file (str)
+    returns: A dictionary of the yaml file (dict)
+    """
+    with open(path_to_yaml) as yaml_file:
+        content = yaml.safe_load(yaml_file)
+        return content
 
 def get_highest_prob_column(probs, cols):
-    """Returns the column name with the highest probability.
+    """
+    Returns the column name with the highest probability.
     
     Args:
-        probs (list): A list of probabilities, with one probability value for each column.
-        cols (list): A list of column names.
+        probs : A list of probabilities, with one probability 
+                value for each column (list)
+        cols : A list of column names (list)
         
     Returns:
         str: The column name with the highest probability.
@@ -35,10 +40,17 @@ def get_highest_prob_column(probs, cols):
 def assure_data_type(values):
 
     '''
-    This column will transform the string data type to float data type if possible
-    Since pandas DataFrame sometimes read dataframe column with float values and
-    convert them in to string 
-    Therefore we need to reconvert the string to float
+    This function will transform the string values in 'values' list to 
+    float data type if possible.
+    Since pandas DataFrame sometimes reads dataframe columns with 
+    float values and converts them into strings,
+    we need to reconvert the strings to float data type.
+    Args:
+        values : A list of values to be converted to float data type (list)
+
+    Returns:
+        list: A list of values with string values converted to float 
+                data type if possible.
     '''
 
     out_vals = values.copy()
@@ -48,7 +60,6 @@ def assure_data_type(values):
         if (val is None) or (type(val) in [int,float]):
             out_vals[idx] = val
             continue
-        
         else:
 
             try:
@@ -56,12 +67,20 @@ def assure_data_type(values):
             except:
                 pass
             out_vals[idx] = val
+
     return out_vals
 
 def initialize_prob_dict(target_columns):
     '''
     This function will intialize 
     the probability dictionary to -1
+    Args:
+        target_columns: The list of target column names for which the 
+                    probability dictionary
+                    is to be initialized (list of str)
+    Returns:                
+        prob_dict: A dictionary with keys as target column names 
+                    and initial values as -1 (dict)
     '''
     prob_dict = dict.fromkeys(target_columns, -1)
     return prob_dict
@@ -80,6 +99,18 @@ def get_report_no_extracted_from_link(df_cleaned, logger,link_columns_name):
     This function will store all the report number extracted from the link
     in to a list if possible
     It will also update the link_columns_name
+
+    Args:
+        df_cleaned: The cleaned dataframe where the report number 
+                    is to be extracted from(data frame)
+        logger: The logger object to log information messages.
+        link_columns_name:A list of column names containing the links(list)
+    Returns:
+        report_no_from_link: A pandas Series containing the extracted 
+                            report numbers (pandas Series)
+        link_columns_name: An updated list of column names after removing 
+                            the "report_no" column (List)
+
     '''
     if 'report_no' not in df_cleaned.columns:
         logger.info("Report No. not found in Link")
@@ -89,4 +120,5 @@ def get_report_no_extracted_from_link(df_cleaned, logger,link_columns_name):
         df_cleaned.drop("report_no", axis=1, inplace=True)
         link_columns_name.remove('report_no')
         logger.info("Report No. discovered in the link")
+
     return report_no_from_link,link_columns_name
