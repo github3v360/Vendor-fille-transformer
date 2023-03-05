@@ -1,5 +1,6 @@
-from src.utils import data_cleaner
+from src import utils 
 from src import hyperlink_extraction
+from utils import data_cleaner
 
 class CleanDataAndExtractLink:
     def __init__(self, df, ws, logger):

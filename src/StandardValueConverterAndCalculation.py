@@ -1,5 +1,6 @@
 import pandas as pd
-from src.utils import post_processing_utils
+from src import utils 
+from utils import post_processing_utils
 
 
 class PostProcessing:

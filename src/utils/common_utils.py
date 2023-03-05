@@ -82,7 +82,7 @@ def get_report_no_extracted_from_link(df_cleaned, logger,link_columns_name):
     It will also update the link_columns_name
     '''
     if 'report_no' not in df_cleaned.columns:
-        logger.info("Report No. Could not be found in Link")
+        logger.info("Report No. not found in Link")
         report_no_from_link = None
     else:
         report_no_from_link = df_cleaned['report_no']
