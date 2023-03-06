@@ -1,6 +1,6 @@
 '''
 This file contains the class 'CleanDataAndExtractLink' 
-which will perform all the stage 1 task
+which will perform all the stage 1 tasks
 '''
 
 from src.utils import data_cleaner
