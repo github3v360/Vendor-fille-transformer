@@ -81,8 +81,7 @@ def transform_measurement_column(cur_val_l,cur_val_d):
         list: A list of 3 parameters including length width and depth (List)
 
     """
-    print(type(cur_val_l))
-    print(type(cur_val_d))
+
     if cur_val_l == "" or cur_val_l is None or (type(cur_val_l) != str):
         return [None,None,None]
 
