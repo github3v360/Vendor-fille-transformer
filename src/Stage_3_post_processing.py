@@ -38,7 +38,7 @@ class PostProcessingData:
             dataframe_pre_processed (pandas dataframe): Pre-processed dataframe
             given by stage 2
 
-            dataframe_cleaned pandas dataframe): cleaned dataframe given by the stage 1
+            dataframe_cleaned (pandas dataframe): cleaned dataframe given by the stage 1
 
             report_no_from_link (list): report number extracted from the link
 
