@@ -6,7 +6,8 @@ import os
 import time
 import shutil
 import logging
-from src.utils import merge_files
+from src import utils 
+from utils import merge_files
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -33,8 +34,8 @@ def main():
     "price per carat","discount","total","rap price total","comments","report_no"])
 
     for test_file_name in test_file_names:
-        # if test_file_name != "JBBROTHER.xlsx":
-        #     continue
+        if test_file_name != "SRKStock_216700.xlsx":
+            continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
         print(f"====File name : {test_file_name} ======")

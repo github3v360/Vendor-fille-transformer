@@ -1,13 +1,19 @@
-import logging
+"""
+This module contains utility functions for working with column names in dataframes.
+"""
+
 from difflib import SequenceMatcher
 
 def get_standard_names(target_name, logger):
+    print(type(target_name))
+    print(type(logger))
     """
-    This function will return the other standard(nick) names of the target name
+        This function will return the other standard names of the target name
     Args:
-          target_name: The original name of the target column
+        target_name: The original name of the target column (String)
+        logger: Logger object to log exceptions (Logger)
     Returns:
-    list: List of all other standard names of the target name.
+        list: List of all other standard names of the target name. (List)
     """
     name_dict = {
         "clarity": ["clarity", "purity", "Clar", "Clearity"],
@@ -147,11 +153,11 @@ def get_standard_names(target_name, logger):
 
 def string_similarity(str1, str2):
     """
-    Computes the similarity between two strings using difflib.
+    This function computes the similarity between two strings using difflib library.
 
     Args:
-        str1 (str): The first string.
-        str2 (str): The second string.
+        str1 (str): The first string. (String)
+        str2 (str): The second string. (String)
 
     Returns:
         float: The similarity score between 0 and 1.
@@ -160,19 +166,25 @@ def string_similarity(str1, str2):
     return seq_matcher.ratio()
 
 def similarity_score_from_col_name(column_name, std_names):
-    """This function calculates the similarity score between a column and a target column.
-
+    """
+    This function calculates the similarity score between a given column and each 
+    stanadard target column names.
+    Example: column_name = "Clarity"
+             std_names = ["clarity", "purity", "Clar", "Clearity"]
+             Output: "1"
     Args:
-        column_name (str): The column name.
-        std_names (list): The list of standard names of the target column.
+        column_name: The column name (String)
+        std_names: The list of standard names of the target column (List)
 
     Returns:
-        str: The similarity score of the column and a target column
+        str: The similarity score of the column and a target column (String)
     """
     # if column name matches one of the standard name then we return similarity score as 1
     if column_name.lower() in std_names:
         return 1
 
-    # We calculate the string similarity of column name with standard names and return only the highest similarity
+    # We calculate the string similarity of column name with standard names and return
+    # only the highest similarity
     probs = [string_similarity(column_name, name) for name in std_names]
     return round(max(probs), 3)
+    

@@ -4,7 +4,8 @@ import os
 import pandas as pd
 import re
 import urllib.parse
-from src.utils import hyperlink_extraction_utils
+from src import utils 
+from utils import hyperlink_extraction_utils
 
 class HyperlinkExtractor:
     def __init__(self, ws, correct_row_idx, df):
