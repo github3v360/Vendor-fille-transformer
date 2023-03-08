@@ -5,7 +5,7 @@ import pandas as pd
 import re
 import urllib.parse
 from src import utils 
-from utils import hyperlink_extraction_utils
+from src.utils import hyperlink_extraction_utils
 
 class HyperlinkExtractor:
     def __init__(self, ws, correct_row_idx, df):
@@ -52,7 +52,7 @@ class HyperlinkExtractor:
         cur_hyperlink_value = cur_cell.hyperlink
         if cur_hyperlink_value is not None and cur_hyperlink_value.target is not None:
             return cur_hyperlink_value.target
-        return hyperlink_extraction_utils.Find(cur_cell.value)
+        return hyperlink_extraction_utils.find(cur_cell.value)
     
     def extract_report_number_from_cur_cell(self,t,extracted_link):
         if self.df_link['report_no'].iloc[t] is None:

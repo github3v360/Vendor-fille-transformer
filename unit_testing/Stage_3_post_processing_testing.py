@@ -22,13 +22,13 @@ class TestPostProcessingData(unittest.TestCase):
 
         self.remaining_columns_df = pd.DataFrame({'redundant_column_1': [1,2,3,4,5], 'redundant_column_2': [6,7,8,9,10]})
         self.target_columns = ['col1', 'col2']
-        self.Date = '2022-01-01'
+        self.date = '2022-01-01'
         self.test_file_name = 'test_file.csv'
         self.logger = None
 
         self.pp_data = PostProcessingData(self.df_pre_processed, self.df_cleaned, self.report_no_from_link,
                                           self.magic_numbers, self.prob_dict, self.link_columns_name,
-                                          self.remaining_columns_df, self.target_columns, self.Date,
+                                          self.remaining_columns_df, self.target_columns, self.date,
                                           self.test_file_name, self.logger)
     
     def test_add_report_no(self):
@@ -57,13 +57,13 @@ class TestPostProcessingData(unittest.TestCase):
         '''
         This will test whether the date and vendor is added in our dataframe or not
         '''
-        out_df = self.pp_data.add_date_and_vendor(self.df_pre_processed, self.Date, self.test_file_name)
+        out_df = self.pp_data.add_date_and_vendor(self.df_pre_processed)
 
-        expected_date_series = [self.Date]*5
+        expected_date_series = [self.date]*5
         expected_vendor_series = [self.test_file_name]*5
 
         # Testing date and vendor
-        self.assertEqual( list(out_df['Date']) , expected_date_series )
+        self.assertEqual( list(out_df['date']) , expected_date_series )
         self.assertEqual( list(out_df['Vendor']) ,  expected_vendor_series)
     
     def test_transform_values(self):

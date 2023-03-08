@@ -2,11 +2,9 @@
 This module contains utility functions for working with column names in dataframes.
 """
 
-from difflib import SequenceMatcher
+import Levenshtein
 
 def get_standard_names(target_name, logger):
-    print(type(target_name))
-    print(type(logger))
     """
         This function will return the other standard names of the target name
     Args:
@@ -162,8 +160,14 @@ def string_similarity(str1, str2):
     Returns:
         float: The similarity score between 0 and 1.
     """
-    seq_matcher = SequenceMatcher(None, str1, str2)
-    return seq_matcher.ratio()
+    if not str1 or not str2: return 0
+    if type(str1) != str:
+        str1 = str(str1)
+    if type(str2) != str:
+        str2 = str(str2)
+    dist = Levenshtein.distance(str1.lower(), str2.lower())
+    max_len = max(len(str1), len(str2))
+    return 1 - dist/max_len
 
 def similarity_score_from_col_name(column_name, std_names):
     """

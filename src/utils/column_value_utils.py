@@ -274,7 +274,6 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,
                                             str(last_unique_value)) >= 10:
             unique_values_count = len(updated_unique_values_list)
             if unique_values_count == count:
-                print("Equal values found")
                 return 10
         else:
             return 0

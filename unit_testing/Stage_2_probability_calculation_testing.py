@@ -105,8 +105,8 @@ class TestStage1DataCleaningAndExtraction(unittest.TestCase):
 
         final_similarity_score = self.processor.get_column_probability(
             cur_target_column="clarity",
-            cur_df_cleaned_column_name=cur_df_cleaned_column_name,
-            cur_df_cleaned_column_unique_values=cur_df_cleaned_column_unique_values,
+            cur_dataframe_cleaned_column_name=cur_df_cleaned_column_name,
+            cur_dataframe_cleaned_column_unique_values=cur_df_cleaned_column_unique_values,
             cur_target_col_std_names=["clarity", "cls"],
             cur_target_col_unique_vals=cur_target_col_unique_vals,
         )
