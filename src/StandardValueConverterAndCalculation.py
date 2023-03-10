@@ -1,9 +1,26 @@
-import pandas as pd
-from src import utils 
+'''
+This file contains class for performing post processing with column values in dataframes.
+'''
 from src.utils import post_processing_utils
-
-
 class PostProcessing:
+    """
+    Class performs post processing of extracted data. It starts with 'process' functions and 
+    then iteratively calls other functions.
+    It calculates final values for:
+    1) Measurement Column
+    2) All Price Columns
+    3) Report No.
+    4) Shape ,Fluoroscent and Cut
+
+    Args:
+        fetched_columns: Predicted Columns (list)
+        df_pre_processed: Pre Processed Dataframe (DataFrame)
+        magic_numbers: Required weights (dict)
+        prob_dict: Predicted Probablities (dict)
+    Returns:
+        df_pre_processed : Post Processed Dataframe (DataFrame)
+
+    """
     def __init__(self, fetched_columns, df_pre_processed, magic_numbers, prob_dict):
         self.fetched_columns = fetched_columns
         self.df_pre_processed = df_pre_processed
@@ -12,9 +29,14 @@ class PostProcessing:
 
     def cal_measurement_columns(self):
         """
-        Extract the length, width and depth from this string of this  format "2*7*8"
-        and also this format "7*8" and then
-        calculate depth% and ratio.
+        Extracts the length, width and depth from the provided string 
+        in the format "2*7*8" or "7*8".
+        It calculates the 'depth percentage' and 'ratio'.
+
+        Returns:
+            pre-processed DataFrame with transformed measurement columns 
+            and calculated ratio and depth percentage. (Datframe)
+
         """
         # Corecting the length, width and depth column
         measurement_columns = ["length", "width", "depth"]
@@ -63,7 +85,18 @@ class PostProcessing:
     def cal_price_columns(self):
         """
         This function will calculate the "price per carat","discount" and "total"
-        only if 'carat','raprate' and one of the aforementioned column is given
+        only if 'carat','raprate' and one of the aforementioned column is given.
+        Total Columns:
+        1) Carat
+        2) Raprate
+        3) Price per carat
+        4) Discount
+        5) Total
+        6) RapTotal
+
+        Returns:
+            post-processed DataFrame with additional price columns 
+            
         """
         price_columns = ["carat", "raprate", "price per carat", "discount", "total"]
 
@@ -129,17 +162,23 @@ class PostProcessing:
                     )
                 ) * 100
 
+        self.df_pre_processed["rap total"] = (
+                    self.df_pre_processed["raprate"]
+                    * self.df_pre_processed["carat"]
+                )
         return self.df_pre_processed
 
     def process(self):
 
         """
-        This function will tranform the shape, fluorescent and cut column
-        where it will transform their non-standard value to standard values.
-        It will also all the above two functions "cal_measurement_columns" 
-        and "cal_price_columns"
-        Finally it will combine the 'report_no_from_link' column and 'report_no' column
+        This function will tranform shape, fluorescent and cut column.
+        It will transform their non-standard value to a standard value.
+        It will call "cal_measurement_columns" and "cal_price_columns"
+        It will combine the 'report_no_from_link' column and 'report_no' column
         to get final 'report_no' column
+
+        Returns:
+            pre-processed DataFrame with additional columns 
         """
 
         if "shape" in self.fetched_columns:
