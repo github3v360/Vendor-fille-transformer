@@ -6,7 +6,7 @@ import random
 import pandas as pd
 
 from openpyxl import load_workbook
-from src import Single_Sheet_extraction
+from src import single_sheet_extraction
 
 class EntireFileExtractor:
     """
@@ -59,7 +59,7 @@ class EntireFileExtractor:
                 continue
 
             # Data Extraction from current sheet
-            extractor = Single_Sheet_extraction.ExtractFromSingleSheet(data_frame,
+            extractor = single_sheet_extraction.ExtractFromSingleSheet(data_frame,
                         cur_work_book_xl, self.debug, self.logger, now, self.test_file_name)
             out_data_frame = extractor.process()
 
