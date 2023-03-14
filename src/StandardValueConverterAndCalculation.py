@@ -162,10 +162,10 @@ class PostProcessing:
                     )
                 ) * 100
 
-        self.df_pre_processed["rap total"] = (
-                    self.df_pre_processed["raprate"]
-                    * self.df_pre_processed["carat"]
-                )
+        # self.df_pre_processed["rap total"] = (
+        #             self.df_pre_processed["raprate"]
+        #             * self.df_pre_processed["carat"]
+        #         )
         return self.df_pre_processed
 
     def process(self):
