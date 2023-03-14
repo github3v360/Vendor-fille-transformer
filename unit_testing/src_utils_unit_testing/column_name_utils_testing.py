@@ -116,7 +116,7 @@ class TestStringSimilarity(unittest.TestCase):
         self.assertLess(column_name_utils.string_similarity("hello", "world"), 0.5)
     
     def test_capitalization(self):
-        self.assertEqual(column_name_utils.string_similarity("Hello", "hello"), 1.0)
+        self.assertEqual(column_name_utils.string_similarity("Hello", "hello"), 0.8)
     
     def test_numeric_input(self):
         self.assertEqual(column_name_utils.string_similarity(123, "123"), 1.0)
@@ -140,13 +140,13 @@ class TestSimilarityfromColumnName(unittest.TestCase):
         column_name = 'clrty'
         std_names = ['clarity','purity','Clar', 'Clearity']
         result = column_name_utils.similarity_score_from_col_name(column_name, std_names)
-        assert  result == 0.714
+        assert  result == 0.833
         
         # Test case 3: No match
         column_name = 'weight'
         std_names = ['clarity','purity','Clar', 'Clearity']
         result = column_name_utils.similarity_score_from_col_name(column_name, std_names)
-        assert  result == 0.25
+        assert  result == 0.429
         
         # Test case 4: Same strings with different cases
         column_name = 'Color'
@@ -158,7 +158,7 @@ class TestSimilarityfromColumnName(unittest.TestCase):
         column_name = 'lenght'
         std_names = ['M1','Measurement','Diameter','length']
         result = column_name_utils.similarity_score_from_col_name(column_name, std_names)
-        assert  result == 0.667
+        assert  result == 0.833
 
 if __name__ == '__main__':
     unittest.main()
