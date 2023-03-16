@@ -18,16 +18,17 @@ class EntireFileExtractor:
         file_path: Test File Path (String)
         debug: Flag Variable (int)
         logger: Logger (logger)
-        test_file_name: File Name (String)
+        vendor_name: File Name (String)
     Returns:
         global_data_frame : Processed Dataframe (Dataframe)
 
     """
-    def __init__(self, file_path, debug, logger, test_file_name):
+    def __init__(self, file_path, debug, logger, date, vendor_name):
         self.file_path = file_path
         self.debug = debug
         self.logger = logger
-        self.test_file_name = test_file_name
+        self.date = date
+        self.vendor_name = vendor_name
 
     def extract(self):
         """
@@ -36,8 +37,6 @@ class EntireFileExtractor:
 
         Concatenate all the outputs to final excel sheet
         """
-        gap = random.randint(0, 10)
-        now = (datetime.datetime.now() - datetime.timedelta(days=gap)).strftime("%d/%m/%Y")
 
         # this is flag which will tell whether the file is excel or not
         sheet_names,is_excel,work_book,work_book_xl = self.check_extension_of_sheet()
@@ -60,7 +59,7 @@ class EntireFileExtractor:
 
             # Data Extraction from current sheet
             extractor = single_sheet_extraction.ExtractFromSingleSheet(data_frame,
-                        cur_work_book_xl, self.debug, self.logger, now, self.test_file_name)
+                        cur_work_book_xl, self.debug, self.logger, self.date, self.vendor_name)
             out_data_frame = extractor.process()
 
             # Concatenation of global dataframe with out_data_frame

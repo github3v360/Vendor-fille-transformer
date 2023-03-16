@@ -36,7 +36,7 @@ def correct_df_headers(input_df):
         # We will check the 10 row below the current header to get the row with correct header
         for i in range(10):
             # Getting the row values of the next row
-            cur_columns = list(input_df.iloc[0:input_df.shape[0]])
+            cur_columns = list(input_df.iloc[i])
             for cur_column in cur_columns:
                 # Below logic will try to match the row values with correct headers
                 try:

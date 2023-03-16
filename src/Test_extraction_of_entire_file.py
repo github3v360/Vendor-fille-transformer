@@ -42,7 +42,7 @@ def main():
         start = time.time()
         try:
             vendor_name = test_file_name[:-5]
-            extractor = extraction_of_entire_file.EntireFileExtractor(file_path,False,logger,vendor_name)
+            extractor = extraction_of_entire_file.EntireFileExtractor(file_path,False,logger,"2/02/2002",vendor_name)
             out_df = extractor.extract()
             dummy_df = pd.concat([out_df,dummy_df])
         except:
