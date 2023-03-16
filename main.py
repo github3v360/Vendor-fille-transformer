@@ -15,7 +15,7 @@ import fnmatch
 import pickle
 import yaml
 import pandas as pd
-from src import Extraction_of_entire_file
+from src import extraction_of_entire_file
 import logging
 import io
 
@@ -106,7 +106,7 @@ def helloFirestore(event, context):
         blob=bucket.blob(currentFilePath)
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
 
-        extractor = Extraction_of_entire_file.Entire_file_extractor(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logging,"")
+        extractor = extraction_of_entire_file.EntireFileExtractor(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logging,"")
         out_df = extractor.extract()
         out_df=out_df.reset_index()
 

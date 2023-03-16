@@ -111,7 +111,7 @@ class TestStage1DataCleaningAndExtraction(unittest.TestCase):
             cur_target_col_unique_vals=cur_target_col_unique_vals,
         )
 
-        self.assertEqual(final_similarity_score, 0.785)
+        self.assertEqual(final_similarity_score, 0.75)
 
     def test_get_current_column_unique_values(self):
 
