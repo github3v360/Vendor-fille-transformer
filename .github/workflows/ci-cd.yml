@@ -13,17 +13,12 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           pyhon-version: '3.7'
-      - name: Install dependencies
+      - name: Install dependencies and run all unit test
         env:
           REPO_TOKEN: ${{ secrets._GITHUB_TOKEN }}
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          python unit_testing/run_all_unit_tests.py
       
-      - name: Deploy to firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_VENDOR_PROJECT_123 }}
           
