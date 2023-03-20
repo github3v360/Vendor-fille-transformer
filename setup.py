@@ -12,10 +12,5 @@ setup(
     url="https://github.com/Manav664/MLOps-Demo.git",
     author_email="19bce062@nirmauni.ac.in",
     packages=["src"],
-    python_requires=">=3.6",
-    install_requires=[
-        'pandas',
-        'scikit-learn',
-        'numpy'
-    ]
+    python_requires=">=3.6"
 )
