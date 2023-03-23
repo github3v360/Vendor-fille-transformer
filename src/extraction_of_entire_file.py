@@ -48,8 +48,9 @@ class EntireFileExtractor:
             if is_excel:
                 # Fetching and storing the sheet
                 data_frame = work_book[sheet_name]
+
                 # Getting openpyxl current sheet
-                cur_work_book_xl = work_book_xl[sheet_name]
+                cur_work_book_xl = None if work_book_xl is None else work_book_xl[sheet_name]
             else:
                 data_frame = work_book
                 cur_work_book_xl = None
@@ -80,16 +81,19 @@ class EntireFileExtractor:
 
         # Load the Pandas Data Frame with all sheets
         if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
-            work_book = pd.read_excel(self.file_path, None)
 
-            # Read Data file with openpyxl
-            work_book_xl = load_workbook(self.file_path)
+            work_book = pd.read_excel(self.file_path, None)
 
             # Fetching all sheet names
             sheet_names = list(work_book.keys())
-
             # setting is_excel flag to True
             is_excel = True
+
+            try:
+                # Read Data file with openpyxl
+                work_book_xl = load_workbook(self.file_path)
+            except:
+                work_book_xl = None
 
         elif self.file_path.endswith('.csv'):
 
@@ -98,6 +102,7 @@ class EntireFileExtractor:
             # Since csv files do not have multiple sheets
             # we will assign a random name
             sheet_names = ['random_sheet']
+            work_book_xl = None
 
         else:
             self.logger.exception("This file format is not supported")

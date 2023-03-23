@@ -22,7 +22,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 def main():
 
-    test_data_dir = "artifacts/new_test_data_2"
+    test_data_dir = "artifacts/test_files"
     test_file_names = os.listdir(test_data_dir)
     out_dir = "artifacts/output_generated"
 
@@ -34,8 +34,8 @@ def main():
     "price per carat","discount","total","rap price total","comments","report_no"])
 
     for test_file_name in test_file_names:
-        if test_file_name != "SRKStock_216700.xlsx":
-            continue
+        # if test_file_name not in ["atlantic1.xlsx"]:
+        #     continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
         print(f"====File name : {test_file_name} ======")

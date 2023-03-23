@@ -20,6 +20,8 @@ def correct_df_headers(input_df):
 
     flag = False
 
+    total_rows = len(input_df)
+
     # Getting the current header names of the input dataframe
     cur_columns = list(input_df.columns)
 
@@ -34,7 +36,7 @@ def correct_df_headers(input_df):
     # If DataFrame is not in Correct Format
     if not flag:
         # We will check the 10 row below the current header to get the row with correct header
-        for i in range(10):
+        for i in range(total_rows//2):
             # Getting the row values of the next row
             cur_columns = list(input_df.iloc[i])
             for cur_column in cur_columns:

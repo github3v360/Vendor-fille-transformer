@@ -269,6 +269,19 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,
                 target_column_unique_value,target_name,input_data_type,len_column_unique_value)
     
     elif target_name == 'report_no':
+
+        if input_data_type[0]==str:
+            get_val = None 
+
+            for val in column_unique_values:
+                if type(val) == str:
+                    get_val = val
+                    break
+            
+            if get_val:
+                if "**" in get_val:
+                    return 1
+
         updated_unique_values_list,count = convert_to_int_and_update_rows_count(
                                             column_unique_values,count_of_rows)
 
@@ -278,7 +291,7 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,
                                             str(last_unique_value)) >= 10:
             unique_values_count = len(updated_unique_values_list)
             if unique_values_count == count:
-                return 10
+                return 1
         else:
             return 0
 
