@@ -1,6 +1,7 @@
 '''
 This file contains class for performing post processing with column values in dataframes.
 '''
+import pickle
 from src.utils import post_processing_utils
 class PostProcessing:
     """
@@ -207,11 +208,43 @@ class PostProcessing:
                 axis=1,
             )
 
+        if "color" in self.fetched_columns:
+            self.df_pre_processed["color"] = self.df_pre_processed.apply(
+                lambda x: post_processing_utils.transform_column(
+                    x["color"], self.magic_numbers, "color"
+                ),
+                axis=1,
+            )
+
+        if "clarity" in self.fetched_columns:
+            self.df_pre_processed["clarity"] = self.df_pre_processed.apply(
+                lambda x: post_processing_utils.transform_column(
+                    x["clarity"], self.magic_numbers, "clarity"
+                ),
+                axis=1,
+            )
+
         self.df_pre_processed = self.cal_price_columns()
 
         self.df_pre_processed["report_no"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.transform_report_no_column(
                 x["report_no"], x["report_no_from_link"]
+            ),
+            axis=1,
+        )
+
+        shape_values = []
+        # Load shape dictionary from pickle file
+        try:
+            with open("artifacts/pickle_files/shape.pkl", "rb") as f_name:
+                target_unique_values = pickle.load(f_name)
+                shape_values = list(target_unique_values.values())
+        except FileNotFoundError:
+            raise ValueError(f"File not found for target name")
+
+        self.df_pre_processed["generated_report_no"] = self.df_pre_processed.apply(
+            lambda x: post_processing_utils.generate_report_no_column(
+                x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],shape_values
             ),
             axis=1,
         )

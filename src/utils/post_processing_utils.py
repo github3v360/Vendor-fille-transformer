@@ -3,6 +3,8 @@
 '''
 import os
 import pickle
+import pandas as pd
+from collections import Counter
 from src.utils.column_name_utils import string_similarity
 
 def transform_column(cur_val, magic_numbers, target_column_name):
@@ -35,8 +37,25 @@ def transform_column(cur_val, magic_numbers, target_column_name):
         cut_values = ["I","EX","VG","G","F","P","EX"]
         target_column_dict = dict(zip(cut_key,cut_values))
 
+    elif target_column_name == "clarity":
+        clar_key = ['SI1', 'VS1 -', 'SI1 -', 'SI2', 'SI2 -', 'SI2 +', 'VS1 +', 'VS2', 'VS1', 'VS2 -', 'SI1 +', 'VS2 +']
+        clar_values = ['SI1', 'VS1-', 'SI1-', 'SI2', 'SI2-', 'SI2+', 'VS1+', 'VS2', 'VS1', 'VS2-', 'SI1+', 'VS2+']
+        target_column_dict = dict(zip(clar_key,clar_values))
+
+    elif target_column_name == "color":
+        col_key = ['G', 'D', 'E', 'D -', 'E -', 'E +', 'G +', 'G -', 'H', 'J', 'H +', 'H -', 'I -', 'I', 'J -', 'J +', 'I +','F','F +','F -']
+        col_values = ['G', 'D', 'E', 'D-', 'E-', 'E+', 'G+', 'G-', 'H', 'J', 'H+', 'H-', 'I-', 'I', 'J-', 'J+', 'I+','F','F+','F-']
+
+        target_column_dict = dict(zip(col_key,col_values))
+
     if cur_val == "" or cur_val is None or (type(cur_val) != str):
         return None
+
+    if (target_column_name == "color" or target_column_name == "clarity"):
+        if (cur_val in target_column_dict.keys()):
+            return target_column_dict[cur_val]
+        else:
+            return cur_val
 
     try:
         # Fetching the correct transformed value using the target_column_dict
@@ -155,3 +174,42 @@ def transform_report_no_column(report_no,report_no_from_link):
     if report_no_from_link is None:
         return None
     return report_no_from_link
+
+def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,shape_values):
+    clar = ['SI1', 'VS1-', 'SI1-', 'SI2', 'SI2-', 'SI2+', 'VS1+', 'VS2', 'VS1', 'VS2-', 'SI1+', 'VS2+',None]
+    col = ['G', 'D', 'E', 'D-', 'E-', 'E+', 'G+', 'G-', 'H', 'J', 'H+', 'H-', 'I-', 'I', 'J-', 'J+', 'I+','F','F+','F-',None]
+    fluor = ['FAINT','MEDIUM','NONE',None]
+    # print(type(shape_values))
+    shape_values.append(None)
+
+
+    clarity_value_counter = Counter(chr(i) for i in range(ord('A'), ord('A')+len(clar)))
+    clarity_map = dict(zip(clar, clarity_value_counter))
+
+    col_value_counter = Counter(chr(i) for i in range(ord('A'), ord('A')+len(col)))
+    color_map = dict(zip(col, col_value_counter))
+
+    # color_map = {color: i for i, color in enumerate(col)}
+
+    fluorescent_map = {fluorescent: i for i, fluorescent in enumerate(fluor)}
+
+    # key_list = ['G', 'D', 'E', 'D -', 'E -', 'E +', 'G +', 'G -', 'H', 'J', 'H +', 'H -', 'I -', 'I', 'J -', 'J +', 'I +']
+    shape_value_counter = Counter(f"{chr(i)}{j}" for i in range(ord('A'), ord('A')+(len(shape_values)//10)+1) for j in range(10))
+    shape_map = dict(zip(shape_values, shape_value_counter))
+    # Extract last four digits from previous report
+    last_four = str(report_no)[-4:]
+    
+    # Map values for clarity, color, and fluorescent to serial numbers
+    clarity_num = str(clarity_map[clarity] ) if clarity in clarity_map else str(clarity_map[None])
+    color_num = str(color_map[color]) if color in color_map else str(color_map[None])
+
+    fluorescent_num = str(fluorescent_map[fluorescent]) if fluorescent in fluorescent_map else str(fluorescent_map[None])
+    carat_num = str(int(round((carat*100),3)))
+    shape_num = str(shape_map[shape]) if shape in shape_map else str(shape_map[None])
+    # Concatenate serial numbers and last four digits of previous report
+    # print(clarity_num,color_num,fluorescent_num,carat_num)
+
+    new_reportno = clarity_num + color_num + fluorescent_num + shape_num + carat_num +last_four
+    # print(new_reportno)
+    return new_reportno
+    
