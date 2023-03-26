@@ -17,9 +17,14 @@ def correct_df_headers(input_df):
     # Possible Correct names of headers (More can be added in future)
     col_names = ['srno', 'color', 'cut', 'shape', 'clarity', 'purity',
                  'carat', 'size', 'cts', 'crtwt', 'fluor', 'flour']
+    
+    # Dropping the empty columns
+    input_df = input_df.dropna(how="all",axis=1)
 
+    # setting the header found flag to False
     flag = False
 
+    # Setting total number of rows
     total_rows = len(input_df)
 
     # Getting the current header names of the input dataframe
@@ -36,9 +41,14 @@ def correct_df_headers(input_df):
     # If DataFrame is not in Correct Format
     if not flag:
         # We will check the 10 row below the current header to get the row with correct header
-        for i in range(total_rows//2):
+        for i in range(total_rows//4):
             # Getting the row values of the next row
-            cur_columns = list(input_df.iloc[i])
+            cur_columns = input_df.iloc[i]
+
+            # If there is lot of empty columns
+            # Then current row is not header row
+            if cur_columns.isna().sum() > 10:continue
+
             for cur_column in cur_columns:
                 # Below logic will try to match the row values with correct headers
                 try:
