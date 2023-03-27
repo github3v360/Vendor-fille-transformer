@@ -82,7 +82,7 @@ class EntireFileExtractor:
         # Load the Pandas Data Frame with all sheets
         if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
 
-            work_book = pd.read_excel(self.file_path, None)
+            work_book = pd.read_excel(self.file_path, sheet_name = None, header = None)
 
             # Fetching all sheet names
             sheet_names = list(work_book.keys())
