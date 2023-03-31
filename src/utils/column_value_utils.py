@@ -16,14 +16,11 @@ def get_target_column_unique_values(target_name, logger):
     """
 
     target_dict = {
-        "clarity": ("artifacts/pickle_files/clarity_list.pkl", True),
+        "clarity": ("artifacts/pickle_files/clarity_dict.pkl", True),
         "carat": ([1.51, 2.1, 3.05, 4.01, 5.6], False),
-        "color": ("artifacts/pickle_files/color_list.pkl", True),
-        "shape": ("artifacts/pickle_files/shape.pkl", True),
-        "fluorescent": (
-            ["faint", "medium", "none", "f", "m", "n", "med", "non", "fnt"],
-            True,
-        ),
+        "color": ("artifacts/pickle_files/color_dict.pkl", True),
+        "shape": ("artifacts/pickle_files/shape_dict.pkl", True),
+        "fluorescent": ("artifacts/pickle_files/fluorescent_dict.pkl", True),
         "raprate": ([12000.00, 21000.00, 11000.00, 18000.00, 16000.12], False),
         "length": (["*", "x", "X", "+", "-"], False),
         "width": (["*", "x", "X", "+", "-"], False),
