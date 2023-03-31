@@ -175,41 +175,42 @@ def transform_report_no_column(report_no,report_no_from_link):
         return None
     return report_no_from_link
 
-def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,shape_values):
-    clar = ['SI1', 'VS1-', 'SI1-', 'SI2', 'SI2-', 'SI2+', 'VS1+', 'VS2', 'VS1', 'VS2-', 'SI1+', 'VS2+',None]
-    col = ['G', 'D', 'E', 'D-', 'E-', 'E+', 'G+', 'G-', 'H', 'J', 'H+', 'H-', 'I-', 'I', 'J-', 'J+', 'I+','F','F+','F-',None]
-    fluor = ['FAINT','MEDIUM','NONE',None]
-    # print(type(shape_values))
-    shape_values.append(None)
+def format_number(num):
+    num = int(round(num * 100))
+    num_str = str(num).zfill(4)
+    return num_str
 
-
-    clarity_value_counter = Counter(chr(i) for i in range(ord('A'), ord('A')+len(clar)))
-    clarity_map = dict(zip(clar, clarity_value_counter))
-
-    col_value_counter = Counter(chr(i) for i in range(ord('A'), ord('A')+len(col)))
-    color_map = dict(zip(col, col_value_counter))
-
-    # color_map = {color: i for i, color in enumerate(col)}
-
-    fluorescent_map = {fluorescent: i for i, fluorescent in enumerate(fluor)}
-
-    # key_list = ['G', 'D', 'E', 'D -', 'E -', 'E +', 'G +', 'G -', 'H', 'J', 'H +', 'H -', 'I -', 'I', 'J -', 'J +', 'I +']
-    shape_value_counter = Counter(f"{chr(i)}{j}" for i in range(ord('A'), ord('A')+(len(shape_values)//10)+1) for j in range(10))
-    shape_map = dict(zip(shape_values, shape_value_counter))
-    # Extract last four digits from previous report
-    last_four = str(report_no)[-4:]
+def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,shape_keys,cut,polish,symmetry):
+    shape_keys.append(None)
     
-    # Map values for clarity, color, and fluorescent to serial numbers
+    clarity_map = { None: 0,'SI1': 1, 'SI2': 2, 'VS1': 3, 'VS2': 4}
+    color_map = {None: 0, 'D': 1, 'E': 2, 'F': 3, 'G': 4, 'H': 5, 'I': 6, 'J': 7}
+    cut_map = {None:0, 'I': 1, 'EX': 2, 'VG': 3, 'G': 4, 'F': 5, 'P': 6}
+    fluorescent_map = {None: 0,'FAINT': 1, 'MEDIUM': 2, 'NONE': 3}
+
+    shape_value_counter = Counter(f"{chr(i)}{j}" for i in range(ord('A'), ord('A')+(len(shape_keys)//10)+1) for j in range(10))
+    shape_map = dict(zip(shape_keys, shape_value_counter))
+    last_four = str(report_no)[-4:]
+
     clarity_num = str(clarity_map[clarity] ) if clarity in clarity_map else str(clarity_map[None])
     color_num = str(color_map[color]) if color in color_map else str(color_map[None])
-
+    cut_num = str(cut_map[cut]) if cut in cut_map else str(cut_map[None])
+    polish_num = str(cut_map[polish]) if polish in cut_map else str(cut_map[None])
+    symmetry_num = str(cut_map[symmetry]) if symmetry in cut_map else str(cut_map[None])
     fluorescent_num = str(fluorescent_map[fluorescent]) if fluorescent in fluorescent_map else str(fluorescent_map[None])
-    carat_num = str(int(round((carat*100),3)))
+    carat_num = str(format_number(carat))
     shape_num = str(shape_map[shape]) if shape in shape_map else str(shape_map[None])
     # Concatenate serial numbers and last four digits of previous report
     # print(clarity_num,color_num,fluorescent_num,carat_num)
-
-    new_reportno = clarity_num + color_num + fluorescent_num + shape_num + carat_num +last_four
+    # 1.01 = 0101
+    # 10.01 = 1001 
+    # 1.01 , 10.1  = 101 , 101
+    # 1 = 01
+    # 10 = 10
+    # 10 B1
+    # fluro + shape + carat + color + clarity + cut + polish + symmetry + last_four(if empty put 4 0's)
+    # 1 + 2 + 4 + 2 + 2 + 1 + 1 + 1 + 4 # convert to hexadecimal (convert each category to hexadecimal)(18)
+    new_reportno = fluorescent_num +shape_num + carat_num + color_num +  clarity_num + cut_num + polish_num + symmetry_num +  last_four
     # print(new_reportno)
     return new_reportno
     

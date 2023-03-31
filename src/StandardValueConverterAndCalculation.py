@@ -238,13 +238,14 @@ class PostProcessing:
         try:
             with open("artifacts/pickle_files/shape.pkl", "rb") as f_name:
                 target_unique_values = pickle.load(f_name)
-                shape_values = list(target_unique_values.values())
+                shape_keys = list(target_unique_values.keys())
+                print(shape_keys)
         except FileNotFoundError:
             raise ValueError(f"File not found for target name")
 
         self.df_pre_processed["generated_report_no"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.generate_report_no_column(
-                x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],shape_values
+                x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],shape_keys,x['cut'],x['polish'],x['symmetry']
             ),
             axis=1,
         )
