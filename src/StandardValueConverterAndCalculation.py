@@ -193,7 +193,7 @@ class PostProcessing:
         if "fluorescent" in self.fetched_columns:
             self.df_pre_processed["fluorescent"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["fluorescent"], self.magic_numbers, "fluor"
+                    x["fluorescent"], self.magic_numbers, "fluorescent"
                 ),
                 axis=1,
             )
@@ -236,7 +236,7 @@ class PostProcessing:
         shape_values = []
         # Load shape dictionary from pickle file
         try:
-            with open("artifacts/pickle_files/shape.pkl", "rb") as f_name:
+            with open("artifacts/pickle_files/shape_dict.pkl", "rb") as f_name:
                 target_unique_values = pickle.load(f_name)
                 shape_keys = list(target_unique_values.keys())
                 print(shape_keys)

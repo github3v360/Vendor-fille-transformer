@@ -5,12 +5,14 @@ magic_numbers:
   # final_similarity_score = (sim_score_from_col_name*clarity_normalizing_factor_for_col_name) + (sim_score_from_col_val * clarity_normalizing_factor_for_col_value)
   clarity_normalizing_factor_for_col_name: 0.5
   clarity_normalizing_factor_for_col_value: 0.5
+  clarity_similarity_transform_df_threshold: 0.7
 
   carat_normalizing_factor_for_col_name: 0.65
   carat_normalizing_factor_for_col_value: 0.35
 
   color_normalizing_factor_for_col_name: 0.5
   color_normalizing_factor_for_col_value: 0.5
+  color_similarity_transform_df_threshold: 0.7
 
   shape_normalizing_factor_for_col_name: 0.5
   shape_normalizing_factor_for_col_value: 0.5
@@ -22,7 +24,7 @@ magic_numbers:
   
   fluor_normalizing_factor_for_col_name: 0.5
   fluor_normalizing_factor_for_col_value: 0.5
-  fluor_similarity_transform_df_threshold: 0.3
+  fluorescent_similarity_transform_df_threshold: 0.3
 
   raprate_normalizing_factor_for_col_name: 0.5
   raprate_normalizing_factor_for_col_value: 0.5
@@ -36,9 +38,11 @@ magic_numbers:
 
   polish_normalizing_factor_for_col_name: 0.5
   polish_normalizing_factor_for_col_value: 0.5
+  polish_similarity_transform_df_threshold: 0.7
 
   sym_normalizing_factor_for_col_name: 0.5
   sym_normalizing_factor_for_col_value: 0.5
+  symmetry_similarity_transform_df_threshold: 0.7
   
   table_normalizing_factor_for_col_name: 0.5
   table_normalizing_factor_for_col_value: 0.5

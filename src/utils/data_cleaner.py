@@ -17,28 +17,48 @@ def correct_df_headers(input_df):
     # Possible Correct names of headers (More can be added in future)
     col_names = ['srno', 'color', 'cut', 'shape', 'clarity', 'purity',
                  'carat', 'size', 'cts', 'crtwt', 'fluor', 'flour']
+    
+    # Dropping the empty columns
+    input_df = input_df.dropna(how="all",axis=1)
 
+    # setting the header found flag to False
     flag = False
 
+    # Setting total number of rows
     total_rows = len(input_df)
 
     # Getting the current header names of the input dataframe
-    cur_columns = list(input_df.columns)
+    cur_columns = input_df.columns
 
     correct_row_idx = -1
 
-    # This for loop will check if the DataFrame is already in the correct format or not
-    for cur_column in cur_columns:
-        if cur_column in col_names:
-            flag = True
-            break
+    # If there is lot of empty columns
+    # Then current header is not header row
+    if cur_columns.isna().sum() <= 10:
+
+        # This for loop will check if the DataFrame is already in the correct format or not
+        for cur_column in cur_columns:
+            # Below logic will try to match the row values with correct headers
+            try:
+                cur_column = cur_column.lower()
+            except:
+                continue
+
+            if cur_column in col_names:
+                flag = True
+                break
 
     # If DataFrame is not in Correct Format
     if not flag:
         # We will check the 10 row below the current header to get the row with correct header
-        for i in range(total_rows//2):
+        for i in range(total_rows//4):
             # Getting the row values of the next row
-            cur_columns = list(input_df.iloc[i])
+            cur_columns = input_df.iloc[i]
+
+            # If there is lot of empty columns
+            # Then current row is not header row
+            if cur_columns.isna().sum() > 10:continue
+
             for cur_column in cur_columns:
                 # Below logic will try to match the row values with correct headers
                 try:
@@ -55,9 +75,12 @@ def correct_df_headers(input_df):
                 input_df = input_df[i+1:]
                 input_df.columns = cur_columns
                 break
+    
+    # If correct headers not found then we return None
+    if not flag: return None,-1
 
     input_df = input_df.reset_index(drop=True)
-    return input_df, correct_row_idx
+    return input_df, correct_row_idx-1
 
 def drop_empty_columns_and_rows(input_df):
     """
