@@ -2,7 +2,8 @@
 This file contains class for performing post processing with column values in dataframes.
 '''
 import pickle
-from src.utils import post_processing_utils
+import os
+from src.utils import post_processing_utils,common_utils
 class PostProcessing:
     """
     Class performs post processing of extracted data. It starts with 'process' functions and 
@@ -232,20 +233,36 @@ class PostProcessing:
             ),
             axis=1,
         )
-
-        shape_values = []
+        file_destination_list = []
+        test_data_dir = "artifacts/pickle_files"
+        test_file_names = os.listdir(test_data_dir)
+        for test_file_name in test_file_names:
+            file_destination_list.append(os.path.join(test_data_dir,test_file_name))
+        
         # Load shape dictionary from pickle file
-        try:
-            with open("artifacts/pickle_files/shape_dict.pkl", "rb") as f_name:
-                target_unique_values = pickle.load(f_name)
-                shape_keys = list(target_unique_values.keys())
-                print(shape_keys)
-        except FileNotFoundError:
-            raise ValueError(f"File not found for target name")
+        list_of_dictionaries = common_utils.load_pickle_files(file_destination_list)
+        clarity_map=  {}
+        color_map = {}
+        cut_map = {}
+        fluorescent_map = {}
+        shape_map = {}
 
+        for dictionary in list_of_dictionaries:
+            if 'color' in dictionary:
+                color_map = dictionary['color']
+            elif 'shape' in dictionary:
+                shape_map = dictionary['shape']
+            elif 'clarity' in dictionary:
+                clarity_map = dictionary['clarity']
+            elif 'cut' in dictionary:
+                cut_map = dictionary['cut']
+            elif 'fluorescent' in dictionary:
+                fluorescent_map = dictionary['fluorescent']
+                
         self.df_pre_processed["generated_report_no"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.generate_report_no_column(
-                x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],shape_keys,x['cut'],x['polish'],x['symmetry']
+                x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
+                clarity_map,color_map, shape_map, cut_map, fluorescent_map
             ),
             axis=1,
         )

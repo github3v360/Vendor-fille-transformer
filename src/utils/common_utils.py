@@ -2,6 +2,8 @@
 This module contains utility functions for common use.
 '''
 import yaml
+import os
+import pickle
 
 def read_yaml(path_to_yaml: str) -> dict:
     """
@@ -122,3 +124,19 @@ def get_report_no_extracted_from_link(df_cleaned, logger,link_columns_name):
         logger.info("Report No. discovered in the link")
 
     return report_no_from_link,link_columns_name
+
+def load_pickle_files(data):
+    dictionaries = []
+    for file_name in data:
+        try:
+            with open(file_name, "rb") as f_name:
+                target_unique_values = pickle.load(f_name)
+                # Get unique values of target_unique_values and store them in a dictionary
+                unique_values = list(set(target_unique_values.values()))
+                unique_values.insert(0, None)
+                target_dict = {value: i for i, value in enumerate(unique_values, start=0)}
+                dictionaries.append({os.path.basename(file_name).replace('_dict.pkl', ''): target_dict})
+                # print(dictionaries)
+        except FileNotFoundError:
+            raise ValueError(f"File not found for target name")
+    return dictionaries
