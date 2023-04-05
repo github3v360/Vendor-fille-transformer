@@ -112,7 +112,7 @@ def helloFirestore(event, context):
         blob=bucket.blob(currentFilePath)
         blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
 
-        extractor = extraction_of_entire_file.Entire_file_extractor(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logging,date,metaData['VENDORNAME'])
+        extractor = extraction_of_entire_file.EntireFileExtractor(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logging,date,metaData['VENDORNAME'])
         out_df = extractor.extract()
         out_df=out_df.reset_index()
 
