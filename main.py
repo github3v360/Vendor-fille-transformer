@@ -81,6 +81,17 @@ def addSummaryFileMeta(summaryFilePath, uid, VENDORNAME):
 
   collection_ref.add(data)
 
+def list_files(bucket_name, folder_name):
+    bucket = client.bucket(bucket_name)
+
+    # List objects with the given prefix (i.e., folder name).
+    blobs = bucket.list_blobs(prefix=folder_name)
+
+    # Print the name of each object.
+    for blob in blobs:
+        print(blob.name)
+
+
 def helloFirestore(event, context):
     """
     Triggered by a change to a Firestore document.
@@ -105,6 +116,8 @@ def helloFirestore(event, context):
     metaData['CREATEDAT']=dt.fromtimestamp(int(event['value']['fields']['CREATEDAT']['integerValue'])/1000.0)
     metaData['VENDORNAME'] = event['value']['fields']['VENDORNAME']['stringValue']
     date = metaData['CREATEDAT'].strftime("%Y/%m/%d")
+
+    
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
@@ -123,6 +136,7 @@ def helloFirestore(event, context):
     
         summary_bucket = os.environ['SUMMARY_BUCKET']
         exportDataFrameToExcel(out_df, os.path.join(tempdir, 'summary_2.xlsx'))
+        list_files(summary_bucket,userId)
         summaryFilePath = '/'.join([userId, date, 'summary_2.xlsx'])
         print("==========user Id and uuid ========")
         print(userId,str(uuid.uuid4()))
