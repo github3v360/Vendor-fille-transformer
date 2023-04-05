@@ -104,7 +104,7 @@ def helloFirestore(event, context):
     metaData=dict()
     metaData['CREATEDAT']=dt.fromtimestamp(int(event['value']['fields']['CREATEDAT']['integerValue'])/1000.0)
     metaData['VENDORNAME'] = event['value']['fields']['VENDORNAME']['stringValue']
-    date = metaData['CREATEDAT'].strftime("%d/%m/%Y")
+    date = metaData['CREATEDAT'].strftime("%Y/%m/%d")
     
     for everyobj in bucketPathArray:
         currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
@@ -118,10 +118,12 @@ def helloFirestore(event, context):
 
         userId=currentFilePath.split('/')[0]
         filenames.append(os.path.join(tempdir,currentFilePath.split('/')[-1]))
+
+        date = metaData['CREATEDAT'].strftime("%Y%m%d")
     
         summary_bucket = os.environ['SUMMARY_BUCKET']
         exportDataFrameToExcel(out_df, os.path.join(tempdir, 'summary_2.xlsx'))
-        summaryFilePath = '/'.join([userId, str(uuid.uuid4()), 'summary_2.xlsx'])
+        summaryFilePath = '/'.join([userId, date, 'summary_2.xlsx'])
         print("==========user Id and uuid ========")
         print(userId,str(uuid.uuid4()))
         uploadToBucket(
