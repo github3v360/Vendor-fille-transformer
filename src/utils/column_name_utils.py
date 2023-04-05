@@ -1,7 +1,6 @@
 """
 This module contains utility functions for working with column names in dataframes.
 """
-
 import Levenshtein
 
 def get_standard_names(target_name, logger):

@@ -1,9 +1,28 @@
-import pandas as pd
-from src import utils 
-from src.utils import post_processing_utils
-
-
+'''
+This file contains class for performing post processing with column values in dataframes.
+'''
+import pickle
+import os
+from src.utils import post_processing_utils,common_utils
 class PostProcessing:
+    """
+    Class performs post processing of extracted data. It starts with 'process' functions and 
+    then iteratively calls other functions.
+    It calculates final values for:
+    1) Measurement Column
+    2) All Price Columns
+    3) Report No.
+    4) Shape ,Fluoroscent and Cut
+
+    Args:
+        fetched_columns: Predicted Columns (list)
+        df_pre_processed: Pre Processed Dataframe (DataFrame)
+        magic_numbers: Required weights (dict)
+        prob_dict: Predicted Probablities (dict)
+    Returns:
+        df_pre_processed : Post Processed Dataframe (DataFrame)
+
+    """
     def __init__(self, fetched_columns, df_pre_processed, magic_numbers, prob_dict):
         self.fetched_columns = fetched_columns
         self.df_pre_processed = df_pre_processed
@@ -12,9 +31,14 @@ class PostProcessing:
 
     def cal_measurement_columns(self):
         """
-        Extract the length, width and depth from this string of this  format "2*7*8"
-        and also this format "7*8" and then
-        calculate depth% and ratio.
+        Extracts the length, width and depth from the provided string 
+        in the format "2*7*8" or "7*8".
+        It calculates the 'depth percentage' and 'ratio'.
+
+        Returns:
+            pre-processed DataFrame with transformed measurement columns 
+            and calculated ratio and depth percentage. (Datframe)
+
         """
         # Corecting the length, width and depth column
         measurement_columns = ["length", "width", "depth"]
@@ -63,7 +87,18 @@ class PostProcessing:
     def cal_price_columns(self):
         """
         This function will calculate the "price per carat","discount" and "total"
-        only if 'carat','raprate' and one of the aforementioned column is given
+        only if 'carat','raprate' and one of the aforementioned column is given.
+        Total Columns:
+        1) Carat
+        2) Raprate
+        3) Price per carat
+        4) Discount
+        5) Total
+        6) RapTotal
+
+        Returns:
+            post-processed DataFrame with additional price columns 
+            
         """
         price_columns = ["carat", "raprate", "price per carat", "discount", "total"]
 
@@ -129,17 +164,23 @@ class PostProcessing:
                     )
                 ) * 100
 
+        # self.df_pre_processed["rap total"] = (
+        #             self.df_pre_processed["raprate"]
+        #             * self.df_pre_processed["carat"]
+        #         )
         return self.df_pre_processed
 
     def process(self):
 
         """
-        This function will tranform the shape, fluorescent and cut column
-        where it will transform their non-standard value to standard values.
-        It will also all the above two functions "cal_measurement_columns" 
-        and "cal_price_columns"
-        Finally it will combine the 'report_no_from_link' column and 'report_no' column
+        This function will tranform shape, fluorescent and cut column.
+        It will transform their non-standard value to a standard value.
+        It will call "cal_measurement_columns" and "cal_price_columns"
+        It will combine the 'report_no_from_link' column and 'report_no' column
         to get final 'report_no' column
+
+        Returns:
+            pre-processed DataFrame with additional columns 
         """
 
         if "shape" in self.fetched_columns:
@@ -153,7 +194,7 @@ class PostProcessing:
         if "fluorescent" in self.fetched_columns:
             self.df_pre_processed["fluorescent"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["fluorescent"], self.magic_numbers, "fluor"
+                    x["fluorescent"], self.magic_numbers, "fluorescent"
                 ),
                 axis=1,
             )
@@ -167,12 +208,77 @@ class PostProcessing:
                 ),
                 axis=1,
             )
+        
+        if "polish" in self.fetched_columns:
+            self.df_pre_processed["polish"] = self.df_pre_processed.apply(
+                lambda x: post_processing_utils.transform_column(
+                    x["polish"], self.magic_numbers, "polish"
+                ),
+                axis=1,
+            )
+        
+        if "symmetry" in self.fetched_columns:
+            self.df_pre_processed["symmetry"] = self.df_pre_processed.apply(
+                lambda x: post_processing_utils.transform_column(
+                    x["symmetry"], self.magic_numbers, "symmetry"
+                ),
+                axis=1,
+            )
+
+        if "color" in self.fetched_columns:
+            self.df_pre_processed["color"] = self.df_pre_processed.apply(
+                lambda x: post_processing_utils.transform_column(
+                    x["color"], self.magic_numbers, "color"
+                ),
+                axis=1,
+            )
+
+        if "clarity" in self.fetched_columns:
+            self.df_pre_processed["clarity"] = self.df_pre_processed.apply(
+                lambda x: post_processing_utils.transform_column(
+                    x["clarity"], self.magic_numbers, "clarity"
+                ),
+                axis=1,
+            )
 
         self.df_pre_processed = self.cal_price_columns()
 
         self.df_pre_processed["report_no"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.transform_report_no_column(
                 x["report_no"], x["report_no_from_link"]
+            ),
+            axis=1,
+        )
+        file_destination_list = []
+        test_data_dir = "artifacts/pickle_files"
+        test_file_names = os.listdir(test_data_dir)
+        for test_file_name in test_file_names:
+            file_destination_list.append(os.path.join(test_data_dir,test_file_name))
+        
+        # Load shape dictionary from pickle file
+        list_of_dictionaries = common_utils.load_pickle_files(file_destination_list)
+        clarity_map=  {}
+        color_map = {}
+        cut_map = {}
+        fluorescent_map = {}
+        shape_map = {}
+
+        for dictionary in list_of_dictionaries:
+            if 'color' in dictionary:
+                color_map = dictionary['color']
+            elif 'shape' in dictionary:
+                shape_map = dictionary['shape']
+            elif 'clarity' in dictionary:
+                clarity_map = dictionary['clarity']
+            elif 'cut' in dictionary:
+                cut_map = dictionary['cut']
+            elif 'fluorescent' in dictionary:
+                fluorescent_map = dictionary['fluorescent']
+                
+        self.df_pre_processed["generated_report_no"] = self.df_pre_processed.apply(
+            lambda x: post_processing_utils.generate_report_no_column(
+                x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
+                clarity_map,color_map, shape_map, cut_map, fluorescent_map
             ),
             axis=1,
         )

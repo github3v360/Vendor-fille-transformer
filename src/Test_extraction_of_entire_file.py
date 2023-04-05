@@ -1,7 +1,7 @@
 import yaml
 import pandas as pd
 import argparse
-from src import Extraction_of_entire_file
+from src import extraction_of_entire_file
 import os
 import time
 import shutil
@@ -22,7 +22,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 def main():
 
-    test_data_dir = "artifacts/new_test_data_2"
+    test_data_dir = "artifacts/test_files"
     test_file_names = os.listdir(test_data_dir)
     out_dir = "artifacts/output_generated"
 
@@ -34,15 +34,15 @@ def main():
     "price per carat","discount","total","rap price total","comments","report_no"])
 
     for test_file_name in test_file_names:
-        # if test_file_name != "SRKStock_216700.xlsx":
-        #     continue
+        if test_file_name not in ["continue.xlsx"]:
+            continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
         print(f"====File name : {test_file_name} ======")
         start = time.time()
         try:
             vendor_name = test_file_name[:-5]
-            extractor = Extraction_of_entire_file.Entire_file_extractor(file_path,False,logger,vendor_name)
+            extractor = extraction_of_entire_file.EntireFileExtractor(file_path,False,logger,"2/02/2002",vendor_name)
             out_df = extractor.extract()
             dummy_df = pd.concat([out_df,dummy_df])
         except:

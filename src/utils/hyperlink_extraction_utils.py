@@ -54,7 +54,12 @@ def extract_report_number(url):
                 report_no = match.group(1)
                 return report_no
             else:
-                return None
+                match = re.search(r'/(\d+)\.jpg$', url)
+                if match:
+                    report_no = match.group(1)
+                    return report_no
+                else:
+                    return None
 
 def get_hyperlink_columns(input_df, worksheet, columns_name):
     

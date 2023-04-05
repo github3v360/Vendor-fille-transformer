@@ -158,46 +158,46 @@ class TestMyFunctions(unittest.TestCase):
         # Test for a list of integers and NaN values
         value = [1, 2, pd.NA, 4, 5]
         count_of_rows = len(value)
-        new_list, count_of_rows = column_value_utils.convert_to_int(value, count_of_rows)
+        new_list, count_of_rows = column_value_utils.convert_to_int_and_update_rows_count(value, count_of_rows)
         self.assertEqual(new_list, [1, 2, 4, 5])
         self.assertEqual(count_of_rows, 4)
 
         # Test for a list of floats and NaN values
         value = [1.0, 2.5, pd.NA, 4.2, 5.9]
         count_of_rows = len(value)
-        new_list, count_of_rows = column_value_utils.convert_to_int(value, count_of_rows)
+        new_list, count_of_rows = column_value_utils.convert_to_int_and_update_rows_count(value, count_of_rows)
         self.assertEqual(new_list, [1, 2, 4, 5])
         self.assertEqual(count_of_rows, 4)
 
         value = []
         count_of_rows = 0
         expected = ([], 0)
-        self.assertEqual(column_value_utils.convert_to_int(value, count_of_rows), expected)
+        self.assertEqual(column_value_utils.convert_to_int_and_update_rows_count(value, count_of_rows), expected)
 
         value = [1, 2.0, 3.1, 4.5]
         count_of_rows = 4
         expected = ([1, 2, 3, 4], 4)
-        self.assertEqual(column_value_utils.convert_to_int(value, count_of_rows), expected)
+        self.assertEqual(column_value_utils.convert_to_int_and_update_rows_count(value, count_of_rows), expected)
 
         value = [1, 2.0, None, 4.5]
         count_of_rows = 4
         expected = ([1, 2, 4], 3)
-        self.assertEqual(column_value_utils.convert_to_int(value, count_of_rows), expected)
+        self.assertEqual(column_value_utils.convert_to_int_and_update_rows_count(value, count_of_rows), expected)
 
         value = [None, None, None]
         count_of_rows = 3
         expected = ([], 0)
-        self.assertEqual(column_value_utils.convert_to_int(value, count_of_rows), expected)
+        self.assertEqual(column_value_utils.convert_to_int_and_update_rows_count(value, count_of_rows), expected)
 
         value = ['1', '2.0', '3.1', '4.5']
         count_of_rows = 4
         expected = (['1', '2.0', '3.1', '4.5'], 4)
-        self.assertEqual(column_value_utils.convert_to_int(value, count_of_rows), expected)
+        self.assertEqual(column_value_utils.convert_to_int_and_update_rows_count(value, count_of_rows), expected)
 
         value = ['1', '2.0', '3.1', '4.5', None]
         count_of_rows = 5
         expected = (['1', '2.0', '3.1', '4.5'], 4)
-        self.assertEqual(column_value_utils.convert_to_int(value, count_of_rows), expected)
+        self.assertEqual(column_value_utils.convert_to_int_and_update_rows_count(value, count_of_rows), expected)
 
   def test_cal_measurement_columns(self):
         # Test for string input data type with valid formula

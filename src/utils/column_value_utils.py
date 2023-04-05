@@ -16,14 +16,11 @@ def get_target_column_unique_values(target_name, logger):
     """
 
     target_dict = {
-        "clarity": ("artifacts/pickle_files/clarity_list.pkl", True),
+        "clarity": ("artifacts/pickle_files/clarity_dict.pkl", True),
         "carat": ([1.51, 2.1, 3.05, 4.01, 5.6], False),
-        "color": ("artifacts/pickle_files/color_list.pkl", True),
-        "shape": ("artifacts/pickle_files/shape.pkl", True),
-        "fluorescent": (
-            ["faint", "medium", "none", "f", "m", "n", "med", "non", "fnt"],
-            True,
-        ),
+        "color": ("artifacts/pickle_files/color_dict.pkl", True),
+        "shape": ("artifacts/pickle_files/shape_dict.pkl", True),
+        "fluorescent": ("artifacts/pickle_files/fluorescent_dict.pkl", True),
         "raprate": ([12000.00, 21000.00, 11000.00, 18000.00, 16000.12], False),
         "length": (["*", "x", "X", "+", "-"], False),
         "width": (["*", "x", "X", "+", "-"], False),
@@ -62,15 +59,19 @@ def get_target_column_unique_values(target_name, logger):
     try:
         value, flag = target_dict[target_name]
         if isinstance(value, str):
-            with open(value, "rb") as f_name:
-                target_unique_values = pickle.load(f_name)
+            try:
+                with open(value, "rb") as f_name:
+                    target_unique_values = pickle.load(f_name)
+            except FileNotFoundError:
+                raise ValueError(f"File not found for target name: {target_name}")
         else:
             target_unique_values = value
         if flag:
             target_unique_values = [value.lower() for value in target_unique_values]
         return target_unique_values
-    except:
-        logger.exception("The function could not find this target name")
+    except KeyError:
+        raise ValueError(f"Target name not found: {target_name}")
+
 
 def get_most_common_type(values):
     """
@@ -265,6 +266,19 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,
                 target_column_unique_value,target_name,input_data_type,len_column_unique_value)
     
     elif target_name == 'report_no':
+
+        if input_data_type[0]==str:
+            get_val = None 
+
+            for val in column_unique_values:
+                if type(val) == str:
+                    get_val = val
+                    break
+            
+            if get_val:
+                if "**" in get_val:
+                    return 1
+
         updated_unique_values_list,count = convert_to_int_and_update_rows_count(
                                             column_unique_values,count_of_rows)
 
@@ -274,7 +288,7 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,
                                             str(last_unique_value)) >= 10:
             unique_values_count = len(updated_unique_values_list)
             if unique_values_count == count:
-                return 10
+                return 1
         else:
             return 0
 

@@ -3,40 +3,32 @@
 '''
 import os
 import pickle
+import pandas as pd
+from collections import Counter
 from src.utils.column_name_utils import string_similarity
 
 def transform_column(cur_val, magic_numbers, target_column_name):
     """
     This function is used to transform the non-standard name to the
     standard name for columns like shape, fluorescent and cut.
-
     Args:
         cur_val: current value (string)
         magic_numbers: dictionary of magic numbers (dict)
         target_column_name: target column name (string)
-
     Returns:
         transformed value (string) or None if the current value is not 
         valid or could not be transformed
     """
 
-    if target_column_name == 'shape':
-        shape_file_path = os.path.join(os.path.join("artifacts","pickle_files"),"shape.pkl")
-        with open(shape_file_path,'rb') as f_name:
-            target_column_dict = pickle.load(f_name)
-
-    elif target_column_name == "fluor":
-        fluor_key = ["faint","medium","none","f","m","n","fnt","med","non"]
-        fluor_values = ["FAINT","MEDIUM","NONE","FAINT","MEDIUM","NONE","FAINT","MEDIUM","NONE"]
-        target_column_dict = dict(zip(fluor_key,fluor_values))
-
-    elif target_column_name == 'cut':
-        cut_key = ["I","EX","VG","G","F","P","EX+"]
-        cut_values = ["I","EX","VG","G","F","P","EX"]
-        target_column_dict = dict(zip(cut_key,cut_values))
+    # Loading dictionary for the current target column
+    file_path = os.path.join(os.path.join("artifacts","pickle_files"),f"{target_column_name}_dict.pkl")
+    with open(file_path,'rb') as f_name:
+        target_column_dict = pickle.load(f_name)
 
     if cur_val == "" or cur_val is None or (type(cur_val) != str):
         return None
+    
+    cur_val = cur_val.replace("+","").replace("-","").replace(" ","").lower()
 
     try:
         # Fetching the correct transformed value using the target_column_dict
@@ -69,17 +61,13 @@ def transform_measurement_column(cur_val_l,cur_val_d):
     measurement column is in string format
     Eg -: Input: Measurement = "2 * 3 *4" 
         Output: length = 4, width = 3 and depth = 2
-
     If the measurement column is in this format = [4*1]
     then length = 4 , width = 1 and depth would be cur_val_d
-
     Args:
         cur_val_l : current row length value (String)
         cur_val_d : current row depth value (String)
-
     Returns:
         list: A list of 3 parameters including length width and depth (List)
-
     """
 
     if cur_val_l == "" or cur_val_l is None or (type(cur_val_l) != str):
@@ -114,14 +102,11 @@ def transform_discount_column(disc_val):
     '''
     This function will transform discount value.
     It will convert the negative value to postive value
-
     Example -: -40.38 to 40.38
-
     Args:
         disc_val : Discount Value (int)
     Returns:
         disc_val : Transformed discount Value (int)
-
     '''
     try:
         disc_val = float(disc_val)
@@ -136,11 +121,9 @@ def transform_report_no_column(report_no,report_no_from_link):
     '''
     Function checks report_no extracted from link and from sheet is same or not.
     It gives more prefernce to report_no from sheet
-
     Args:
         report_no : The report number extracted normally from the sheet (int or )
         report_no_from_link : The report number extracted from the link (int)
-
     Returns:
         return: The function will return the report number based on the comparsion
         between report_no and report_no_from_link (int)
@@ -155,3 +138,24 @@ def transform_report_no_column(report_no,report_no_from_link):
     if report_no_from_link is None:
         return None
     return report_no_from_link
+
+def format_number(num):
+    num = int(round(num * 100))
+    num_str = str(num).zfill(4)
+    return num_str
+
+def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,cut,polish,symmetry,clarity_map,color_map, shape_map, cut_map, fluorescent_map):
+    last_four = str(report_no)[-4:]
+
+    clarity_num = str(clarity_map[clarity] ) if clarity in clarity_map else str(clarity_map[None])
+    color_num = str(color_map[color]) if color in color_map else str(color_map[None])
+    cut_num = str(cut_map[cut]) if cut in cut_map else str(cut_map[None])
+    polish_num = str(cut_map[polish]) if polish in cut_map else str(cut_map[None])
+    symmetry_num = str(cut_map[symmetry]) if symmetry in cut_map else str(cut_map[None])
+    fluorescent_num = str(fluorescent_map[fluorescent]) if fluorescent in fluorescent_map else str(fluorescent_map[None])
+    carat_num = str(format_number(carat))
+    shape_num = str(shape_map[shape]) if shape in shape_map else str(shape_map[None])
+    
+    new_reportno = fluorescent_num +shape_num + carat_num + color_num +  clarity_num + cut_num + polish_num + symmetry_num +  last_four
+    # print(new_reportno)
+    return new_reportno

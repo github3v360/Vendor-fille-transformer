@@ -5,6 +5,7 @@ which will perform all the stage 1 tasks
 
 from src.utils import data_cleaner
 from src import hyperlink_extraction
+import pandas as pd
 
 class CleanDataAndExtractLink:
     '''
@@ -49,6 +50,9 @@ class CleanDataAndExtractLink:
 
         # Correcting the DataFrame Headers
         df_corrected_headers, correct_row_idx = data_cleaner.correct_df_headers(self.dataframe)
+
+        # If dataframe is empty we return the empty dataframe
+        if df_corrected_headers is None: return pd.DataFrame() ,None
 
         # Extracting the hyperlink and report number from the link
         hyperlink_extractor = hyperlink_extraction.HyperlinkExtractor(

@@ -158,6 +158,7 @@ class TestSimilarityfromColumnName(unittest.TestCase):
         column_name = 'lenght'
         std_names = ['M1','Measurement','Diameter','length']
         result = column_name_utils.similarity_score_from_col_name(column_name, std_names)
+        print(result)
         assert  result == 0.667
 
 if __name__ == '__main__':
