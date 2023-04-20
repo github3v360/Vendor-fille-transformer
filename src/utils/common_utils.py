@@ -139,4 +139,5 @@ def load_pickle_files(data):
                 # print(dictionaries)
         except FileNotFoundError:
             raise ValueError(f"File not found for target name")
+    print(dictionaries)
     return dictionaries

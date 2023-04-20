@@ -11,19 +11,19 @@ class TestTransformShapeColumn(unittest.TestCase):
 
     # Test with a shape that exists in the shape dictionary
     result = post_processing_utils.transform_column("RND",magic_numbers,'shape')
-    self.assertEqual(result, "Round")
+    self.assertEqual(result, "round")
     
     # Test with a shape that is close to a shape in the shape dictionary df['disc'] = df['disc'].astype(float)
     result = post_processing_utils.transform_column("ROUD",magic_numbers,'shape')
-    self.assertEqual(result, "Round")
+    self.assertEqual(result, "round")
     
     # Test with a shape that is an exact match to a shape in the shape dictionary
     result = post_processing_utils.transform_column("OVAL",magic_numbers,'shape')
-    self.assertEqual(result, "Oval")
+    self.assertEqual(result, "oval")
     
     # Test with a shape that is not in the shape dictionary but has a high similarity score
     result = post_processing_utils.transform_column("OVEL",magic_numbers,'shape')
-    self.assertEqual(result, "Oval")
+    self.assertEqual(result, "oval")
     
     # Test with a shape that is not in the shape dictionary and has a low similarity score
     result = post_processing_utils.transform_column("V",magic_numbers,'shape')
@@ -43,26 +43,26 @@ class TestTransformfluorColumn(unittest.TestCase):
     magic_numbers = common_utils.read_yaml("params.yaml")['magic_numbers']
 
     # Test with a fluorescent that exists in the fluor dictionary
-    result = post_processing_utils.transform_column("faint",magic_numbers,"fluor")
-    self.assertEqual(result, "FAINT")
+    result = post_processing_utils.transform_column("faint",magic_numbers,"fluorescent")
+    self.assertEqual(result, "f")
 
     # Test with a fluorescent that exists in the fluor dictionary
-    result = post_processing_utils.transform_column("f",magic_numbers,"fluor")
-    self.assertEqual(result, "FAINT")
+    result = post_processing_utils.transform_column("f",magic_numbers,"fluorescent")
+    self.assertEqual(result, "f")
 
     # Test with a fluorescent that exists in the fluor dictionary
-    result = post_processing_utils.transform_column("non",magic_numbers,"fluor")
-    self.assertEqual(result, "NONE")
+    result = post_processing_utils.transform_column("non",magic_numbers,"fluorescent")
+    self.assertEqual(result, "n")
 
     # Test with a fluorescent that don't exists in the fluor dictionary
-    result = post_processing_utils.transform_column("med-w",magic_numbers,"fluor")
-    self.assertEqual(result, "MEDIUM")
+    result = post_processing_utils.transform_column("med-w",magic_numbers,"fluorescent")
+    self.assertEqual(result, "m")
 
     # Test with a fluorescent that exists in the fluor dictionary
-    result = post_processing_utils.transform_column("",magic_numbers,"fluor")
+    result = post_processing_utils.transform_column("",magic_numbers,"fluorescent")
     self.assertEqual(result, None)
 
-    result = post_processing_utils.transform_column(None,magic_numbers,"fluor")
+    result = post_processing_utils.transform_column(None,magic_numbers,"fluorescent")
     self.assertEqual(result, None)
     
 class TestTransformMeasurementColumn(unittest.TestCase):
@@ -163,13 +163,13 @@ class TestTransformCutColumn(unittest.TestCase):
 
     def test_transform_cut_column(self):
         # Test standard shapes
-        assert post_processing_utils.transform_column("I", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "I"
-        assert post_processing_utils.transform_column("EX", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "EX"
-        assert post_processing_utils.transform_column("VG", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "VG"
-        assert post_processing_utils.transform_column("G", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "G"
-        assert post_processing_utils.transform_column("F", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "F"
-        assert post_processing_utils.transform_column("P", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "P"
-        assert post_processing_utils.transform_column("EX+", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "EX"
+        assert post_processing_utils.transform_column("I", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "i"
+        assert post_processing_utils.transform_column("EX", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "ex"
+        assert post_processing_utils.transform_column("VG", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "vg"
+        assert post_processing_utils.transform_column("G", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "g"
+        assert post_processing_utils.transform_column("F", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "f"
+        assert post_processing_utils.transform_column("P", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "p"
+        assert post_processing_utils.transform_column("EX+", {"cut_similarity_transform_df_threshold": 0.5},'cut') == "ex"
 
         # Test non-standard shapes with exact match
         assert post_processing_utils.transform_column("Round", {"cut_similarity_transform_df_threshold": 0.5},'cut') == None
@@ -212,6 +212,46 @@ class TestTransformReportNoColumn(unittest.TestCase):
 
         # Test Case 6 - report_no and report_no_from_link are both None
         assert post_processing_utils.transform_report_no_column(None, None) == None
+
+class Testgeneratereportnocolumn(unittest.TestCase):
+    def test_generate_report_no_column(self):
+        # test case for all fields provided
+        report_no = 12345678
+        clarity = 'VS2'
+        color = 'G'
+        fluorescent = 'Faint'
+        shape = 'round'
+        carat = 1.23
+        cut = 'Very Good'
+        polish = 'Excellent'
+        symmetry = 'Very Good'
+        clarity_map = {'I3': 1, 'I2': 2, 'I1': 3, 'SI2': 4, 'SI1': 5, 'VS2': 6, 'VS1': 7, 'VVS2': 8, 'VVS1': 9, 'IF': 10}
+        color_map = {'J': 1, 'I': 2, 'H': 3, 'G': 4, 'F': 5, 'E': 6, 'D': 7}
+        shape_map = {'Cushion': 1, 'Emerald': 2, 'Heart': 3, 'Marquise': 4, 'Oval': 5, 'Pear': 6, 'Princess': 7, 'Radiant': 8, 'round': 9}
+        cut_map = {'Fair': 1, 'Good': 2, 'Very Good': 3, 'Excellent': 4}
+        fluorescent_map = {'Faint': 1, 'Medium': 2, 'Strong': 3, 'Very Strong': 4}
+        expected_result = "190123463435678"
+        print(post_processing_utils.generate_report_no_column(report_no, clarity, color, fluorescent, shape, carat, cut, polish, symmetry, clarity_map, color_map, shape_map, cut_map, fluorescent_map))
+        assert post_processing_utils.generate_report_no_column(report_no, clarity, color, fluorescent, shape, carat, cut, polish, symmetry, clarity_map, color_map, shape_map, cut_map, fluorescent_map) == expected_result
+
+        # test case with missing clarity and color
+        report_no = 12345678
+        clarity = None
+        color = None
+        fluorescent = 'Faint'
+        shape = 'round'
+        carat = 1.23
+        cut = 'Very Good'
+        polish = 'Excellent'
+        symmetry = 'Very Good'
+        clarity_map = {'I3': 1, 'I2': 2, 'I1': 3, 'SI2': 4, 'SI1': 5, 'VS2': 6, 'VS1': 7, 'VVS2': 8, 'VVS1': 9, 'IF': 10}
+        color_map = {'J': 1, 'I': 2, 'H': 3, 'G': 4, 'F': 5, 'E': 6, 'D': 7}
+        shape_map = {'Cushion': 1, 'Emerald': 2, 'Heart': 3, 'Marquise': 4, 'Oval': 5, 'Pear': 6, 'Princess': 7, 'Radiant': 8, 'Round': 9}
+        cut_map = {'Fair': 1, 'Good': 2, 'Very Good': 3, 'Excellent': 4}
+        fluorescent_map = {'Faint': 1, 'Medium': 2, 'Strong': 3, 'Very Strong': 4}
+        expected_result = "1162314568"
+        assert post_processing_utils.generate_report_no_column(report_no, clarity, color, fluorescent, shape, carat, cut, polish, symmetry, clarity_map, color_map, shape_map, cut_map, fluorescent_map)
+
 
 if __name__ == "__main__":
     unittest.main()
