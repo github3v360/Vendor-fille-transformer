@@ -157,5 +157,4 @@ def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,cu
     shape_num = str(shape_map[shape]) if shape in shape_map else str(shape_map[None])
     
     new_reportno = fluorescent_num +shape_num + carat_num + color_num +  clarity_num + cut_num + polish_num + symmetry_num +  last_four
-    # print(new_reportno)
     return new_reportno
