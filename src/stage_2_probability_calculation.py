@@ -17,7 +17,8 @@ class DataProcessor:
     to extract the target columns from the data.
     '''
     def __init__(
-        self, dataframe_cleaned, logger, link_columns_name, count_of_rows, date, vendor_name
+        self, dataframe_cleaned, logger, link_columns_name, 
+        count_of_rows, date, vendor_name
     ):
         '''
         Initializes the instance based on the attributes.
@@ -157,24 +158,29 @@ class DataProcessor:
         self.remaining_columns_dataframe["Extra Column"] = list_of_dicts
         return self.remaining_columns_dataframe
 
-    def get_current_column_unique_values(self, dataframe_cleaned, cur_dataframe_cleaned_column_name):
+    def get_current_column_unique_values(self, dataframe_cleaned, 
+                                cur_dataframe_cleaned_column_name):
         """
         This function will used by "Iterate_And_Get_Desired_Column_By_Probability"
         function to get the values of the current column and also get the number 
         of rows (excluding None row of the current column).
 
         Args:
-            dataframe_cleaned(pandas dataframe): cleaned dataframe given by the stage 1
+            dataframe_cleaned(pandas dataframe): 
+                cleaned dataframe given by the stage 1
             
-            cur_dataframe_cleaned_column_name (string): Name of the column in dataframe_cleaned 
-            for which unique values will be extracted and the number of rows for that
-            column will be calculated as mentioned above.
+            cur_dataframe_cleaned_column_name (string): 
+                Name of the column in dataframe_cleaned 
+                for which unique values will be extracted 
+                and the number of rows for that column 
+                will be calculated as mentioned above.
         
         Returns:
-            cur_dataframe_cleaned_column_unique_values (list): cur_dataframe_cleaned_column_name unique
-            values
+            cur_dataframe_cleaned_column_unique_values (list): 
+                cur_dataframe_cleaned_column_name unique values
 
-            cur_dataframe_cleaned_column_name (string): cur_dataframe_cleaned_column_name in lower case
+            cur_dataframe_cleaned_column_name (string): 
+            cur_dataframe_cleaned_column_name in lower case
         """
 
         cur_dataframe_cleaned_column_unique_values = list(
@@ -195,37 +201,42 @@ class DataProcessor:
 
         return cur_dataframe_cleaned_column_unique_values, cur_dataframe_cleaned_column_name
 
-    def Iterate_And_Get_Desired_Column_By_Probability(self):
+    def iterate_and_get_desired_column_by_probability(self):
         '''
         This function will iterate to each column in dataframe(given by stage 1) and
         gives the probability of each column belonging to a particular target column.
         The aforementioned procedure will be done for each target column
 
         Returns:
-            dataframe_pre_processed (pandas dataframe): Pre-processed dataframe in which
+            dataframe_pre_processed (pandas dataframe): 
+            Pre-processed dataframe in which
             all the target columns are fetched
 
             magic_number(dictionary): Dictionary cotaning the magic numbers 
 
-            remaining_columns_dataframe(pandas dataframe): DataFrame which 
-            contains all the extra (redundant) columns in the form of dictionary
+            remaining_columns_dataframe(pandas dataframe): 
+            DataFrame which contains all the extra 
+            (redundant) columns in the form of dictionary
         '''
 
         # Initializing the empty DataFrame to store output of pre-processed data
         dataframe_pre_processed = pd.DataFrame()
 
-        # For each target column, fetch the right column and save it in dataframe_pre_processed
+        # For each target column, fetch the right column and save 
+        # it in dataframe_pre_processed
         for cur_target_column in self.target_columns:
 
             # Get a list of the column names in the dataframe_cleaned
             dataframe_cleaned_columns_name = list(self.dataframe_cleaned.columns)
 
-            # Getting the other standard names for the current target column (cur_target_column)
+            # Getting the other standard names for the current target 
+            # column (cur_target_column)
             cur_target_col_std_names = column_name_utils.get_standard_names(
                 cur_target_column, self.logger
             )
 
-            # Set the probability of each column in dataframe_cleaned belonging to the current target column (cur_target_column) to -1.
+            # Set the probability of each column in dataframe_cleaned 
+            # belonging to the current target column (cur_target_column) to -1.
             probs = [-1] * len(dataframe_cleaned_columns_name)
 
             # This will get the current target column (cur_target_column) unique values
@@ -235,7 +246,8 @@ class DataProcessor:
                 )
             )
 
-            # Iteratively obtain the probability of all columns in cleaned dataframe (dataframe_cleaned) belonging to the
+            # Iteratively obtain the probability of all columns in 
+            # cleaned dataframe (dataframe_cleaned) belonging to the
             # current target column (cur_target_column).
             for idx, cur_dataframe_cleaned_column_name in enumerate(dataframe_cleaned_columns_name):
 
@@ -260,7 +272,8 @@ class DataProcessor:
                     cur_target_col_unique_vals,
                 )
 
-            # Getting the column name from the cleaned_dataframe with highest probability (similarity) score
+            # Getting the column name from the cleaned_dataframe with highest 
+            # probability (similarity) score
             # to current target column (cur_target_column)
             predicted_column, prob = common_utils.get_highest_prob_column(
                 probs, dataframe_cleaned_columns_name
@@ -269,15 +282,17 @@ class DataProcessor:
             # update prob dict
             self.prob_dict[cur_target_column] = prob
 
-            # Adding column of cleaned_dataframe with highest probability(similarity) score to dataframe_pre_processed on if the probability is more than 65%
-            p = round(prob, 3)
+            # Adding column of cleaned_dataframe with highest probability(similarity) 
+            # score to dataframe_pre_processed on if the probability is more than 65%
+            rounded_prob = round(prob, 3)
             self.logger.info(
-                f"'{cur_target_column}' is present as '{predicted_column}' with probability {round(p,3)}"
+                f"'{cur_target_column}' is present as '{predicted_column}' with probability {round(rounded_prob,3)}"
             )
             if prob > self.magic_numbers["threshold_for_selection"]:
                 dataframe_pre_processed[cur_target_column] = self.dataframe_cleaned[predicted_column]
 
-                # Dropping the column with highest probability (similarity) score from cleaned_dataframe, since we do not need to iterate over that column again
+                # Dropping the column with highest probability (similarity) score 
+                # from cleaned_dataframe, since we do not need to iterate over that column again
                 if cur_target_column not in ["length", "width", "depth"]:
                     self.dataframe_cleaned = self.dataframe_cleaned.drop(columns=predicted_column)
 
@@ -285,7 +300,7 @@ class DataProcessor:
 
         return dataframe_pre_processed, self.magic_numbers, remaining_columns_dataframe
 
-    def Probability_Based_DataExtraction(self):
+    def probability_based_dataExtraction(self):
         """
         This function will run all the required function to fetch the 
         target columns from the dataframe(given by the Stage 1)
@@ -309,7 +324,6 @@ class DataProcessor:
 
         # This will store the report umber whhich were extracted from the link in stage 1
         # in to the list "self.report_no_from_link" and also upadate self.link_columns_name
-        # accordingly
         (
             self.report_no_from_link,
             self.link_columns_name,
@@ -321,7 +335,7 @@ class DataProcessor:
             self.dataframe_pre_processed,
             self.magic_numbers,
             self.remaining_columns_dataframe,
-        ) = self.Iterate_And_Get_Desired_Column_By_Probability()
+        ) = self.iterate_and_get_desired_column_by_probability()
 
         return (
             self.dataframe_pre_processed,

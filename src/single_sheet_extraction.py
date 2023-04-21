@@ -68,7 +68,7 @@ class ExtractFromSingleSheet:
                     df_cleaned, self.logger, link_columns_name,
                     count_of_rows, self.date, self.test_file_name)
         df_pre_processed, report_no_from_link, magic_numbers, prob_dict, \
-        remaining_columns_df, target_columns = processor.Probability_Based_DataExtraction()
+        remaining_columns_df, target_columns = processor.probability_based_dataExtraction()
 
         #  ====== stage 3 post-process the data =========
         processor = stage_3_post_processing.PostProcessingData(
