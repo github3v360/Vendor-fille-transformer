@@ -213,9 +213,15 @@ class Analysis_of_files:
             raise ValueError(f"File not found for target name")
 
     def store_dictionary_to_pickle(self):
+        txt_file = "/home/github3_v360/Vendor-fille-transformer/artifacts/pickle_files/dictionary_count.txt"
         pickle_file = "/home/github3_v360/Vendor-fille-transformer/artifacts/pickle_files/dictionary_count.pickle"
-        with open(pickle_file, "wb") as file:
-            pickle.dump(self.dict_for_counts, file)
+        with open(txt_file, 'w') as file:
+            for key, value in self.dict_for_counts.items():
+                file.write(f"{key}: {value}\n")
+        print(f"Dictionary has been stored in '{txt_file}' text file.")
+
+        with open(pickle_file, 'wb') as handle:
+            pickle.dump(self.dict_for_counts, handle, protocol=pickle.HIGHEST_PROTOCOL)
         print("Dictionary stored in pickle file:", pickle_file)
 
 def main():
