@@ -7,7 +7,7 @@ import pandas as pd
 from collections import Counter
 from src.utils.column_name_utils import string_similarity
 
-def transform_column(cur_val, magic_numbers, target_column_name):
+def transform_column(cur_val, magic_numbers, target_column_name, default_value):
     """
     This function is used to transform the non-standard name to the
     standard name for columns like shape, fluorescent and cut.
@@ -15,6 +15,7 @@ def transform_column(cur_val, magic_numbers, target_column_name):
         cur_val: current value (string)
         magic_numbers: dictionary of magic numbers (dict)
         target_column_name: target column name (string)
+        default_value: The Default value if not matching key is found from the dictionary
     Returns:
         transformed value (string) or None if the current value is not 
         valid or could not be transformed
@@ -26,7 +27,7 @@ def transform_column(cur_val, magic_numbers, target_column_name):
         target_column_dict = pickle.load(f_name)
 
     if cur_val == "" or cur_val is None or (type(cur_val) != str):
-        return None
+        return default_value
     
     cur_val = cur_val.replace("+","").replace("-","").replace(" ","").lower()
 
@@ -53,7 +54,7 @@ def transform_column(cur_val, magic_numbers, target_column_name):
                                     .format(target_column_name)]:
             return target_column_dict[best_key]
         else:
-            return None
+            return default_value
 
 def transform_measurement_column(cur_val_l,cur_val_d):
     """
