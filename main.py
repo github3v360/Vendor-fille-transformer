@@ -1,147 +1,41 @@
 # Importing Required Libraries
-
-import tempfile
-import os
-from google.cloud import storage
-import numpy as np
-import openpyxl
-import uuid
-import firebase_admin
-from datetime import datetime as dt 
-from firebase_admin import credentials, firestore
-import math
-import time
-import fnmatch
-import pickle
-import yaml
 import pandas as pd
 from src import extraction_of_entire_file
 import logging
 import io
+import tempfile
+import os
+from google.cloud import storage
 
 # Bucket Realted parameters and functions
 
 tempdir = tempfile.gettempdir()
-cred = credentials.ApplicationDefault()
-firebase_admin.initialize_app(cred)
-db = firestore.client()
-
 tempdir = tempfile.mkdtemp()
 
 client = storage.Client(project="friendlychat-bb9ff")
 
-
-def uploadToBucket(bucketName, path, filepath):
-    '''
-    function to upload file to cloud storage bucket
-    bucketName = bucket name where file is to be uploaded,
-    path = path inside the bucket
-    filepath = location of the file to be uploaded 
-
-    assuming that file to be uploaded is always .xlsx file
-    '''
-    bucket = client.get_bucket(bucketName)
-
-    blob = bucket.blob(path)
-    
-    with open(filepath, 'rb') as file:
-        blob.upload_from_file(file)
-
-    blob.make_public()
-
-def downloadFromBucket(bucketName, path, filepath):
-    bucket = client.get_bucket(bucketName)
-
-    blob = bucket.blob(path)
-    doesFileExist = blob.exists()
-    print("download",filepath,path,bucketName)
-    if not doesFileExist:
-        raise Exception('remote file not present')
-    
-    blob.download_to_filename(filepath)
-
-def exportDataFrameToExcel(dataframe, path):
-    dataframe.to_excel(path, index = False)
-
-def read_excel(filename):
-    assert filename.split('.')[-1] in ['xlsx', 'xls'] ,'Not a excel file'
-    return pd.read_excel(filename,header=None,engine='openpyxl')
-  
-def addSummaryFileMeta(summaryFilePath, uid, VENDORNAME):
-  collection_ref = db.collection('/'.join(['userFiles', uid, 'summaryFiles']))
-
-  data = {
-    'filePath' : summaryFilePath,
-    'bucket' : summary_bucket,
-    'CREATEDAT' :dt.now(),
-    'downloadURL' : '/'.join(['https://storage.googleapis.com',summary_bucket, summaryFilePath]),
-    'ack' : False,
-    'VENDORNAME' : VENDORNAME
-  }
-
-  collection_ref.add(data)
-
-def list_files(bucket_name, folder_name):
-    bucket = client.bucket(bucket_name)
-
-    # List objects with the given prefix (i.e., folder name).
-    blobs = bucket.list_blobs(prefix=folder_name)
-
-    # Print the name of each object.
-    for blob in blobs:
-        print(blob.name)
-
-
-def helloFirestore(event, context):
-    """
-    Triggered by a change to a Firestore document.
+def convert_to_common_format(request):
+    """Responds to any HTTP request.
     Args:
-        event (dict): Event payload.
-        context (google.cloud.functions.Context): Metadata for the event.
+        request (flask.Request): HTTP request object.
+    Returns:
+        The response text or any set of values that can be turned into a
+        Response object using
+        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
     """
-    
-    bucketName= event['value']['fields']['bucket']['stringValue']
-    bucket = client.get_bucket(bucketName)
+    file_ = request.files['file']
+    file_name = file_.filename
+    temp_dir = tempfile.gettempdir()
+    file_path = os.path.join(temp_dir, file_name)
+    file_.save(file_path)
 
-    bucketPathArray = event['value']['fields']['files']['arrayValue']['values']
-    filenames=[]
-
-    userId = None
+    vendor_name = request.args.get('vendor_name')
+    date = request.args.get('date')
 
     log_buffer = io.StringIO()
     logging.basicConfig(level=logging.INFO, stream=log_buffer)
 
-    # Extracting date and vendor name
-    metaData=dict()
-    metaData['CREATEDAT']=dt.fromtimestamp(int(event['value']['fields']['CREATEDAT']['integerValue'])/1000.0)
-    metaData['VENDORNAME'] = event['value']['fields']['VENDORNAME']['stringValue']
-    date = metaData['CREATEDAT'].strftime("%Y/%m/%d")
-
-    
-    
-    for everyobj in bucketPathArray:
-        currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
-    
-        blob=bucket.blob(currentFilePath)
-        blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
-
-        extractor = extraction_of_entire_file.EntireFileExtractor(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logging,date,metaData['VENDORNAME'])
-        out_df = extractor.extract()
-        out_df=out_df.reset_index()
-
-        userId=currentFilePath.split('/')[0]
-        filenames.append(os.path.join(tempdir,currentFilePath.split('/')[-1]))
-
-        date = metaData['CREATEDAT'].strftime("%Y%m%d")
-    
-        summary_bucket = os.environ['SUMMARY_BUCKET']
-        exportDataFrameToExcel(out_df, os.path.join(tempdir, 'summary_2.xlsx'))
-        list_files(summary_bucket,userId)
-        summaryFilePath = '/'.join([userId, date, 'summary_2.xlsx'])
-        print("==========user Id and uuid ========")
-        print(userId,str(uuid.uuid4()))
-        uploadToBucket(
-        summary_bucket,
-        summaryFilePath,
-        os.path.join(tempdir, 'summary_2.xlsx')
-        )
+    extractor = extraction_of_entire_file.EntireFileExtractor(file_path,False,logging,date,vendor_name)
+    out_df = extractor.extract()
+    out_df=out_df.reset_index()
+    return out_df.to_json()
