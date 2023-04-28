@@ -2,12 +2,13 @@
     This module contains utility functions for post processing column data.
 '''
 import os
+import math
 import pickle
 import pandas as pd
 from collections import Counter
 from src.utils.column_name_utils import string_similarity
 
-def transform_column(cur_val, magic_numbers, target_column_name):
+def transform_column(cur_val, magic_numbers, target_column_name, default_value):
     """
     This function is used to transform the non-standard name to the
     standard name for columns like shape, fluorescent and cut.
@@ -15,6 +16,7 @@ def transform_column(cur_val, magic_numbers, target_column_name):
         cur_val: current value (string)
         magic_numbers: dictionary of magic numbers (dict)
         target_column_name: target column name (string)
+        default_value: The Default value if not matching key is found from the dictionary
     Returns:
         transformed value (string) or None if the current value is not 
         valid or could not be transformed
@@ -26,7 +28,7 @@ def transform_column(cur_val, magic_numbers, target_column_name):
         target_column_dict = pickle.load(f_name)
 
     if cur_val == "" or cur_val is None or (type(cur_val) != str):
-        return None
+        return default_value
     
     cur_val = cur_val.replace("+","").replace("-","").replace(" ","").lower()
 
@@ -53,7 +55,7 @@ def transform_column(cur_val, magic_numbers, target_column_name):
                                     .format(target_column_name)]:
             return target_column_dict[best_key]
         else:
-            return None
+            return default_value
 
 def transform_measurement_column(cur_val_l,cur_val_d):
     """
@@ -140,18 +142,19 @@ def transform_report_no_column(report_no,report_no_from_link):
     return report_no_from_link
 
 def format_number(num):
+    if math.isnan(num):num = 0
     num = int(round(num * 100))
     num_str = str(num).zfill(4)
     return num_str
 
-def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,cut,polish,symmetry,clarity_map,color_map, shape_map, cut_map, fluorescent_map):
+def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,cut,polish,symmetry,clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map):
     last_four = str(report_no)[-4:]
 
     clarity_num = str(clarity_map[clarity] ) if clarity in clarity_map else str(clarity_map[None])
     color_num = str(color_map[color]) if color in color_map else str(color_map[None])
     cut_num = str(cut_map[cut]) if cut in cut_map else str(cut_map[None])
-    polish_num = str(cut_map[polish]) if polish in cut_map else str(cut_map[None])
-    symmetry_num = str(cut_map[symmetry]) if symmetry in cut_map else str(cut_map[None])
+    polish_num = str(polish_map[polish]) if polish in cut_map else str(cut_map[None])
+    symmetry_num = str(symmetry_map[symmetry]) if symmetry in cut_map else str(cut_map[None])
     fluorescent_num = str(fluorescent_map[fluorescent]) if fluorescent in fluorescent_map else str(fluorescent_map[None])
     carat_num = str(format_number(carat))
     shape_num = str(shape_map[shape]) if shape in shape_map else str(shape_map[None])
