@@ -262,11 +262,15 @@ class PostProcessing:
                 cut_map = dictionary['cut']
             elif 'fluorescent' in dictionary:
                 fluorescent_map = dictionary['fluorescent']
+            elif 'polish' in dictionary:
+                polish_map = dictionary['polish']
+            elif 'symmetry' in dictionary:
+                symmetry_map = dictionary['symmetry']
                 
         self.df_pre_processed["generated_report_no"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.generate_report_no_column(
                 x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
-                clarity_map,color_map, shape_map, cut_map, fluorescent_map
+                clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map
             ),
             axis=1,
         )
