@@ -289,6 +289,8 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,
             unique_values_count = len(updated_unique_values_list)
             if unique_values_count == count:
                 return 1
+            else:
+                return 0
         else:
             return 0
 

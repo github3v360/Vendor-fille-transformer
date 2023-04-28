@@ -120,7 +120,8 @@ def get_report_no_extracted_from_link(df_cleaned, logger,link_columns_name):
     else:
         report_no_from_link = df_cleaned['report_no']
         df_cleaned.drop("report_no", axis=1, inplace=True)
-        link_columns_name.remove('report_no')
+        if "report_no" in link_columns_name:
+            link_columns_name.remove('report_no')
         logger.info("Report No. discovered in the link")
 
     return report_no_from_link,link_columns_name
