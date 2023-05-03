@@ -163,11 +163,6 @@ class PostProcessing:
                         / self.df_pre_processed["raprate"]
                     )
                 ) * 100
-
-        # self.df_pre_processed["rap total"] = (
-        #             self.df_pre_processed["raprate"]
-        #             * self.df_pre_processed["carat"]
-        #         )
         return self.df_pre_processed
 
     def process(self):
@@ -186,16 +181,14 @@ class PostProcessing:
         if "shape" in self.fetched_columns:
             self.df_pre_processed["shape"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["shape"], self.magic_numbers, "shape"
-                ),
+                    x["shape"], self.magic_numbers, "shape", None),
                 axis=1,
             )
 
         if "fluorescent" in self.fetched_columns:
             self.df_pre_processed["fluorescent"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["fluorescent"], self.magic_numbers, "fluorescent"
-                ),
+                    x["fluorescent"], self.magic_numbers, "fluorescent", None),
                 axis=1,
             )
 
@@ -204,16 +197,28 @@ class PostProcessing:
         if "cut" in self.fetched_columns:
             self.df_pre_processed["cut"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["cut"], self.magic_numbers, "cut"
-                ),
+                    x["cut"], self.magic_numbers, "cut", "ex"),
+                axis=1,
+            )
+        
+        if "polish" in self.fetched_columns:
+            self.df_pre_processed["polish"] = self.df_pre_processed.apply(
+                lambda x: post_processing_utils.transform_column(
+                    x["polish"], self.magic_numbers, "polish", None),
+                axis=1,
+            )
+        
+        if "symmetry" in self.fetched_columns:
+            self.df_pre_processed["symmetry"] = self.df_pre_processed.apply(
+                lambda x: post_processing_utils.transform_column(
+                    x["symmetry"], self.magic_numbers, "symmetry", None),
                 axis=1,
             )
 
         if "color" in self.fetched_columns:
             self.df_pre_processed["color"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["color"], self.magic_numbers, "color"
-                ),
+                    x["color"], self.magic_numbers, "color", None),
                 axis=1,
             )
 
@@ -236,8 +241,7 @@ class PostProcessing:
         if "clarity" in self.fetched_columns:
             self.df_pre_processed["clarity"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["clarity"], self.magic_numbers, "clarity"
-                ),
+                    x["clarity"], self.magic_numbers, "clarity", None),
                 axis=1,
             )
 
@@ -274,11 +278,15 @@ class PostProcessing:
                 cut_map = dictionary['cut']
             elif 'fluorescent' in dictionary:
                 fluorescent_map = dictionary['fluorescent']
+            elif 'polish' in dictionary:
+                polish_map = dictionary['polish']
+            elif 'symmetry' in dictionary:
+                symmetry_map = dictionary['symmetry']
                 
         self.df_pre_processed["generated_report_no"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.generate_report_no_column(
                 x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
-                clarity_map,color_map, shape_map, cut_map, fluorescent_map
+                clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map
             ),
             axis=1,
         )
