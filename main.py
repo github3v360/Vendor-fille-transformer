@@ -73,7 +73,7 @@ actual_fluor_dict = {
     'MEDIUM':'M','MED':'M', 'M':'M', 'MEDIUMYELLOW': 'M', 'MD-BL':'M',
     'STRONG':'S', 'STG':'S', 'S':'S', 'ST':'S', 'STRONGYELLOW':'S', 'ST-BL':'S', 
     'VERY STRONG':'VS', 'VST':'VS', 'VSTG':'VS', 'VS':'VS', 'VERYSTRONG':'VS', 'VERYSTRONGBL': 'VS',
-    'VST-BL':'VS'
+    'VST-BL':'VS',
     }
 # Fluor Count 5
 fluor_list = ['N', 'F', 'M', 'S', 'VS'] 
@@ -198,6 +198,8 @@ def dict_key(weight, shape, color, clarity, fluor, cut, polish, sym): #WSCCFCPS
 def user_value_dict_key(weight, shape, color, clarity, fluor, cut, polish, sym) :
     if shape == None:
         shape = "other"
+    if fluor == None:
+        fluor = "other"
     if color == None:
         color = "other"
     if clarity == None:
