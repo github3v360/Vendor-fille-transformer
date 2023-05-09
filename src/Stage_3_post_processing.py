@@ -113,7 +113,7 @@ class PostProcessingData:
         """
         fetched_columns = list(dataframe.columns)
         value_transformer = StandardValueConverterAndCalculation.PostProcessing(
-            fetched_columns, dataframe, self.magic_numbers, self.prob_dict
+            fetched_columns, dataframe, self.magic_numbers, self.prob_dict, self.logger
         )
         transformed_dataframe = value_transformer.process()
         return transformed_dataframe

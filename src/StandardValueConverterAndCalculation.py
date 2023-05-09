@@ -4,6 +4,8 @@ This file contains class for performing post processing with column values in da
 import pickle
 import os
 from src.utils import post_processing_utils,common_utils
+import time
+
 class PostProcessing:
     """
     Class performs post processing of extracted data. It starts with 'process' functions and 
@@ -19,15 +21,17 @@ class PostProcessing:
         df_pre_processed: Pre Processed Dataframe (DataFrame)
         magic_numbers: Required weights (dict)
         prob_dict: Predicted Probablities (dict)
+        logger: Python's logger to log the Info, Errors and Exceptions
     Returns:
         df_pre_processed : Post Processed Dataframe (DataFrame)
 
     """
-    def __init__(self, fetched_columns, df_pre_processed, magic_numbers, prob_dict):
+    def __init__(self, fetched_columns, df_pre_processed, magic_numbers, prob_dict, logger):
         self.fetched_columns = fetched_columns
         self.df_pre_processed = df_pre_processed
         self.magic_numbers = magic_numbers
         self.prob_dict = prob_dict
+        self.logger = logger
 
     def cal_measurement_columns(self):
         """
@@ -266,6 +270,8 @@ class PostProcessing:
                 polish_map = dictionary['polish']
             elif 'symmetry' in dictionary:
                 symmetry_map = dictionary['symmetry']
+            
+        start_time_to_generate_report_no = time.time()
                 
         self.df_pre_processed["generated_report_no"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.generate_report_no_column(
@@ -274,5 +280,10 @@ class PostProcessing:
             ),
             axis=1,
         )
+
+        total_time_taken_to_generate_report_no = time.time() - start_time_to_generate_report_no
+
+        self.logger.info(f"Time taken to generate report number {total_time_taken_to_generate_report_no}")
+
         self.df_pre_processed.drop("report_no_from_link", axis=1, inplace=True)
         return self.df_pre_processed
