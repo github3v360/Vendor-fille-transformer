@@ -45,12 +45,11 @@ def getActualShape(input_shape):
         return input_shape
 
 
-actual_color_dict = {'OTHER': 'OTHER','D':'D', 'E':'E', 'F':'F', 'D-':'D', 'E-':'E', 'F-':'F','D+':'D', 'E+':'E', 'F+':'F',
-                     'G':'G', 'H':'H', 'I':'I', 'G-':'G', 'H-':'H', 'I-':'I', 'G+':'G', 'H+':'H', 'I+':'I',
-                     'J':'J', 'K':'K', 'L':'L', 'J-':'J', 'K-':'K', 'L-':'L', 'J+':'J', 'K+':'K', 'L+':'L',
-                     'M':'M', 'N':'N', 'O':'O', 'M-':'M', 'N-':'N', 'O-':'O', 'M+':'M', 'N+':'N', 'O+':'O',
-                     'P':'P', 'Q':'Q', 'P-':'P', 'Q-':'Q', 'Q+':'Q', 'P+':'P',
-                     'Q':'Q', 'R':'R', 'S':'S', 'T':'T', 'U':'U', 'V':'V',
+actual_color_dict = {'OTHER': 'OTHER','D':'D', 'E':'E', 'F':'F',
+                     'G':'G', 'H':'H', 'I':'I',
+                     'J':'J', 'K':'K', 'L':'L', 
+                     'M':'M', 'N':'N', 'O':'O', 
+                     'P':'P', 'Q':'Q','R':'R', 'S':'S', 'T':'T', 'U':'U', 'V':'V',
                      'W':'W', 'X':'X', 'Y':'Y', 'Z':'Z',
                      'FANCY': 'FANCY'}
 # Color Count 23
@@ -68,12 +67,13 @@ def getActualColor(input_color):
 
 
 actual_fluor_dict = {
-    'OTHER': 'OTHER','NONE':'N', 'NON':'N', 'N':'N', 'NO':'N', 'NAN':'N',
-    'FAINT':'F','FNT':'F', 'FAINT':'F', 'F': 'F', 'FA': 'F',
-    'MEDIUM':'M','MED':'M', 'M':'M', 'MEDIUMYELLOW': 'M', 'MD-BL':'M',
-    'STRONG':'S', 'STG':'S', 'S':'S', 'ST':'S', 'STRONGYELLOW':'S', 'ST-BL':'S', 
-    'VERY STRONG':'VS', 'VST':'VS', 'VSTG':'VS', 'VS':'VS', 'VERYSTRONG':'VS', 'VERYSTRONGBL': 'VS',
-    'VST-BL':'VS',
+    'OTHER': 'OTHER','NONE':'N', 'NON':'N', 'N':'N', 'NO':'N', 'NAN':'N', 'NIL':'N','FLO':'N',
+    'FAINT':'F','FNT':'F', 'FL1':'F', 'F': 'F', 'FA': 'F','NEGLIGIBLE':'F',
+    'MEDIUM':'M','MED':'M', 'M':'M', 'MEDIUMYELLOW': 'M', 'MD-BL':'M', 'FL2':'M',
+    'STRONG':'S', 'STG':'S', 'S':'S', 'ST':'S', 'STRONGYELLOW':'S', 'ST-BL':'S','FL3':'S', 
+    'VERY STRONG':'VS', 'VST':'VS', 'VSTG':'VS', 'VS':'VS', 'VERYSTRONG':'VS', 'VERYSTRONGBL': 'VS', 'FL4':'VS','VST-BL':'VS', 
+    'SL':'SL', 'SLIGHT':'SL', 'SLI':'SL',
+    'VERY SLIGHT':'VSL', 'VSLG':'VSL', 'VSLT':'VSL'
     }
 # Fluor Count 5
 fluor_list = ['N', 'F', 'M', 'S', 'VS'] 
@@ -90,11 +90,9 @@ def getActualFlour(input_flour):
 
 actual_clarity_dict = {
     'OTHER': 'OTHER','FL':'FL', 'IF':'IF', 'VVS1':'VVS1', 'VVS2':'VVS2', 'VS1':'VS1',
-    'FL-':'IF', 'IF-':'IF', 'VVS1-':'VVS1', 'VVS2-':'VVS2', 'VS1-':'VS1',
-    'FL+':'IF', 'IF+':'IF', 'VVS1+':'VVS1', 'VVS2+':'VVS2', 'VS1+':'VS1',
-    'VS2':'VS2', 'SI1':'SI1', 'SI2':'SI2', 'I1':'', 'I2':'', 'I3':'I3',
-    'VS2-':'VS2', 'SI1-':'SI1', 'SI2-':'SI2', 'I1-':'I1', 'I2-':'I2', 'I3-':'I3',
-    'VS2+':'VS2', 'SI1+':'SI1', 'SI2+':'SI2', 'I1+':'I1', 'I2+':'I2', 'I3+':'I3'}
+    'VS2':'VS2', 'SI1':'SI1', 'SI2':'SI2','SI3':'SI3', 'I1':'I1', 'I2':'I2', 'I3':'I3',
+     'P1':'P1', 'P2':'P2', 'P3':'P3', 'LC' : 'LC', 'LOUPECLEAN':'CLEAN'
+    }
 # Clarity Count 12
 clarity_list = ['FL', 'IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'I1', 'I2', 'I3']
 rare_clarity_list = ['PK']
@@ -117,8 +115,6 @@ def getBNCLarity(actual_clarity) :
 
 #converting I to X
 actual_cut_dict = {'OTHER': 'OTHER','EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
-                   'EX-':'X', 'VG-':'VG', 'G-': 'G',
-                   'EX+':'X', 'VG+':'VG', 'G+': 'G',
                    'EXCELLENT':'X', 'VERY GOOD': 'VG', 'VERYGOOD': 'VG', 'GOOD': 'G',
                    'F':'F','FAIR':'F','P':'P','POOR':'P','I':'X','IDEAL':'X','ID':'X'}
 # Cut Count 5
@@ -137,8 +133,7 @@ def getActualCut(input_cut, default_value, shape):
         return default_value
 
 actual_polish_dict = {'OTHER': 'OTHER','EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
-                   'EX-':'X', 'VG-':'VG', 'G-': 'G',
-                   'EX+':'X', 'VG+':'VG', 'G+': 'G',
+                      'FAIR TO GOOD':'F-G', 'GOOD TO VERY GOOD':'G-VG','VERY GOOD TO EXCELLENT':'VG-EX',
                    'EXCELLENT':'X', 'VERY GOOD': 'VG', 'VERYGOOD': 'VG', 'GOOD': 'G',
                    'F':'F','FAIR':'F','P':'P','POOR':'P','I':'X','IDEAL':'X','ID':'X'}
 # Polish Count 5
@@ -154,8 +149,7 @@ def getActualPolish(input_polish, default_value):
         return default_value
 
 actual_sym_dict = {'OTHER': 'OTHER','EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
-                   'EX-':'X', 'VG-':'VG', 'G-': 'G',
-                   'EX+':'X', 'VG+':'VG', 'G+': 'G',
+                      'FAIR TO GOOD':'F-G', 'GOOD TO VERY GOOD':'G-VG','VERY GOOD TO EXCELLENT':'VG-EX',
                    'EXCELLENT':'X', 'VERY GOOD': 'VG', 'VERYGOOD': 'VG', 'GOOD': 'G',
                    'F':'F','FAIR':'F','P':'P','POOR':'P','I':'X','IDEAL':'X','ID':'X'}
 # Symmetry Count 5
@@ -198,8 +192,6 @@ def dict_key(weight, shape, color, clarity, fluor, cut, polish, sym): #WSCCFCPS
 def user_value_dict_key(weight, shape, color, clarity, fluor, cut, polish, sym) :
     if shape == None:
         shape = "other"
-    if fluor == None:
-        fluor = "other"
     if color == None:
         color = "other"
     if clarity == None:
