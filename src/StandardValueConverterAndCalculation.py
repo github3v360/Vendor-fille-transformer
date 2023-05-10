@@ -283,6 +283,13 @@ class PostProcessing:
             elif 'symmetry' in dictionary:
                 symmetry_map = dictionary['symmetry']
                 
+        required_column = ["report_no","clarity","color","fluorescent","shape","carat","cut","polish","symmetry"]
+        temporary_columns = []
+        for col in required_column:
+            if col not in self.df_pre_processed.columns:
+                self.df_pre_processed.loc[:,col] = 'OTHER'
+                temporary_columns.append(col)
+
         self.df_pre_processed["generated_report_no"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.generate_report_no_column(
                 x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
@@ -290,5 +297,9 @@ class PostProcessing:
             ),
             axis=1,
         )
-        self.df_pre_processed.drop("report_no_from_link", axis=1, inplace=True)
+
+        temporary_columns.append("report_no_from_link")
+        self.df_pre_processed.drop(columns=temporary_columns, axis=1, inplace=True)
+        print("Deleted columns")
+        print(temporary_columns)
         return self.df_pre_processed
