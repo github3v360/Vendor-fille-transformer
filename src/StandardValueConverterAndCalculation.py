@@ -225,7 +225,7 @@ class PostProcessing:
         if "polish" in self.fetched_columns:
             self.df_pre_processed["polish"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["polish"], self.magic_numbers, "polish"
+                    x["polish"], self.magic_numbers, "polish", None
                 ),
                 axis=1,
             )
@@ -233,7 +233,7 @@ class PostProcessing:
         if "symmetry" in self.fetched_columns:
             self.df_pre_processed["symmetry"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["symmetry"], self.magic_numbers, "symmetry"
+                    x["symmetry"], self.magic_numbers, "symmetry", None
                 ),
                 axis=1,
             )
