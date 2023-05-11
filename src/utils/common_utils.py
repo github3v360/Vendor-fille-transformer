@@ -134,7 +134,9 @@ def load_pickle_files(data):
                 target_unique_values = pickle.load(f_name)
                 # Get unique values of target_unique_values and store them in a dictionary
                 unique_values = list(set(target_unique_values.values()))
+                unique_values.sort()
                 unique_values.insert(0, None)
+                unique_values.insert(1, 'OTHER')
                 target_dict = {value: i for i, value in enumerate(unique_values, start=0)}
                 dictionaries.append({os.path.basename(file_name).replace('_dict.pkl', ''): target_dict})
                 # print(dictionaries)
