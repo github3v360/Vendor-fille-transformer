@@ -199,7 +199,9 @@ def user_value_dict_key(weight, shape, color, clarity, fluor, cut, polish, sym) 
     if polish == None:
         polish = "other"
     if sym == None:
-        sym = "other"    
+        sym = "other"  
+    if cut == None:
+        cut = "EX"   
     weight = weight
     shape = actual_shape_dict[shape.upper()]
     color = actual_color_dict[color.upper()]
