@@ -7,6 +7,7 @@ import tempfile
 import os
 from google.cloud import storage
 import json
+import mmath
 # Bucket Realted parameters and functions
 
 tempdir = tempfile.gettempdir()
@@ -14,8 +15,9 @@ tempdir = tempfile.mkdtemp()
 
 client = storage.Client(project="friendlychat-bb9ff")
 
+
 actual_weight_dict = {}
-actual_shape_dict = {'OTHER': 'OTHER','ROUND':'RD', 'RD':'RD', 'R':'RD', 'BR':'RD', 'RB':'RD',
+actual_shape_dict = {'NA': 'NA','ROUND':'RD', 'RD':'RD', 'R':'RD', 'BR':'RD', 'RB':'RD',
           'ROUND BRILLIANT':'RD','ROUNDBRILLIANT':'RD', 'BRILLIANT':'RD',
           'BRILLIANT CUT':'RD', 'BRILLIANTCUT':'RD', 
           'OVAL':'OV',  'OV':'OV', 'OC':'OV',  'OVEL':'OV', 'OL':'OV', 
@@ -27,9 +29,16 @@ actual_shape_dict = {'OTHER': 'OTHER','ROUND':'RD', 'RD':'RD', 'R':'RD', 'BR':'R
           'PEAR':'PS','PAER':'PS', 'PER':'PS', 'PS':'PS', 'PE':'PS',
           'RADIANT':'RA', 'RAD':'RA', 'RA':'RA', 'RA-N': 'RA', 'SQRADIANT': 'RA','LRADIANT': 'RA',    
           'MARQUISE':'MQ', 'MR':'MQ', 'MQ':'MQ', 'MAR':'MQ', 
-          'ASHCHER':'AS', 'AS':'AS', 'ASSCHER': 'AS',
+          'ASHCHER':'AS', 'AS':'AS', 
           'HEART':'HS','HRT':'HS', 'LOVE':'HS', 'HS':'HS', 'HR':'HS', 'HC':'HS','HE':'HS',
-          'TRIANGLE':'TR', 'TRI': 'TR', 'TR':'TR'}
+          'TRIANGLE':'TR', 'TRI': 'TR', 'TR':'TR',
+          'SQUAREEMERALD':'SE', 'SQUARERADIANT':'SR',
+          'OLDMINER':'OM', 'TAPEREDBULLET':'TB','BRIOLETTE':'BL',
+          'ASSCHER': 'AS','LOZENGE':'LZ','ROSE':'R',
+          'CALF':'CF','SHIELD':'SD','EPAULETTE':'EL','TRILLIANT':'TL',
+          'EUROPEANCUT':'EC','FLANDERS':'FL','OTHER':'OTHER','STAR':'ST','HEXAGONAL':'HX',
+          'BULLETS':'BL','SQUARE':'SQ','PENTAGONAL':'PN','TAPEREDBAGUETTE':'TRB','KITE':'KT',
+          'TRAPEZOID':'TZ','HALFMOON':'HM','OCTAGONAL':'OG','BAGUETTE':'BG'}
 
 # Shape Count 10 
 shape_list = ['RD', 'OV', 'EM', 'CU', 'PR', 'PS', 'RA', 'MQ', 'AS', 'HS']
@@ -45,7 +54,7 @@ def getActualShape(input_shape):
         return input_shape
 
 
-actual_color_dict = {'OTHER': 'OTHER','D':'D', 'E':'E', 'F':'F',
+actual_color_dict = {'NA': 'NA','D':'D', 'E':'E', 'F':'F',
                      'G':'G', 'H':'H', 'I':'I',
                      'J':'J', 'K':'K', 'L':'L', 
                      'M':'M', 'N':'N', 'O':'O', 
@@ -67,13 +76,13 @@ def getActualColor(input_color):
 
 
 actual_fluor_dict = {
-    'OTHER': 'OTHER','NONE':'N', 'NON':'N', 'N':'N', 'NO':'N', 'NAN':'N', 'NIL':'N','FLO':'N',
+    'NA': 'NA','NONE':'N', 'NON':'N', 'N':'N', 'NO':'N', 'NAN':'N', 'NIL':'N','FLO':'N',
     'FAINT':'F','FNT':'F', 'FL1':'F', 'F': 'F', 'FA': 'F','NEGLIGIBLE':'F',
     'MEDIUM':'M','MED':'M', 'M':'M', 'MEDIUMYELLOW': 'M', 'MD-BL':'M', 'FL2':'M',
     'STRONG':'S', 'STG':'S', 'S':'S', 'ST':'S', 'STRONGYELLOW':'S', 'ST-BL':'S','FL3':'S', 
     'VERY STRONG':'VS', 'VST':'VS', 'VSTG':'VS', 'VS':'VS', 'VERYSTRONG':'VS', 'VERYSTRONGBL': 'VS', 'FL4':'VS','VST-BL':'VS', 
     'SL':'SL', 'SLIGHT':'SL', 'SLI':'SL',
-    'VERY SLIGHT':'VSL', 'VSLG':'VSL', 'VSLT':'VSL'
+    'VERY SLIGHT':'VSL', 'VSLG':'VSL', 'VSLT':'VSL',
     }
 # Fluor Count 5
 fluor_list = ['N', 'F', 'M', 'S', 'VS'] 
@@ -89,7 +98,7 @@ def getActualFlour(input_flour):
         return input_flour
 
 actual_clarity_dict = {
-    'OTHER': 'OTHER','FL':'FL', 'IF':'IF', 'VVS1':'VVS1', 'VVS2':'VVS2', 'VS1':'VS1',
+    'NA': 'NA','FL':'FL', 'IF':'IF', 'VVS1':'VVS1', 'VVS2':'VVS2', 'VS1':'VS1',
     'VS2':'VS2', 'SI1':'SI1', 'SI2':'SI2','SI3':'SI3', 'I1':'I1', 'I2':'I2', 'I3':'I3',
      'P1':'P1', 'P2':'P2', 'P3':'P3', 'LC' : 'LC', 'LOUPECLEAN':'CLEAN'
     }
@@ -114,7 +123,7 @@ def getBNCLarity(actual_clarity) :
     return actual_clarity
 
 #converting I to X
-actual_cut_dict = {'OTHER': 'OTHER','EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
+actual_cut_dict = {'NA': 'NA','EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
                    'EXCELLENT':'X', 'VERY GOOD': 'VG', 'VERYGOOD': 'VG', 'GOOD': 'G',
                    'F':'F','FAIR':'F','P':'P','POOR':'P','I':'X','IDEAL':'X','ID':'X'}
 # Cut Count 5
@@ -132,7 +141,7 @@ def getActualCut(input_cut, default_value, shape):
     else: 
         return default_value
 
-actual_polish_dict = {'OTHER': 'OTHER','EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
+actual_polish_dict = {'NA': 'NA','EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
                       'FAIR TO GOOD':'F-G', 'GOOD TO VERY GOOD':'G-VG','VERY GOOD TO EXCELLENT':'VG-EX',
                    'EXCELLENT':'X', 'VERY GOOD': 'VG', 'VERYGOOD': 'VG', 'GOOD': 'G',
                    'F':'F','FAIR':'F','P':'P','POOR':'P','I':'X','IDEAL':'X','ID':'X'}
@@ -148,7 +157,7 @@ def getActualPolish(input_polish, default_value):
     else: 
         return default_value
 
-actual_sym_dict = {'OTHER': 'OTHER','EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
+actual_sym_dict = {'NA': 'NA','EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
                       'FAIR TO GOOD':'F-G', 'GOOD TO VERY GOOD':'G-VG','VERY GOOD TO EXCELLENT':'VG-EX',
                    'EXCELLENT':'X', 'VERY GOOD': 'VG', 'VERYGOOD': 'VG', 'GOOD': 'G',
                    'F':'F','FAIR':'F','P':'P','POOR':'P','I':'X','IDEAL':'X','ID':'X'}
@@ -187,22 +196,29 @@ def get_d360_weight(input_weight_str):
 
 
 def dict_key(weight, shape, color, clarity, fluor, cut, polish, sym): #WSCCFCPS
-    return ','.join([get_d360_weight(weight), shape, color, clarity, fluor, cut, polish, sym]).upper()
+    try:
+      return ','.join([weight, shape, color, clarity, fluor, cut, polish, sym]).upper()
+    except:
+      print([weight, shape, color, clarity, fluor, cut, polish, sym])
 
 def user_value_dict_key(weight, shape, color, clarity, fluor, cut, polish, sym) :
-    if shape == None:
-        shape = "other"
-    if color == None:
-        color = "other"
-    if clarity == None:
-        clarity = "other"
-    if polish == None:
-        polish = "other"
-    if sym == None:
-        sym = "other"  
-    if cut == None:
-        cut = "EX"   
-    weight = weight
+    if shape == None or math.isnan(shape):
+        shape = "NA"
+    if color == None or math.isnan(color):
+        color = "NA"
+    if clarity == None or math.isnan(color):
+        clarity = "NA"
+    if polish == None or math.isnan(polish):
+        polish = "NA"
+    if sym == None or math.isnan(sym):
+        sym = "NA"  
+    if fluor == None or math.isnan(fluor):
+        fluor = "NA"
+    if cut == None or math.isnan(cut):
+        cut = "EX"
+    if weight == None or math.isnan(weight):
+        weight = 0    
+    weight = get_d360_weight(weight)
     shape = actual_shape_dict[shape.upper()]
     color = actual_color_dict[color.upper()]
     clarity = actual_clarity_dict[clarity.upper()]
