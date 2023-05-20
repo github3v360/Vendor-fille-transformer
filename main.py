@@ -15,7 +15,6 @@ tempdir = tempfile.mkdtemp()
 
 client = storage.Client(project="friendlychat-bb9ff")
 
-
 actual_weight_dict = {}
 actual_shape_dict = {'NA': 'NA','ROUND':'RD', 'RD':'RD', 'R':'RD', 'BR':'RD', 'RB':'RD',
           'ROUND BRILLIANT':'RD','ROUNDBRILLIANT':'RD', 'BRILLIANT':'RD',
@@ -202,19 +201,19 @@ def dict_key(weight, shape, color, clarity, fluor, cut, polish, sym): #WSCCFCPS
       print([weight, shape, color, clarity, fluor, cut, polish, sym])
 
 def user_value_dict_key(weight, shape, color, clarity, fluor, cut, polish, sym) :
-    if shape == None or math.isnan(shape):
+    if shape == None:
         shape = "NA"
-    if color == None or math.isnan(color):
+    if color == None:
         color = "NA"
-    if clarity == None or math.isnan(color):
+    if clarity == None:
         clarity = "NA"
-    if polish == None or math.isnan(polish):
+    if polish == None:
         polish = "NA"
-    if sym == None or math.isnan(sym):
+    if sym == None:
         sym = "NA"  
-    if fluor == None or math.isnan(fluor):
+    if fluor == None:
         fluor = "NA"
-    if cut == None or math.isnan(cut):
+    if cut == None:
         cut = "EX"
     if weight == None or math.isnan(weight):
         weight = 0    
