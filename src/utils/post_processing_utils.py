@@ -8,7 +8,7 @@ import pandas as pd
 from collections import Counter
 from src.utils.column_name_utils import string_similarity
 
-def transform_column(cur_val, magic_numbers, target_column_name, default_value):
+def transform_column(cur_val, magic_numbers, target_column_name, target_column_dict, default_value):
     """
     This function is used to transform the non-standard name to the
     standard name for columns like shape, fluorescent and cut.
@@ -23,9 +23,6 @@ def transform_column(cur_val, magic_numbers, target_column_name, default_value):
     """
 
     # Loading dictionary for the current target column
-    file_path = os.path.join(os.path.join("artifacts","pickle_files"),f"{target_column_name}_dict.pkl")
-    with open(file_path,'rb') as f_name:
-        target_column_dict = pickle.load(f_name)
 
     if cur_val == "" or cur_val is None or (type(cur_val) != str):
         return default_value
@@ -160,4 +157,5 @@ def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,cu
     shape_num = str(shape_map[shape]) if shape in shape_map else str(shape_map[None])
     
     new_reportno = fluorescent_num +shape_num + carat_num + color_num +  clarity_num + cut_num + polish_num + symmetry_num +  last_four
+    # print(new_reportno)
     return new_reportno

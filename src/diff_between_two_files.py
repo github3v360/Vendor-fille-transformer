@@ -1,7 +1,9 @@
+
 '''
 This file calculates difference of files
 '''
 import csv
+
 def csv_diff_of_each_cell(file1, file2):
     """
     This function takes in two CSV files and returns the difference between them.
@@ -17,10 +19,10 @@ def csv_diff_of_each_cell(file1, file2):
           and the values from both files respectively.
     """
     # Load the CSV files into lists
-    with open(file1, 'r', encoding='utf-8') as f_name:
-        csv1 = list(csv.reader(f_name))
-    with open(file2, 'r', encoding='utf-8') as f_name:
-        csv2 = list(csv.reader(f_name))
+    with open(file1, 'r') as f:
+        csv1 = [row for row in csv.reader(f)]
+    with open(file2, 'r') as f:
+        csv2 = [row for row in csv.reader(f)]
 
     # Find the differences between the two CSV files
     diff_file = []
@@ -45,10 +47,10 @@ def file_diff_of_each_line(file1, file2):
             line that is different between the two files.
     """
     # Load the contents of the files into lists
-    with open(file1, 'r', encoding='utf-8') as f_name:
-        lines1 = f_name.readlines()
-    with open(file2, 'r', encoding='utf-8') as f_name:
-        lines2 = f_name.readlines()
+    with open(file1, 'r') as f:
+        lines1 = f.readlines()
+    with open(file2, 'r') as f:
+        lines2 = f.readlines()
 
     # Find the differences between the two files
     diff_files = []
@@ -64,8 +66,6 @@ def file_diff_of_each_line(file1, file2):
 
 
 if __name__ == "__main__":
-    diff = csv_diff_of_each_cell(r"artifacts\output_generated\Master_File copy.csv",\
-        r"C:\Users\hp\OneDrive\Desktop\D360\Vendor-fille-transformer\artifacts\
-            output_generated\Master_File.csv")
+    diff = csv_diff_of_each_cell(r"artifacts\output_generated\Master_File copy.csv",r"C:\Users\hp\OneDrive\Desktop\D360\Vendor-fille-transformer\artifacts\output_generated\Master_File.csv")
     for row, col, val1, val2 in diff:
         print(f"Row {row+1}, Column {col+1}: {val1} -> {val2}")

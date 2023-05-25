@@ -2,9 +2,9 @@
 This file contains class for applying whole logic on a single sheet of workbook
 '''
 # pylint: disable=too-few-public-methods
-from src import stage_1_data_cleaning_and_link_extraction
-from src import stage_2_probability_calculation
-from src import stage_3_post_processing
+from src import Stage_1_data_cleaning_and_link_extraction
+from src import Stage_2_probability_calculation
+from src import Stage_3_post_processing
 
 class ExtractFromSingleSheet:
     """
@@ -52,7 +52,7 @@ class ExtractFromSingleSheet:
         self.logger.info("-" * 75)
 
         # ======= Run Stage 1 (Which wil clean the data and extract the link) ==========
-        processor = stage_1_data_cleaning_and_link_extraction.CleanDataAndExtractLink(
+        processor = Stage_1_data_cleaning_and_link_extraction.CleanDataAndExtractLink(
                     self.data_frame, self.work_sheet, self.logger)
         df_cleaned, link_columns_name = processor.process()
         # It is possible that initially sheet is not empty but
@@ -61,17 +61,17 @@ class ExtractFromSingleSheet:
         if len(df_cleaned.columns) == 0:
             return df_cleaned
 
-        # ==== stage 2 process the data (probability calculation) ======
+        # ==== Stage 2 process the data (probability calculation) ======
         count_of_rows = df_cleaned.shape[0]
 
-        processor = stage_2_probability_calculation.DataProcessor(
+        processor = Stage_2_probability_calculation.DataProcessor(
                     df_cleaned, self.logger, link_columns_name,
                     count_of_rows, self.date, self.test_file_name)
         df_pre_processed, report_no_from_link, magic_numbers, prob_dict, \
-        remaining_columns_df, target_columns = processor.probability_based_dataExtraction()
+        remaining_columns_df, target_columns = processor.Probability_Based_DataExtraction()
 
-        #  ====== stage 3 post-process the data =========
-        processor = stage_3_post_processing.PostProcessingData(
+        #  ====== Stage 3 post-process the data =========
+        processor = Stage_3_post_processing.PostProcessingData(
                              df_pre_processed, df_cleaned, report_no_from_link, magic_numbers,
                              prob_dict, link_columns_name, remaining_columns_df,
                              target_columns, self.date, self.test_file_name,

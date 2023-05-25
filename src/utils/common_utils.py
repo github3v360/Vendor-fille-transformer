@@ -139,6 +139,13 @@ def load_pickle_files(data):
                 unique_values.insert(1, 'OTHER')
                 target_dict = {value: i for i, value in enumerate(unique_values, start=0)}
                 dictionaries.append({os.path.basename(file_name).replace('_dict.pkl', ''): target_dict})
+                # print(dictionaries)
         except FileNotFoundError:
             raise ValueError(f"File not found for target name")
     return dictionaries
+
+def load_pickle_files_for_single_column(target_column_name):
+    file_path = os.path.join(os.path.join("artifacts","pickle_files"),f"{target_column_name}_dict.pkl")
+    with open(file_path,'rb') as f_name:
+        target_column_dict = pickle.load(f_name)
+    return target_column_dict

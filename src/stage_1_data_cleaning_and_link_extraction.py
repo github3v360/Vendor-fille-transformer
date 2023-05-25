@@ -6,6 +6,7 @@ which will perform all the stage 1 tasks
 from src.utils import data_cleaner
 from src import hyperlink_extraction
 import pandas as pd
+import time
 
 class CleanDataAndExtractLink:
     '''
@@ -54,10 +55,16 @@ class CleanDataAndExtractLink:
         # If dataframe is empty we return the empty dataframe
         if df_corrected_headers is None: return pd.DataFrame() ,None
 
+        start_time_of_link_extraction = time.time()
+
         # Extracting the hyperlink and report number from the link
         hyperlink_extractor = hyperlink_extraction.HyperlinkExtractor(
             self.openpyxl_workbook, correct_row_idx, df_corrected_headers
         )
+
+        time_taken_to_extract_link = time.time() - start_time_of_link_extraction
+
+        self.logger.info(f"Time taken to execute the process of extracting the link {time_taken_to_extract_link}")
 
         df_with_links, link_columns_name = hyperlink_extractor.add_hyperlink_columns()
 

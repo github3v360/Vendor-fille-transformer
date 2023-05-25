@@ -4,6 +4,8 @@ This file contains class for performing post processing with column values in da
 import pickle
 import os
 from src.utils import post_processing_utils,common_utils
+import time
+
 class PostProcessing:
     """
     Class performs post processing of extracted data. It starts with 'process' functions and 
@@ -19,15 +21,17 @@ class PostProcessing:
         df_pre_processed: Pre Processed Dataframe (DataFrame)
         magic_numbers: Required weights (dict)
         prob_dict: Predicted Probablities (dict)
+        logger: Python's logger to log the Info, Errors and Exceptions
     Returns:
         df_pre_processed : Post Processed Dataframe (DataFrame)
 
     """
-    def __init__(self, fetched_columns, df_pre_processed, magic_numbers, prob_dict):
+    def __init__(self, fetched_columns, df_pre_processed, magic_numbers, prob_dict, logger):
         self.fetched_columns = fetched_columns
         self.df_pre_processed = df_pre_processed
         self.magic_numbers = magic_numbers
         self.prob_dict = prob_dict
+        self.logger = logger
 
     def cal_measurement_columns(self):
         """
@@ -166,7 +170,7 @@ class PostProcessing:
         return self.df_pre_processed
 
     def process(self):
-
+        start = time.time()
         """
         This function will tranform shape, fluorescent and cut column.
         It will transform their non-standard value to a standard value.
@@ -177,71 +181,62 @@ class PostProcessing:
         Returns:
             pre-processed DataFrame with additional columns 
         """
-
+        
         if "shape" in self.fetched_columns:
+            target_column_dict= common_utils.load_pickle_files_for_single_column("shape")
             self.df_pre_processed["shape"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["shape"], self.magic_numbers, "shape", None),
+                    x["shape"], self.magic_numbers,"shape", target_column_dict, None),
                 axis=1,
             )
-
+        
         if "fluorescent" in self.fetched_columns:
+            target_column_dict= common_utils.load_pickle_files_for_single_column("fluorescent")
             self.df_pre_processed["fluorescent"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["fluorescent"], self.magic_numbers, "fluorescent", None),
+                    x["fluorescent"], self.magic_numbers, "fluorescent", target_column_dict, None),
                 axis=1,
             )
 
         self.df_pre_processed = self.cal_measurement_columns()
 
         if "cut" in self.fetched_columns:
+            target_column_dict= common_utils.load_pickle_files_for_single_column("cut")
             self.df_pre_processed["cut"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["cut"], self.magic_numbers, "cut", "ex"),
+                    x["cut"], self.magic_numbers, "cut", target_column_dict, "ex"),
                 axis=1,
             )
         
         if "polish" in self.fetched_columns:
+            target_column_dict= common_utils.load_pickle_files_for_single_column("polish")
             self.df_pre_processed["polish"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["polish"], self.magic_numbers, "polish", None),
+                    x["polish"], self.magic_numbers, "polish", target_column_dict, None),
                 axis=1,
             )
         
         if "symmetry" in self.fetched_columns:
+            target_column_dict= common_utils.load_pickle_files_for_single_column("symmetry")
             self.df_pre_processed["symmetry"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["symmetry"], self.magic_numbers, "symmetry", None),
+                    x["symmetry"], self.magic_numbers, "symmetry", target_column_dict, None),
                 axis=1,
             )
 
         if "color" in self.fetched_columns:
+            target_column_dict= common_utils.load_pickle_files_for_single_column("color")
             self.df_pre_processed["color"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["color"], self.magic_numbers, "color", None),
+                    x["color"], self.magic_numbers, "color", target_column_dict, None),
                 axis=1,
             )
 
-        if "polish" in self.fetched_columns:
-            self.df_pre_processed["polish"] = self.df_pre_processed.apply(
-                lambda x: post_processing_utils.transform_column(
-                    x["polish"], self.magic_numbers, "polish", None
-                ),
-                axis=1,
-            )
-        
-        if "symmetry" in self.fetched_columns:
-            self.df_pre_processed["symmetry"] = self.df_pre_processed.apply(
-                lambda x: post_processing_utils.transform_column(
-                    x["symmetry"], self.magic_numbers, "symmetry", None
-                ),
-                axis=1,
-            )
-            
         if "clarity" in self.fetched_columns:
+            target_column_dict= common_utils.load_pickle_files_for_single_column("clarity")
             self.df_pre_processed["clarity"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["clarity"], self.magic_numbers, "clarity", None),
+                    x["clarity"], self.magic_numbers, "clarity", target_column_dict, None),
                 axis=1,
             )
 
@@ -282,7 +277,8 @@ class PostProcessing:
                 polish_map = dictionary['polish']
             elif 'symmetry' in dictionary:
                 symmetry_map = dictionary['symmetry']
-                
+            
+        start_time_to_generate_report_no = time.time()
         required_column = ["report_no","clarity","color","fluorescent","shape","carat","cut","polish","symmetry"]
         temporary_columns = []
         for col in required_column:
@@ -298,8 +294,14 @@ class PostProcessing:
             axis=1,
         )
 
+        total_time_taken_to_generate_report_no = time.time() - start_time_to_generate_report_no
+
+        self.logger.info(f"Time taken to generate report number {total_time_taken_to_generate_report_no}")
+
         temporary_columns.append("report_no_from_link")
         self.df_pre_processed.drop(columns=temporary_columns, axis=1, inplace=True)
         print("Deleted columns")
         print(temporary_columns)
+        end = time.time()
+        self.logger.info("Total time taken in post processing function: "+str(end-start))
         return self.df_pre_processed
