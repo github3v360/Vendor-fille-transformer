@@ -50,7 +50,7 @@ class PostProcessing:
         if set(measurement_columns).issubset(set(self.fetched_columns)):
             flag = True
             try:
-                _ = float(self.df_pre_processed["length"].iloc[20])
+                _ = float(self.df_pre_processed["length"].iloc[0])
                 flag = False
             except:
                 pass
