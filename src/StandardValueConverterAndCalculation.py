@@ -112,14 +112,14 @@ class PostProcessing:
             # Now Calculating and correcting the price related column
             price_list = price_columns[2:]
             self.df_pre_processed["rapRate"] = self.df_pre_processed["rapRate"].astype(
-                float
+                int
             )
             self.df_pre_processed["carat"] = self.df_pre_processed["carat"].astype(
                 float
             )
             self.df_pre_processed["rapPriceTotal"] = (
                 self.df_pre_processed["rapRate"] * self.df_pre_processed["carat"]
-            )
+            ).astype(int)
 
             max_prob = -1
             price_name = None
@@ -137,29 +137,30 @@ class PostProcessing:
                 self.df_pre_processed["discount"] = self.df_pre_processed[
                     "discount"
                 ].apply(post_processing_utils.transform_discount_column)
-                self.df_pre_processed["pricePerCarat"] = self.df_pre_processed[
-                    "rapRate"
-                ] * (1 - (self.df_pre_processed["discount"] / 100))
+                self.df_pre_processed["pricePerCarat"] = (
+                    self.df_pre_processed["rapRate"] * 
+                    (1 - (self.df_pre_processed["discount"] / 100))).astype(int)
+
                 self.df_pre_processed["total"] = (
                     self.df_pre_processed["pricePerCarat"]
                     * self.df_pre_processed["carat"]
-                )
+                ).astype(int)
             elif price_name == "pricePerCarat":
-                self.df_pre_processed["discount"] = (
+                self.df_pre_processed["discount"] = ((
                     1
                     - (
                         self.df_pre_processed["pricePerCarat"]
                         / self.df_pre_processed["rapRate"]
                     )
-                ) * 100
+                ) * 100).astype(int)
                 self.df_pre_processed["total"] = (
                     self.df_pre_processed["pricePerCarat"]
                     * self.df_pre_processed["carat"]
-                )
+                ).astype(int)
             else:
                 self.df_pre_processed["pricePerCarat"] = (
                     self.df_pre_processed["total"] / self.df_pre_processed["carat"]
-                )
+                ).astype(int)
                 self.df_pre_processed["discount"] = (
                     1
                     - (

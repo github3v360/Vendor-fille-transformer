@@ -78,4 +78,6 @@ class ExtractFromSingleSheet:
                              self.logger)
 
         df_processed = processor.process_data()
+        #columns_to_convert = ['cut','shape','clarity','color','fluorescent','polish','symmetry']
+        #df_processed[columns_to_convert] = df_processed[columns_to_convert].applymap(str.upper)
         return df_processed

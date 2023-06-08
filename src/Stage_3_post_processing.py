@@ -158,7 +158,7 @@ class PostProcessingData:
             dataframe (pandas dataframe): Input DataFrame with report_no
             column
         '''
-        if "report_no" in dataframe.columns:
+        if "reportNo" in dataframe.columns:
             self.logger.info(
             f"The total number of columns without a report number is {dataframe['reportNo'].isna().sum()}."
             )
