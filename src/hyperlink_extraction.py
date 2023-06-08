@@ -63,7 +63,7 @@ class HyperlinkExtractor:
                 [None]*len(self.data_frame)
 
 
-        self.data_frame_link['report_no'] = [None]*len(self.data_frame)
+        self.data_frame_link['reportNo'] = [None]*len(self.data_frame)
         self.data_frame_link = self.iteratively_extract_link_and_report_number(0)
         self.data_frame_link.dropna(axis=1, how='all', inplace=True)
         self.data_frame = pd.concat([self.data_frame, self.data_frame_link], axis=1)
@@ -141,6 +141,6 @@ class HyperlinkExtractor:
                             number will be extracted.
 
         """
-        if self.data_frame_link['report_no'].iloc[current] is None:
-            self.data_frame_link['report_no'].iloc[current] = \
+        if self.data_frame_link['reportNo'].iloc[current] is None:
+            self.data_frame_link['reportNo'].iloc[current] = \
             hyperlink_extraction_utils.extract_report_number(extracted_link)

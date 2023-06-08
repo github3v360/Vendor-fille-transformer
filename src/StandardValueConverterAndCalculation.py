@@ -204,7 +204,7 @@ class PostProcessing:
             target_column_dict= common_utils.load_pickle_files_for_single_column("cut")
             self.df_pre_processed["cut"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["cut"], self.magic_numbers, "cut", target_column_dict, "ex"),
+                    x["cut"], self.magic_numbers, "cut", target_column_dict, "EX"),
                 axis=1,
             )
         
@@ -242,9 +242,9 @@ class PostProcessing:
 
         self.df_pre_processed = self.cal_price_columns()
 
-        self.df_pre_processed["report_no"] = self.df_pre_processed.apply(
+        self.df_pre_processed["reportNo"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.transform_report_no_column(
-                x["report_no"], x["report_no_from_link"]
+                x["reportNo"], x["report_no_from_link"]
             ),
             axis=1,
         )
@@ -279,16 +279,16 @@ class PostProcessing:
                 symmetry_map = dictionary['symmetry']
             
         start_time_to_generate_report_no = time.time()
-        required_column = ["report_no","clarity","color","fluorescent","shape","carat","cut","polish","symmetry"]
+        required_column = ["reportNo","clarity","color","fluorescent","shape","carat","cut","polish","symmetry"]
         temporary_columns = []
         for col in required_column:
             if col not in self.df_pre_processed.columns:
                 self.df_pre_processed.loc[:,col] = 'OTHER'
                 temporary_columns.append(col)
 
-        self.df_pre_processed["generated_report_no"] = self.df_pre_processed.apply(
+        self.df_pre_processed["generatedReportNo"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.generate_report_no_column(
-                x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
+                x["reportNo"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
                 clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map
             ),
             axis=1,

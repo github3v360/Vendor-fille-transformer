@@ -21,7 +21,7 @@ def get_target_column_unique_values(target_name, logger):
         "color": ("artifacts/pickle_files/color_dict.pkl", True),
         "shape": ("artifacts/pickle_files/shape_dict.pkl", True),
         "fluorescent": ("artifacts/pickle_files/fluorescent_dict.pkl", True),
-        "raprate": ([12000.00, 21000.00, 11000.00, 18000.00, 16000.12], False),
+        "rapRate": ([12000.00, 21000.00, 11000.00, 18000.00, 16000.12], False),
         "length": (["*", "x", "X", "+", "-"], False),
         "width": (["*", "x", "X", "+", "-"], False),
         "depth": (["*", "x", "X", "+", "-"], False),
@@ -33,11 +33,11 @@ def get_target_column_unique_values(target_name, logger):
             [56.2, 57.6, 58.2, 59.5, 60.4, 61.3, 62.2, 63.2, 65.5, 70.3, 72.2],
             False,
         ),
-        "price per carat": ([5000, 7000, 8600, 10000, 12067, 16800], False),
+        "pricePerCarat": ([5000, 7000, 8600, 10000, 12067, 16800], False),
         "discount": ([-2, 1.0, 30.89, 70.65, -4.00, -50.00], False),
         "total": ([5000.0, 56789.98, 76452.98, 54637.83], False),
-        "rap price total": ([5000.0, 56789.98, 76452.98, 54637.83], False),
-        "Stock Ref": (
+        "rapPriceTotal": ([5000.0, 56789.98, 76452.98, 54637.83], False),
+        "stockRef": (
             [
                 "VSBDJ003",
                 "1627905",
@@ -50,7 +50,7 @@ def get_target_column_unique_values(target_name, logger):
             ],
             True,
         ),
-        "report_no": (
+        "reportNo": (
             [5673832784, 4851297767, 4851269742, 52364789152, 45862177986, 45841253698],
             False,
         ),
@@ -265,7 +265,7 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,
         return cal_measurement_columns(count_of_rows,column_unique_values,
                 target_column_unique_value,target_name,input_data_type,len_column_unique_value)
     
-    elif target_name == 'report_no':
+    elif target_name == 'reportNo':
 
         if input_data_type[0]==str:
             get_val = None 
@@ -315,12 +315,12 @@ def similarity_score_from_col_values(count_of_rows,column_unique_values,
         # Define the target_name to range mapping
         target_range_map = {
             'carat': (0.1, 10),
-            'raprate': (1000, 100000),
+            'rapRate': (1000, 100000),
             'table': (50, 73),
-            'price per carat': (5000, 30000),
+            'pricePerCarat': (5000, 30000),
             'discount': (-99, 99),
             'total': (10000, 100000),
-            'rap price total': (10000, 100000)
+            'rapPriceTotal': (10000, 100000)
         }
 
         # Check if target_name exists in the mapping

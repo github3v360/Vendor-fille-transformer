@@ -42,7 +42,7 @@ def get_standard_names(target_name, logger):
             "FluorescenceIntensity",
             "FluorIntensity",
         ],
-        "raprate": ["Rap", "Rapprice"],
+        "rapRate": ["Rap", "Rapprice"],
         "length": ["M1", "Measurement", "Diameter", "length"],
         "width": ["M2", "Measurement", "Diameter", "width"],
         "depth": ["M3", "Measure", "Diameter", "depth", "height"],
@@ -67,7 +67,7 @@ def get_standard_names(target_name, logger):
             "Laboratory comment",
             "Report Comments",
         ],
-        "price per carat": [
+        "pricePerCarat": [
             "PerCarat",
             "PerCt",
             "Prc",
@@ -101,8 +101,8 @@ def get_standard_names(target_name, logger):
             "per",
         ],
         "total": ["amount", "total", "total price"],
-        "rap price total": ["rap total", "rap value"],
-        "Stock Ref": [
+        "rapPriceTotal": ["rap total", "rap value"],
+        "stockRef": [
             "ReferenceNum",
             "ReferenceNumber",
             "Stock",
@@ -115,7 +115,7 @@ def get_standard_names(target_name, logger):
             "Refno",
             "Packet No",
         ],
-        "report_no": [
+        "reportNo": [
             "REPORTNO",
             "REPORT NO",
             "REP NO",

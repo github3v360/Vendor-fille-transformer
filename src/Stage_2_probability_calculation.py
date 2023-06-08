@@ -44,27 +44,27 @@ class DataProcessor:
         self.vendor_name = vendor_name
 
         self.target_columns = [
-            "clarity",
+            "reportNo",
+            "shape",
             "carat",
             "color",
-            "shape",
-            "fluorescent",
-            "raprate",
+            "clarity",
             "cut",
             "polish",
             "symmetry",
+            "fluorescent",
+            "rapRate",
+            "discount",
+            "rapPriceTotal",
+            "pricePerCarat",
+            "total",
             "table",
             "length",
             "width",
             "depth",
-            "price per carat",
-            "discount",
-            "total",
-            "rap price total",
             "comments",
-            "report_no",
         ]
-
+        
         self.prob_dict = common_utils.initialize_prob_dict(self.target_columns)
 
         self.magic_numbers = common_utils.get_magic_numbers()
@@ -154,7 +154,7 @@ class DataProcessor:
                 d[col] = row[col]
             list_of_dicts.append(d)
 
-        self.remaining_columns_dataframe["Extra Column"] = list_of_dicts
+        self.remaining_columns_dataframe["extraColumn"] = list_of_dicts
         return self.remaining_columns_dataframe
 
     def get_current_column_unique_values(self, dataframe_cleaned, cur_dataframe_cleaned_column_name):

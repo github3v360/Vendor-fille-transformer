@@ -24,7 +24,7 @@ def transform_column(cur_val, magic_numbers, target_column_name, target_column_d
 
     # Loading dictionary for the current target column
 
-    if cur_val == "" or cur_val is None or (type(cur_val) != str):
+    if cur_val == "" or cur_val == "-" or cur_val is None or (type(cur_val) != str):
         return default_value
     
     cur_val = cur_val.replace("+","").replace("-","").replace(" ","").lower()

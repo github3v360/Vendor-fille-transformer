@@ -89,7 +89,7 @@ class PostProcessingData:
 
         """
         dataframe["report_no_from_link"] = self.report_no_from_link
-        dataframe["report_no"] = dataframe["report_no"] if "report_no" in dataframe else None
+        dataframe["reportNo"] = dataframe["reportNo"] if "reportNo" in dataframe else None
         return dataframe
 
     def transform_values(self, dataframe):
@@ -160,7 +160,7 @@ class PostProcessingData:
         '''
         if "report_no" in dataframe.columns:
             self.logger.info(
-            f"The total number of columns without a report number is {dataframe['report_no'].isna().sum()}."
+            f"The total number of columns without a report number is {dataframe['reportNo'].isna().sum()}."
             )
 
     def add_date_and_vendor(self, dataframe):

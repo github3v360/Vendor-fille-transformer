@@ -22,7 +22,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 def main():
 
-    test_data_dir = "artifacts/test_files"
+    test_data_dir = "artifacts/New_test_files"
     test_file_names = os.listdir(test_data_dir)
     out_dir = "artifacts/output_generated"
 
@@ -30,11 +30,28 @@ def main():
         shutil.rmtree(out_dir)
     os.makedirs(out_dir)
 
-    dummy_df = pd.DataFrame(columns=['clarity','carat','color','shape',"fluorescent","raprate",'cut','polish',"symmetry","table","length","width","depth",
-    "price per carat","discount","total","rap price total","comments","report_no"])
+    dummy_df = pd.DataFrame(columns=["reportNo",
+            "shape",
+            "carat",
+            "color",
+            "clarity",
+            "cut",
+            "polish",
+            "symmetry",
+            "fluorescent",
+            "rapRate",
+            "discount",
+            "rapPriceTotal",
+            "pricePerCarat",
+            "total",
+            "table",
+            "length",
+            "width",
+            "depth",
+            "comments"])
 
     for test_file_name in test_file_names:
-        if test_file_name not in ["continue.xlsx"]:
+        if test_file_name not in ["DHARMANANDAN(06-06).xlsx"]:
             continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
