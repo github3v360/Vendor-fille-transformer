@@ -79,10 +79,10 @@ class PostProcessing:
             )
 
             # Calculate the ratio and depth column
-            self.df_pre_processed["ratio"] = round(
+            self.df_pre_processed["Ratio"] = round(
                 self.df_pre_processed["length"] / self.df_pre_processed["width"], 2
             )
-            self.df_pre_processed["depth %"] = round(
+            self.df_pre_processed["Depth %"] = round(
                 (self.df_pre_processed["depth"] / self.df_pre_processed["width"]) * 100,
                 2,
             )
@@ -111,6 +111,7 @@ class PostProcessing:
         ):
             # Now Calculating and correcting the price related column
             price_list = price_columns[2:]
+            self.df_pre_processed.dropna(subset=['rapRate'], inplace=True)
             self.df_pre_processed["rapRate"] = self.df_pre_processed["rapRate"].astype(
                 int
             )

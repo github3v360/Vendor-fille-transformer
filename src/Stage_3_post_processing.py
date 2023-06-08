@@ -127,7 +127,7 @@ class PostProcessingData:
             dataframe (pandas dataframe): Input dataframe
             target_columns (list): A list of name of target columns
         '''
-        target_columns += ["ratio", "depth %"]
+        target_columns += ["Ratio", "Depth %"]
         self.logger.info("-" * 75)
         self.logger.info(f"Not able to detect {set(target_columns) - set(dataframe.columns)}")
 
@@ -174,8 +174,8 @@ class PostProcessingData:
             dataframe (pandas dataframe): DataFrame with date and Vendor
             columns
         """
-        dataframe["date"] = pd.Series([self.date] * len(dataframe))
-        dataframe["Vendor"] = pd.Series([self.vendor_name] * len(dataframe))
+        dataframe["Date"] = pd.Series([self.date] * len(dataframe))
+        dataframe["VendorName"] = pd.Series([self.vendor_name] * len(dataframe))
         return dataframe
 
     def process_data(self):

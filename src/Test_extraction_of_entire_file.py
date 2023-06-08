@@ -30,36 +30,36 @@ def main():
         shutil.rmtree(out_dir)
     os.makedirs(out_dir)
 
-    dummy_df = pd.DataFrame(columns=["reportNo",
-            "shape",
-            "carat",
-            "color",
-            "clarity",
-            "cut",
-            "polish",
-            "symmetry",
-            "fluorescent",
-            "rapRate",
-            "discount",
-            "rapPriceTotal",
-            "pricePerCarat",
-            "total",
-            "table",
-            "length",
-            "width",
-            "depth",
-            "comments"])
+    dummy_df = pd.DataFrame(columns=["ReportNo",
+            "Shape",
+            "Carat",
+            "Color",
+            "Clarity",
+            "Cut",
+            "Polish",
+            "Symmetry",
+            "Fluorescent",
+            "RapRate",
+            "Discount",
+            "RapPriceTotal",
+            "PricePerCarat",
+            "Total",
+            "Table",
+            "Length",
+            "Width",
+            "Depth",
+            "Comments"])
 
     for test_file_name in test_file_names:
-        if test_file_name not in ["DHARMANANDAN(06-06).xlsx"]:
-            continue
+        # if test_file_name not in ["DHARMANANDAN(06-06).xlsx"]:
+        #     continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
         print(f"====File name : {test_file_name} ======")
         start = time.time()
         try:
             vendor_name = test_file_name[:-5]
-            extractor = extraction_of_entire_file.EntireFileExtractor(file_path,False,logger,"2/02/2002",vendor_name)
+            extractor = extraction_of_entire_file.EntireFileExtractor(file_path,False,logger,"06/09/2023",vendor_name)
             out_df = extractor.extract()
             dummy_df = pd.concat([out_df,dummy_df])
         except:
