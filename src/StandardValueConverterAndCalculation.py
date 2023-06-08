@@ -104,21 +104,21 @@ class PostProcessing:
             post-processed DataFrame with additional price columns 
             
         """
-        price_columns = ["carat", "raprate", "price per carat", "discount", "total"]
+        price_columns = ["carat", "rapRate", "pricePerCarat", "discount", "total"]
 
         if set(price_columns[:2]).issubset(set(self.fetched_columns)) and any(
             [item in self.fetched_columns for item in price_columns[2:]]
         ):
             # Now Calculating and correcting the price related column
             price_list = price_columns[2:]
-            self.df_pre_processed["raprate"] = self.df_pre_processed["raprate"].astype(
+            self.df_pre_processed["rapRate"] = self.df_pre_processed["rapRate"].astype(
                 float
             )
             self.df_pre_processed["carat"] = self.df_pre_processed["carat"].astype(
                 float
             )
-            self.df_pre_processed["rap price total"] = (
-                self.df_pre_processed["raprate"] * self.df_pre_processed["carat"]
+            self.df_pre_processed["rapPriceTotal"] = (
+                self.df_pre_processed["rapRate"] * self.df_pre_processed["carat"]
             )
 
             max_prob = -1
@@ -137,34 +137,34 @@ class PostProcessing:
                 self.df_pre_processed["discount"] = self.df_pre_processed[
                     "discount"
                 ].apply(post_processing_utils.transform_discount_column)
-                self.df_pre_processed["price per carat"] = self.df_pre_processed[
-                    "raprate"
+                self.df_pre_processed["pricePerCarat"] = self.df_pre_processed[
+                    "rapRate"
                 ] * (1 - (self.df_pre_processed["discount"] / 100))
                 self.df_pre_processed["total"] = (
-                    self.df_pre_processed["price per carat"]
+                    self.df_pre_processed["pricePerCarat"]
                     * self.df_pre_processed["carat"]
                 )
-            elif price_name == "price per carat":
+            elif price_name == "pricePerCarat":
                 self.df_pre_processed["discount"] = (
                     1
                     - (
-                        self.df_pre_processed["price per carat"]
-                        / self.df_pre_processed["raprate"]
+                        self.df_pre_processed["pricePerCarat"]
+                        / self.df_pre_processed["rapRate"]
                     )
                 ) * 100
                 self.df_pre_processed["total"] = (
-                    self.df_pre_processed["price per carat"]
+                    self.df_pre_processed["pricePerCarat"]
                     * self.df_pre_processed["carat"]
                 )
             else:
-                self.df_pre_processed["price per carat"] = (
+                self.df_pre_processed["pricePerCarat"] = (
                     self.df_pre_processed["total"] / self.df_pre_processed["carat"]
                 )
                 self.df_pre_processed["discount"] = (
                     1
                     - (
-                        self.df_pre_processed["price per carat"]
-                        / self.df_pre_processed["raprate"]
+                        self.df_pre_processed["pricePerCarat"]
+                        / self.df_pre_processed["rapRate"]
                     )
                 ) * 100
         return self.df_pre_processed
