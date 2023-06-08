@@ -124,6 +124,8 @@ def helloFirestore(event, context):
         summaryFilePath = '/'.join([userId, str(uuid.uuid4()), 'summary_2.xlsx'])
         print("==========user Id and uuid ========")
         print(userId,str(uuid.uuid4()))
+        print("==========Summary File Path ========")
+        print(summaryFilePath)
         uploadToBucket(
         summary_bucket,
         summaryFilePath,
