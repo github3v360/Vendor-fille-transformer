@@ -88,6 +88,16 @@ class PostProcessing:
             )
         return self.df_pre_processed
 
+    def convert_to_integer(self,value):
+        try:
+            float_value = float(value)
+            if math.isnan(float_value):
+                return None  # Handle NaN values as needed
+            else:
+                return int(math.ceil(float_value))
+        except (ValueError, TypeError):
+            return int(value)
+            
     def cal_price_columns(self):
         """
         This function will calculate the "price per carat","discount" and "total"
@@ -112,9 +122,7 @@ class PostProcessing:
             # Now Calculating and correcting the price related column
             price_list = price_columns[2:]
             self.df_pre_processed.dropna(subset=['rapRate'], inplace=True)
-            self.df_pre_processed["rapRate"] = self.df_pre_processed["rapRate"].astype(
-                int
-            )
+            self.df_pre_processed["rapRate"] = self.df_pre_processed["rapRate"].apply(self.convert_to_integer)
             self.df_pre_processed["carat"] = self.df_pre_processed["carat"].astype(
                 float
             )
@@ -171,6 +179,7 @@ class PostProcessing:
                 ) * 100
         return self.df_pre_processed
 
+    
     def process(self):
         start = time.time()
         """
@@ -288,7 +297,7 @@ class PostProcessing:
                 self.df_pre_processed.loc[:,col] = 'OTHER'
                 temporary_columns.append(col)
 
-        self.df_pre_processed["generatedReportNo"] = self.df_pre_processed.apply(
+        self.df_pre_processed["GeneratedReportNo"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.generate_report_no_column(
                 x["reportNo"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
                 clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map
