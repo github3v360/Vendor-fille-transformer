@@ -120,6 +120,9 @@ def convert_to_common_format(request):
             cur_vendor_name = file_path_splitted[-2]
             cur_file_name = file_path_splitted[-1]
 
+            print('cur_vendor_name', cur_vendor_name)
+            print('cur_file_name', cur_file_name)
+
             file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "_" + cur_file_name])
             
             downloadFromBucket(inventory_bucket_name, file_path, file_path_download_to_tempdir)
@@ -129,6 +132,8 @@ def convert_to_common_format(request):
             out_df = extractor.extract()
             out_df=out_df.reset_index()
             print("Converted to common format")
+
+
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
             if file_path.endswith(".csv"):
