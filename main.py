@@ -120,8 +120,10 @@ def convert_to_common_format(request):
             cur_vendor_name = file_path_splitted[-2]
             cur_file_name = file_path_splitted[-1]
 
-            print('cur_vendor_name', cur_vendor_name)
-            print('cur_file_name', cur_file_name)
+            print(f'cur_vendor name is : {cur_vendor_name}')
+            print(f'cur_file name is:  {cur_file_name}')
+
+            
 
             file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "_" + cur_file_name])
             
@@ -133,7 +135,7 @@ def convert_to_common_format(request):
             out_df=out_df.reset_index()
             print("Converted to common format")
 
-
+            # cur_file_name = cur_file_name + '_output.xlsx'
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
             if file_path.endswith(".csv"):
