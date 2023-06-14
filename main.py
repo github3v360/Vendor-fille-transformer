@@ -117,6 +117,8 @@ def convert_to_common_format(request):
 
             file_path_splitted = file_path.split("/")
 
+            print(f"splitted file path: {file_path_splitted}")
+
             cur_vendor_name = file_path_splitted[-2]
             cur_file_name = file_path_splitted[-1]
 
