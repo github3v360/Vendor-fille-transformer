@@ -1,34 +1,32 @@
 # Importing Required Libraries
-
-import tempfile
-import os
-from google.cloud import storage
-import numpy as np
-import openpyxl
-import uuid
-import firebase_admin
-from datetime import datetime as dt 
-from firebase_admin import credentials, firestore
-import math
-import time
-import fnmatch
-import pickle
-import yaml
 import pandas as pd
 from src import extraction_of_entire_file
 import logging
 import io
+import tempfile
+import os
+import time
+from google.cloud import storage
 
 # Bucket Realted parameters and functions
 
 tempdir = tempfile.gettempdir()
-cred = credentials.ApplicationDefault()
-firebase_admin.initialize_app(cred)
-db = firestore.client()
-
 tempdir = tempfile.mkdtemp()
 
 client = storage.Client(project="friendlychat-bb9ff")
+
+inventory_bucket_name = "business-inventory-files"
+summary_bucket_name = "business-summary-files"
+
+def downloadFromBucket(bucketName, path, filepath):
+    bucket = client.get_bucket(bucketName)
+
+    blob = bucket.blob(path)
+    doesFileExist = blob.exists()
+    if not doesFileExist:
+        raise Exception('remote file not present')
+    
+    blob.download_to_filename(filepath)
 
 
 def uploadToBucket(bucketName, path, filepath):
@@ -37,7 +35,6 @@ def uploadToBucket(bucketName, path, filepath):
     bucketName = bucket name where file is to be uploaded,
     path = path inside the bucket
     filepath = location of the file to be uploaded 
-
     assuming that file to be uploaded is always .xlsx file
     '''
     bucket = client.get_bucket(bucketName)
@@ -48,86 +45,106 @@ def uploadToBucket(bucketName, path, filepath):
         blob.upload_from_file(file)
 
     blob.make_public()
-
-def downloadFromBucket(bucketName, path, filepath):
-    bucket = client.get_bucket(bucketName)
-
-    blob = bucket.blob(path)
-    doesFileExist = blob.exists()
-    print("download",filepath,path,bucketName)
-    if not doesFileExist:
-        raise Exception('remote file not present')
     
-    blob.download_to_filename(filepath)
 
-def exportDataFrameToExcel(dataframe, path):
-    dataframe.to_excel(path, index = False)
+def delete_file_from_bucket(bucket_name, file_path):
 
-def read_excel(filename):
-    assert filename.split('.')[-1] in ['xlsx', 'xls'] ,'Not a excel file'
-    return pd.read_excel(filename,header=None,engine='openpyxl')
-  
-def addSummaryFileMeta(summaryFilePath, uid, VENDORNAME):
-  collection_ref = db.collection('/'.join(['userFiles', uid, 'summaryFiles']))
+    # Get a reference to your bucket
+    bucket = client.bucket(bucket_name)
 
-  data = {
-    'filePath' : summaryFilePath,
-    'bucket' : summary_bucket,
-    'CREATEDAT' :dt.now(),
-    'downloadURL' : '/'.join(['https://storage.googleapis.com',summary_bucket, summaryFilePath]),
-    'ack' : False,
-    'VENDORNAME' : VENDORNAME
-  }
+    # Get a reference to the blob to be deleted
+    blob = bucket.blob(file_path)
 
-  collection_ref.add(data)
+    # Delete the blob if it exists
+    if blob.exists():
+        blob.delete()
 
-def helloFirestore(event, context):
-    """
-    Triggered by a change to a Firestore document.
-    Args:
-        event (dict): Event payload.
-        context (google.cloud.functions.Context): Metadata for the event.
-    """
-    
-    bucketName= event['value']['fields']['bucket']['stringValue']
-    bucket = client.get_bucket(bucketName)
+from google.cloud import storage
+import os
 
-    bucketPathArray = event['value']['fields']['files']['arrayValue']['values']
-    filenames=[]
+def list_files_in_directory(bucket_name, directory_path):
 
-    userId = None
+    # Get a reference to your bucket
+    bucket = client.bucket(bucket_name)
 
-    log_buffer = io.StringIO()
-    logging.basicConfig(level=logging.INFO, stream=log_buffer)
+    # Get a list of all blobs in the bucket
+    blobs = bucket.list_blobs()
 
-    # Extracting date and vendor name
-    metaData=dict()
-    metaData['CREATEDAT']=dt.fromtimestamp(int(event['value']['fields']['CREATEDAT']['integerValue'])/1000.0)
-    metaData['VENDORNAME'] = event['value']['fields']['VENDORNAME']['stringValue']
-    date = metaData['CREATEDAT'].strftime("%d/%m/%Y")
-    
-    for everyobj in bucketPathArray:
-        currentFilePath=everyobj['mapValue']['fields']['filePath']['stringValue']
-    
-        blob=bucket.blob(currentFilePath)
-        blob.download_to_filename(os.path.join(tempdir, currentFilePath.split('/')[-1]))
+    # Create an empty list to store the file paths
+    file_paths = []
 
-        extractor = extraction_of_entire_file.EntireFileExtractor(os.path.join(tempdir, currentFilePath.split('/')[-1]),False,logging,date,metaData['VENDORNAME'])
-        out_df = extractor.extract()
-        out_df=out_df.reset_index()
+    # Loop through all the blobs in the bucket
+    for blob in blobs:
+        # Check if the blob is a file and is in the specified directory
+        if not blob.name.endswith('/') and blob.name.startswith(directory_path):
+            # Add the file path to the list
+            file_paths.append(blob.name)
+    return file_paths
 
-        userId=currentFilePath.split('/')[0]
-        filenames.append(os.path.join(tempdir,currentFilePath.split('/')[-1]))
-    
-        summary_bucket = os.environ['SUMMARY_BUCKET']
-        exportDataFrameToExcel(out_df, os.path.join(tempdir, 'summary_2.xlsx'))
-        summaryFilePath = '/'.join([userId, str(uuid.uuid4()), 'summary_2.xlsx'])
-        print("==========user Id and uuid ========")
-        print(userId,str(uuid.uuid4()))
-        print("==========Summary File Path ========")
-        print(summaryFilePath)
-        uploadToBucket(
-        summary_bucket,
-        summaryFilePath,
-        os.path.join(tempdir, 'summary_2.xlsx')
-        )
+
+def convert_to_common_format(request):
+    headers = {
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Origin,crossDomain',        
+        'Access-Control-Allow-Origin': '*'
+        }
+    if request.method == 'OPTIONS':
+        # Handle OPTIONS request
+        return ('', 204, headers)
+    try:
+        start = time.time()
+        """Responds to any HTTP request.
+        Args:
+            request (flask.Request): HTTP request object.
+        Returns:
+            The response text or any set of values that can be turned into a
+            Response object using
+            `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
+        """
+        # Retrieve the parameters from the request
+        userId = request.args.get('userId')
+        date = request.args.get('date')
+        
+
+        directory_path = os.path.join(*[userId,date,"User_files"])
+
+        file_paths = list_files_in_directory(inventory_bucket_name, directory_path)
+
+        log_buffer = io.StringIO()
+        logging.basicConfig(level=logging.INFO, stream=log_buffer)
+
+        for file_path in file_paths:
+
+            file_path_splitted = file_path.split("/")
+
+            cur_vendor_name = file_path_splitted[-2]
+            cur_file_name = file_path_splitted[-1]
+
+            file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "_" + cur_file_name])
+            
+            downloadFromBucket(inventory_bucket_name, file_path, file_path_download_to_tempdir)
+            print("downloaded from bucket")
+            extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logging,date,cur_vendor_name)
+            print("Started Converting to common format")
+            out_df = extractor.extract()
+            out_df=out_df.reset_index()
+            print("Converted to common format")
+            out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
+
+            if file_path.endswith(".csv"):
+                file_path_for_summary_bucket = file_path[:-4] + ".xlsx"
+            else:
+                file_path_for_summary_bucket = file_path
+            
+            delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
+            print("deleted old files from bucket since we need to replace it with new file")
+            uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
+            print("uploaded to bucket")
+            os.remove(file_path_download_to_tempdir)
+            os.remove(os.path.join(tempdir, 'summary.xlsx'))
+
+        end = time.time()
+        print("Total time taken in converting all "+ len(file_paths) +" files : " +str({end - start}))
+        return ("converted",200,headers)
+    except Exception as e:
+        return (str(e),200,headers)
