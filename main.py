@@ -113,6 +113,8 @@ def convert_to_common_format(request):
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
 
+        print(f'all file_paths: {file_paths}')
+
         for file_path in file_paths:
 
             file_path_splitted = file_path.split("/")
@@ -137,7 +139,7 @@ def convert_to_common_format(request):
             out_df=out_df.reset_index()
             print("Converted to common format")
 
-            # cur_file_name = cur_file_name + '_output.xlsx'
+            
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
             if file_path.endswith(".csv"):
