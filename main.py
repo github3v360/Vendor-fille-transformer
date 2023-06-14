@@ -5,7 +5,6 @@ import logging
 import io
 import tempfile
 import os
-import time
 from google.cloud import storage
 
 # Bucket Realted parameters and functions
@@ -23,6 +22,7 @@ def downloadFromBucket(bucketName, path, filepath):
 
     blob = bucket.blob(path)
     doesFileExist = blob.exists()
+    print("download",filepath,path,bucketName)
     if not doesFileExist:
         raise Exception('remote file not present')
     
@@ -62,7 +62,7 @@ def delete_file_from_bucket(bucket_name, file_path):
 from google.cloud import storage
 import os
 
-def list_files_in_directory(bucket_name, directory_path):
+def list_files_in_directory(bucket_name, directory_path, folder_names_to_avoid):
 
     # Get a reference to your bucket
     bucket = client.bucket(bucket_name)
@@ -77,12 +77,28 @@ def list_files_in_directory(bucket_name, directory_path):
     for blob in blobs:
         # Check if the blob is a file and is in the specified directory
         if not blob.name.endswith('/') and blob.name.startswith(directory_path):
+            # Get the file path relative to the directory
+            relative_path = os.path.relpath(blob.name, directory_path)
+
+            folder_name = relative_path.split("/")[0]
+
+            if folder_name in folder_names_to_avoid:continue
+
             # Add the file path to the list
             file_paths.append(blob.name)
+
     return file_paths
 
 
 def convert_to_common_format(request):
+    """Responds to any HTTP request.
+    Args:
+        request (flask.Request): HTTP request object.
+    Returns:
+        The response text or any set of values that can be turned into a
+        Response object using
+        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
+    """
     headers = {
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Origin,crossDomain',        
@@ -92,23 +108,16 @@ def convert_to_common_format(request):
         # Handle OPTIONS request
         return ('', 204, headers)
     try:
-        start = time.time()
-        """Responds to any HTTP request.
-        Args:
-            request (flask.Request): HTTP request object.
-        Returns:
-            The response text or any set of values that can be turned into a
-            Response object using
-            `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
-        """
         # Retrieve the parameters from the request
         userId = request.args.get('userId')
         date = request.args.get('date')
         
 
-        directory_path = os.path.join(*[userId,date,"User_files"])
+        folder_names_to_avoid = ["user_files"]
+        directory_path = os.path.join(userId,date)
 
-        file_paths = list_files_in_directory(inventory_bucket_name, directory_path)
+        file_paths = list_files_in_directory(inventory_bucket_name, directory_path, folder_names_to_avoid)
+        # sample_file_path = 'v2TGjuzXowbJYwez2BLZbqHSjHG2/20230417/manavnew/1.xlsx'
 
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
@@ -122,29 +131,23 @@ def convert_to_common_format(request):
 
             file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "_" + cur_file_name])
             
+
             downloadFromBucket(inventory_bucket_name, file_path, file_path_download_to_tempdir)
-            print("downloaded from bucket")
+
             extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logging,date,cur_vendor_name)
-            print("Started Converting to common format")
+
             out_df = extractor.extract()
             out_df=out_df.reset_index()
-            print("Converted to common format")
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
-            if file_path.endswith(".csv"):
-                file_path_for_summary_bucket = file_path[:-4] + ".xlsx"
-            else:
-                file_path_for_summary_bucket = file_path
-            
+            file_path_for_summary_bucket = file_path
+
             delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
-            print("deleted old files from bucket since we need to replace it with new file")
+
             uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
-            print("uploaded to bucket")
+
             os.remove(file_path_download_to_tempdir)
             os.remove(os.path.join(tempdir, 'summary.xlsx'))
-
-        end = time.time()
-        print("Total time taken in converting all "+ len(file_paths) +" files : " +str({end - start}))
-        return ("converted",200,headers)
+            return ("converted",200,headers)
     except Exception as e:
         return (str(e),200,headers)
