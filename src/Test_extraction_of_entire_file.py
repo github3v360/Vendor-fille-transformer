@@ -74,9 +74,9 @@ def main():
         out_file_path = os.path.join(out_dir,out_file_name)
         out_df.to_csv(out_file_path,index=False)
 
-    out_file_name = "Master_File" +".csv"
-    out_file_path = os.path.join(out_dir,out_file_name)
-    dummy_df.to_csv(out_file_path,index=False)
+    # out_file_name = "Master_File" +".csv"
+    # out_file_path = os.path.join(out_dir,out_file_name)
+    # dummy_df.to_csv(out_file_path,index=False)
 
     # ans = input("Do you want to merge based on date: (Y/N)?")
     # if ans == 'Y':

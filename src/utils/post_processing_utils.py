@@ -138,11 +138,22 @@ def transform_report_no_column(report_no,report_no_from_link):
         return None
     return report_no_from_link
 
+import math
+
 def format_number(num):
-    if math.isnan(num):num = 0
+    if isinstance(num, str):
+        try:
+            num = float(num)
+        except ValueError:
+            num = 0.0
+
+    if math.isnan(num):
+        num = 0
+
     num = int(round(num * 100))
     num_str = str(num).zfill(4)
     return num_str
+
 
 def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,cut,polish,symmetry,clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map):
     last_four = str(report_no)[-4:]
