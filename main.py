@@ -114,7 +114,7 @@ def convert_to_common_format(request):
         # Retrieve the parameters from the request
         userId = request.args.get('userId')
         date = request.args.get('date')
-        
+        vendor_name = request.args.get('vendor_name')
 
         folder_names_to_avoid = ["user_files"]
         directory_path = os.path.join(userId,date)
@@ -137,7 +137,9 @@ def convert_to_common_format(request):
             cur_vendor_name = file_path_splitted[-2]
             cur_file_name = file_path_splitted[-1]
 
-            print(f"Current vendor name: {cur_vendor_name}")
+
+            print(f"Current vendor name: {cur_vendor_name} now changed to : {vendor_name}")
+            # cur_vendor_name = vendor_name
             print(f"Current file name: {cur_file_name}")
 
             file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "_" + cur_file_name])
@@ -151,8 +153,8 @@ def convert_to_common_format(request):
             out_df=out_df.reset_index()
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
-            file_path_for_summary_bucket = file_path
-
+            file_path_for_summary_bucket = file_path_splitted[:-2] + f"/{vendor_name}/" + file_path_splitted[-1]
+ 
             delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
 
             uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
