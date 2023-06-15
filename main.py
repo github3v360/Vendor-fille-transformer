@@ -150,7 +150,7 @@ def convert_to_common_format(request):
 
             if file_path.endswith(".csv"):
                 file_path_for_summary_bucket = file_path[:-4]+ "_output" + ".xlsx"
-            else if file_path.endswith(".xlsx"):
+            elif file_path.endswith(".xlsx"):
                 file_path_for_summary_bucket = file_path[:-5] + "_output" + ".xlsx"
             
             delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
