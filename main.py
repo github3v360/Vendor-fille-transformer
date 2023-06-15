@@ -62,10 +62,8 @@ def delete_file_from_bucket(bucket_name, file_path):
     if blob.exists():
         blob.delete()
 
-from google.cloud import storage
-import os
 
-def list_files_in_directory(bucket_name, directory_path, folder_names_to_avoid):
+def list_files_in_directory(bucket_name, directory_path):
 
     # Get a reference to your bucket
     bucket = client.bucket(bucket_name)
@@ -116,11 +114,9 @@ def convert_to_common_format(request):
         date = request.args.get('date')
         vendor_name = request.args.get('vendor_name')
 
-        folder_names_to_avoid = ["user_files"]
-        directory_path = os.path.join(userId,date)
+        directory_path = os.path.join(userId,date,"Vendor_files",vendor_name)
 
-        file_paths = list_files_in_directory(inventory_bucket_name, directory_path, folder_names_to_avoid)
-        # sample_file_path = 'v2TGjuzXowbJYwez2BLZbqHSjHG2/20230417/manavnew/1.xlsx'
+        file_paths = list_files_in_directory(inventory_bucket_name, directory_path)
 
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
@@ -157,7 +153,7 @@ def convert_to_common_format(request):
             file_dir_for_summary_bucket = file_path_splitted[:-2] + f"/Vendor_files/{vendor_name}"
 
             #make dir if does not exist
-            Path(file_path_splitted[:-2] + f"/Vendor_files/{vendor_name}/").mkdir(parents=True, exist_ok= True)
+            # Path(file_path_splitted[:-2] + f"/Vendor_files/{vendor_name}/").mkdir(parents=True, exist_ok= True)
 
             file_path_for_summary_bucket = file_path_splitted[:-2] + f"/Vendor_files/{vendor_name}/" + file_path_splitted[-1]
 
@@ -169,7 +165,7 @@ def convert_to_common_format(request):
             elif file_path.endswith(".xlsx"):
                 file_path_for_summary_bucket = file_path[:-5] + "_output" + ".xlsx"
  
-            delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
+            # delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
 
             uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
 
