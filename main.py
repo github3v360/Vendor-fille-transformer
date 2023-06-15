@@ -178,7 +178,7 @@ def convert_to_common_format(request):
             # delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
 
             uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
-
+            print("Uploaded location: "+ str(file_path_for_summary_bucket))
             os.remove(file_path_download_to_tempdir)
             os.remove(os.path.join(tempdir, 'summary.xlsx'))
         return ("converted all files",200,headers)
