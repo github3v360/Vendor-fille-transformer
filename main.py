@@ -126,7 +126,7 @@ def convert_to_common_format(request):
         directory_path = os.path.join(userId,date,"Vendor_files",vendor_name)
 
         file_paths = get_file_paths(inventory_bucket_name, directory_path)
-        print("All file paths discovered in "+str(vendor_name)+"are: ")
+        print("All file paths discovered in "+str(vendor_name)+"are: "+str(len(file_paths)))
         
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
