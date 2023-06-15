@@ -63,6 +63,7 @@ def delete_file_from_bucket(bucket_name, file_path):
         blob.delete()
 
 def get_file_paths(bucket_name, directory_path):
+
     primary_folder_path = directory_path
     bucket = client.bucket(bucket_name)
     blobs = bucket.list_blobs(prefix=primary_folder_path)
@@ -73,10 +74,9 @@ def get_file_paths(bucket_name, directory_path):
         # Get the blob path
         blob_path = blob.name
 
-        vendor_names.append(blob_path.split("/")[-1])
-        # Exclude the "Master_file" folder
-        # Append the file path to the list
-        file_paths.append(blob_path)
+        if blob_path != primary_folder_path:
+            # Append the file path to the list
+            file_paths.append(blob_path)
 
     return file_paths
 
@@ -108,28 +108,21 @@ def list_files_in_directory(bucket_name, directory_path):
 
 
 def convert_to_common_format(request):
-    """Responds to any HTTP request.
-    Args:
-        request (flask.Request): HTTP request object.
-    Returns:
-        The response text or any set of values that can be turned into a
-        Response object using
-        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
-    """
+    print("In the function")
+
     headers = {
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Origin,crossDomain',        
         'Access-Control-Allow-Origin': '*'
         }
     if request.method == 'OPTIONS':
-        # Handle OPTIONS request
         return ('', 204, headers)
     try:
         # Retrieve the parameters from the request
         userId = request.args.get('userId')
         date = request.args.get('date')
         vendor_name = request.args.get('vendor_name')
-
+        print("All arguments are retrived")
         directory_path = os.path.join(userId,date,"Vendor_files",vendor_name)
 
         file_paths = get_file_paths(inventory_bucket_name, directory_path)
