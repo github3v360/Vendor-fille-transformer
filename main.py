@@ -62,6 +62,23 @@ def delete_file_from_bucket(bucket_name, file_path):
     if blob.exists():
         blob.delete()
 
+def get_file_paths(bucket_name, directory_path):
+    primary_folder_path = directory_path
+    bucket = client.bucket(bucket_name)
+    blobs = bucket.list_blobs(prefix=primary_folder_path)
+
+    file_paths = []
+    # Iterate over the blobs
+    for blob in blobs:
+        # Get the blob path
+        blob_path = blob.name
+
+        vendor_names.append(blob_path.split("/")[-1])
+        # Exclude the "Master_file" folder
+        # Append the file path to the list
+        file_paths.append(blob_path)
+
+    return file_paths
 
 def list_files_in_directory(bucket_name, directory_path):
 
@@ -87,7 +104,6 @@ def list_files_in_directory(bucket_name, directory_path):
 
             # Add the file path to the list
             file_paths.append(blob.name)
-
     return file_paths
 
 
@@ -116,7 +132,7 @@ def convert_to_common_format(request):
 
         directory_path = os.path.join(userId,date,"Vendor_files",vendor_name)
 
-        file_paths = list_files_in_directory(inventory_bucket_name, directory_path)
+        file_paths = get_file_paths(inventory_bucket_name, directory_path)
 
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
