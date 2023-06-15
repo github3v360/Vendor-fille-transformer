@@ -127,6 +127,9 @@ def convert_to_common_format(request):
 
         for file_path in file_paths:
 
+            if ( (file_path.endswith('.csv') or file_path.endswith('.xlsx') or file_path.endswith('.xls')) == False ):
+                continue
+
             print(f"The file path is : {file_path}")
 
             file_path_splitted = file_path.split("/")
