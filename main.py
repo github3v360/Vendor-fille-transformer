@@ -149,14 +149,14 @@ def convert_to_common_format(request):
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
             if file_path.endswith(".csv"):
-                file_path_for_summary_bucket = file_path[:-4] + ".xlsx"
-            else:
-                file_path_for_summary_bucket = file_path
+                file_path_for_summary_bucket = file_path[:-4]+ "_output" + ".xlsx"
+            else if file_path.endswith(".xlsx"):
+                file_path_for_summary_bucket = file_path[:-5] + "_output" + ".xlsx"
             
             delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
             print("deleted old files from bucket since we need to replace it with new file")
             uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
-            print("uploaded to bucket")
+            print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
             os.remove(file_path_download_to_tempdir)
             os.remove(os.path.join(tempdir, 'summary.xlsx'))
 
