@@ -154,9 +154,15 @@ def convert_to_common_format(request):
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
            
+            file_dir_for_summary_bucket = file_path_splitted[:-2] + f"/vendor_files/{vendor_name}"
+
+            #make dir if does not exist
+            Path(file_path_splitted[:-2] + f"/vendor_files/{vendor_name}/").mkdir(parents=True, exist_ok= True)
 
             file_path_for_summary_bucket = file_path_splitted[:-2] + f"/vendor_files/{vendor_name}/" + file_path_splitted[-1]
-            
+
+
+            print(f"File path for summary bucket is {file_path_for_summary_bucket}")
 
             if file_path.endswith(".csv"):
                 file_path_for_summary_bucket = file_path[:-4]+ "_output" + ".xlsx"
