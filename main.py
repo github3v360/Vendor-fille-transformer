@@ -7,6 +7,9 @@ import tempfile
 import os
 from google.cloud import storage
 
+from pathlib import Path
+
+
 # Bucket Realted parameters and functions
 
 tempdir = tempfile.gettempdir()
@@ -124,10 +127,15 @@ def convert_to_common_format(request):
 
         for file_path in file_paths:
 
+            print(f"The file path is : {file_path}")
+
             file_path_splitted = file_path.split("/")
 
             cur_vendor_name = file_path_splitted[-2]
             cur_file_name = file_path_splitted[-1]
+
+            print(f"Current vendor name: {cur_vendor_name}")
+            print(f"Current file name: {cur_file_name}")
 
             file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "_" + cur_file_name])
             
