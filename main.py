@@ -153,7 +153,15 @@ def convert_to_common_format(request):
             out_df=out_df.reset_index()
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
-            file_path_for_summary_bucket = file_path_splitted[:-2] + f"/{vendor_name}/" + file_path_splitted[-1]
+           
+
+            file_path_for_summary_bucket = file_path_splitted[:-2] + f"/vendor_files/{vendor_name}/" + file_path_splitted[-1]
+            
+
+            if file_path.endswith(".csv"):
+                file_path_for_summary_bucket = file_path[:-4]+ "_output" + ".xlsx"
+            elif file_path.endswith(".xlsx"):
+                file_path_for_summary_bucket = file_path[:-5] + "_output" + ".xlsx"
  
             delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
 
