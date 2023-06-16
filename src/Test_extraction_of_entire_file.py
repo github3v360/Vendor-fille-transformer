@@ -22,7 +22,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 def main():
 
-    test_data_dir = "artifacts/new_test_files"
+    test_data_dir = "artifacts/NewFiles"
     test_file_names = os.listdir(test_data_dir)
     out_dir = "artifacts/output_generated"
 
@@ -51,7 +51,7 @@ def main():
             "Comments"])
 
     for test_file_name in test_file_names:
-        # if test_file_name not in ["DHARMANANDAN(06-06).xlsx"]:
+        # if test_file_name not in ["DDPLStock-15-Jun-2023 03_28_48.xlsx"]:
         #     continue
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)

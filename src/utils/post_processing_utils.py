@@ -25,14 +25,14 @@ def transform_column(cur_val, magic_numbers, target_column_name, target_column_d
     # Loading dictionary for the current target column
 
     if cur_val == "" or cur_val == "-" or cur_val is None or (type(cur_val) != str):
-        return str(default_value).upper()
+        return str(default_value)
     
     cur_val = cur_val.replace("+","").replace("-","").replace(" ","").lower()
 
     try:
         # Fetching the correct transformed value using the target_column_dict
         transformed = target_column_dict[cur_val]
-        return str(transformed).upper()
+        return str(transformed)
 
     # If we are not able to fetch the correct transformed value from target_column_dict
     # then we will use the similarity calculation concept
@@ -50,9 +50,9 @@ def transform_column(cur_val, magic_numbers, target_column_name, target_column_d
         # return the standard value accordingly
         if best_sim > magic_numbers['{}_similarity_transform_df_threshold'
                                     .format(target_column_name)]:
-            return str(target_column_dict[best_key]).upper()
+            return str(target_column_dict[best_key])
         else:
-            return str(default_value).upper()
+            return str(default_value)
 
 def transform_measurement_column(cur_val_l,cur_val_d):
     """

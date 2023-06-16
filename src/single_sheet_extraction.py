@@ -78,10 +78,9 @@ class ExtractFromSingleSheet:
                              self.logger)
 
         df_processed = processor.process_data()
-        column_names_map = {"reportNo":"ReportNo","shape":"Shape","carat":"Carat","color":"Color","clarity":"Clarity","cut":"Cut","polish":"Polish",
-        "symmetry":"Symmetry","fluorescent":"Fluorescent","rapRate":"RapRate","discount":"Discount","rapPriceTotal":"RapPriceTotal",
-        "pricePerCarat":"PricePerCarat","total":"Total", "table":"Table","length":"Length","width":"Width",
-        "depth":"Depth","comments":"Comments"}
+        column_names_map = {"reportNo":"report_no","rapRate":"raprate","rapPriceTotal":"rap price total",
+        "pricePerCarat":"price per carat","GeneratedReportNo":"generated_report_no","ExtraColumn":"Extra Column",
+        "Depth %":"depth %","Ratio":"ratio"}
         # Rename the columns using the dictionary
         df_processed.rename(columns=column_names_map, inplace=True)
         return df_processed
