@@ -127,7 +127,7 @@ def convert_to_common_format(request):
 
         file_paths = get_file_paths(inventory_bucket_name, directory_path)
         print("All file paths discovered in "+str(vendor_name)+"are : ")
-        print(str(len(file_paths)))
+        # print(str(len(file_paths)))
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
 
@@ -160,21 +160,22 @@ def convert_to_common_format(request):
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
             print("File successfully converted")
-            file_dir_for_summary_bucket = file_path_splitted[:-2] + f"/Vendor_files/{vendor_name}"
+            file_dir_for_summary_bucket = "".join(file_path_splitted[:-2]) + f"/Vendor_files/{vendor_name}"
 
             #make dir if does not exist
             # Path(file_path_splitted[:-2] + f"/Vendor_files/{vendor_name}/").mkdir(parents=True, exist_ok= True)
 
-            file_path_for_summary_bucket = file_path_splitted[:-2] + f"/Vendor_files/{vendor_name}/" + file_path_splitted[-1]
+            file_path_for_summary_bucket = "".join(file_path_splitted[:-2]) + f"/Vendor_files/{vendor_name}/" + file_path_splitted[-1]
             # print("Path for summary bucket: "+str(file_path_for_summary_bucket))
 
-            # print(f"File path for summary bucket is {file_path_for_summary_bucket}")
+            print(f"File path for summary bucket is {file_path_for_summary_bucket}")
 
             if file_path.endswith(".csv"):
-                file_path_for_summary_bucket = file_path[:-4]+ "_output" + ".xlsx"
+                file_path_for_summary_bucket = "".join(file_path[:-4])+ "_output" + ".xlsx"
             elif file_path.endswith(".xlsx"):
-                file_path_for_summary_bucket = file_path[:-5] + "_output" + ".xlsx"
- 
+                file_path_for_summary_bucket = "".join(file_path[:-5]) + "_output" + ".xlsx"
+
+             print(f"File path for summary bucket is {file_path_for_summary_bucket}")
             # delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
 
             uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
@@ -183,4 +184,4 @@ def convert_to_common_format(request):
         os.remove(os.path.join(tempdir, 'summary.xlsx'))
         return ("converted all files",2,headers)
     except Exception as e:
-        return (str(e),100,headers)
+        return (str(e),300,headers)
