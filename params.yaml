@@ -32,12 +32,12 @@ magic_numbers:
   measurement_normalizing_factor_for_col_name: 0.4
   measurement_normalizing_factor_for_col_value: 0.6
   
-  cut_normalizing_factor_for_col_name: 0.5
-  cut_normalizing_factor_for_col_value: 0.5
+  cut_normalizing_factor_for_col_name: 0.6
+  cut_normalizing_factor_for_col_value: 0.4
   cut_similarity_transform_df_threshold: 0.7
 
-  polish_normalizing_factor_for_col_name: 0.5
-  polish_normalizing_factor_for_col_value: 0.5
+  polish_normalizing_factor_for_col_name: 0.6
+  polish_normalizing_factor_for_col_value: 0.4
   polish_similarity_transform_df_threshold: 0.7
 
   sym_normalizing_factor_for_col_name: 0.5
