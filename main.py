@@ -133,8 +133,8 @@ def convert_to_common_format(request):
 
         for file_path in file_paths:
 
-            # if ( (file_path.endswith('.csv') or file_path.endswith('.xlsx') or file_path.endswith('.xls')) == False ):
-            #     continue
+            if ( (file_path.endswith('.csv') or file_path.endswith('.xlsx') or file_path.endswith('.xls')) == False ):
+                continue
 
             print(f"The file path is : {file_path}")
 
@@ -157,6 +157,7 @@ def convert_to_common_format(request):
 
             out_df = extractor.extract()
             out_df=out_df.reset_index()
+            out_df = out_df.drop(columns=['index'])
             out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
             print("File successfully converted")
