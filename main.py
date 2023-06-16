@@ -77,7 +77,7 @@ def get_file_paths(bucket_name, directory_path):
         if blob_path != primary_folder_path:
             # Append the file path to the list
             file_paths.append(blob_path)
-
+            print(blob_path)
     return file_paths
 
 def list_files_in_directory(bucket_name, directory_path):
@@ -166,7 +166,7 @@ def convert_to_common_format(request):
             # Path(file_path_splitted[:-2] + f"/Vendor_files/{vendor_name}/").mkdir(parents=True, exist_ok= True)
 
             file_path_for_summary_bucket = file_path_splitted[:-2] + f"/Vendor_files/{vendor_name}/" + file_path_splitted[-1]
-            print("Path for summary bucket: "+str(file_path_for_summary_bucket))
+            # print("Path for summary bucket: "+str(file_path_for_summary_bucket))
 
             # print(f"File path for summary bucket is {file_path_for_summary_bucket}")
 
@@ -178,9 +178,9 @@ def convert_to_common_format(request):
             # delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
 
             uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
-            print("Uploaded location: "+ str(file_path_for_summary_bucket))
+            # print("Uploaded location: "+ str(file_path_for_summary_bucket))
         os.remove(file_path_download_to_tempdir)
         os.remove(os.path.join(tempdir, 'summary.xlsx'))
         return ("converted all files",2,headers)
     except Exception as e:
-        return (str(e),200,headers)
+        return (str(e),100,headers)
