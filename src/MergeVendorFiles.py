@@ -15,11 +15,13 @@ def main():
     test_file_names = os.listdir(test_data_dir)
     out_dir = "artifacts"
 
-    if os.path.exists(out_dir):
-        shutil.rmtree(out_dir)
-    os.makedirs(out_dir)
     list_df =  []
     for test_file_name in test_file_names:
+        if test_file_name in ["ParishiDiamond-atlantic1-15-06-2023 (2)_output.csv","Shairu Gems Inventory 15.06.23 (3)_output.csv",
+        "Glowstar FY_output.csv","ParishiDiamond-atlantic1-15-06-2023 (3)_output.csv","ParishiDiamond-atlantic1-15-06-2023 (4)_output.csv",
+        ]:
+            continue
+        print(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
 
         out_df = pd.read_csv(file_path)
@@ -40,7 +42,7 @@ def merge_dataframes(df_list):
 
     counter = dict()
 
-    for idx,val in enumerate(df_no_duplicates["GeneratedReportNo"]):
+    for idx,val in enumerate(df_no_duplicates["generated_report_no"]):
         counter[val] = idx
 
     df_final = df_no_duplicates.iloc[list(counter.values())]
