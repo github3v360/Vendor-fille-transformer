@@ -143,6 +143,7 @@ def convert_to_common_format(request):
             print("Started Converting to common format")
             out_df = extractor.extract()
             out_df=out_df.reset_index()
+            out_df = out_df.drop(columns=['index'])
             print("Converted to common format")
 
             
