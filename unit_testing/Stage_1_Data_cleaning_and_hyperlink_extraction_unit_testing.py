@@ -17,7 +17,7 @@ class TestStage1DataCleaningAndExtraction(unittest.TestCase):
         See the file to get the proper insight
         '''
         self.ws = load_workbook('artifacts/files_for_unit_testing/stage_1_testing_file.xlsx')['Sheet1']
-        self.initial_df = pd.read_excel('artifacts/files_for_unit_testing/stage_1_testing_file.xlsx', engine='openpyxl')
+        self.initial_df = pd.read_excel('artifacts/files_for_unit_testing/stage_1_testing_file.xlsx')
         self.logger = None
 
         self.cleaner_and_link_extractor = CleanDataAndExtractLink(self.initial_df,self.ws,self.logger)

@@ -18,7 +18,6 @@ class TestHyperlinkExtractor(unittest.TestCase):
         '''
         self.ws = load_workbook('artifacts/files_for_unit_testing/hyperlink_testing_file.xlsx')['Sheet1']
         self.df,self.correct_row_idx = data_cleaner.correct_df_headers(pd.read_excel('artifacts/files_for_unit_testing/hyperlink_testing_file.xlsx', engine='openpyxl'))
-
         self.hyperlink_extractor = HyperlinkExtractor(self.ws, self.correct_row_idx, self.df)
     
     def test_all_functions_in_hyperlink_extraction(self):

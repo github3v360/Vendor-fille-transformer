@@ -80,24 +80,8 @@ class EntireFileExtractor:
         is_excel = False
 
         # Load the Pandas Data Frame with all sheets
-        if self.file_path.endswith('.xlsx') :
-
-            work_book = pd.read_excel(self.file_path, sheet_name = None, header = None, engine='openpyxl')
-
-            # Fetching all sheet names
-            sheet_names = list(work_book.keys())
-            # setting is_excel flag to True
-            is_excel = True
-
-            try:
-                # Read Data file with openpyxl
-                work_book_xl = load_workbook(self.file_path)
-            except:
-                work_book_xl = None
-
-        elif self.file_path.endswith('.xls'):
-
-            work_book = pd.read_excel(self.file_path, sheet_name = None, header = None, engine='xlrd')
+        if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
+            work_book = pd.read_excel(self.file_path, sheet_name = None, header = None)
 
             # Fetching all sheet names
             sheet_names = list(work_book.keys())

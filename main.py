@@ -65,14 +65,14 @@ def exportDataFrameToExcel(dataframe, path):
 
 def read_excel(filename):
     assert filename.split('.')[-1] in ['xlsx', 'xls'] ,'Not a excel file'
-
-    extens = filename.split('.')[-1]
-    engine_name = ''
-    if extens == 'xlsx':
-        engine_name = 'openpyxl'
-    elif extens == 'xls':
-        engine_name = 'xlrd'
-    return pd.read_excel(filename,header=None,engine=engine_name)
+    return pd.read_excel(filename,header=None,engine='openpyxl')
+    # extens = filename.split('.')[-1]
+    # engine_name = ''
+    # if extens == 'xlsx':
+    #     engine_name = 'openpyxl'
+    # elif extens == 'xls':
+    #     engine_name = 'xlrd'
+    # return pd.read_excel(filename,header=None,engine=engine_name)
   
 def addSummaryFileMeta(summaryFilePath, uid, VENDORNAME):
   collection_ref = db.collection('/'.join(['userFiles', uid, 'summaryFiles']))
