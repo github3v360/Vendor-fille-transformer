@@ -41,10 +41,12 @@ class EntireFileExtractor:
         # this is flag which will tell whether the file is excel or not
         sheet_names,is_excel,work_book,work_book_xl = self.check_extension_of_sheet()
         # Initializing Global DataFrame which will store all the processed sheet
-        global_data_frame = None
+        global_missing_data_frame = None
+        global_clean_data_frame = None
 
         # Iterating through all the sheet
         for sheet_name in sheet_names:
+            self.logger.info("\nNew Sheet\n")
             if is_excel:
                 # Fetching and storing the sheet
                 data_frame = work_book[sheet_name]
@@ -61,16 +63,32 @@ class EntireFileExtractor:
             # Data Extraction from current sheet
             extractor = single_sheet_extraction.ExtractFromSingleSheet(data_frame,
                         cur_work_book_xl, self.debug, self.logger, self.date, self.vendor_name)
-            out_data_frame = extractor.process()
+            
+            df_clean, df_missing = extractor.process()
+            self.logger.info("Process Completed for this sheet")
 
             # Concatenation of global dataframe with out_data_frame
-            if global_data_frame is None:
-                global_data_frame = out_data_frame
-                continue
+            if global_clean_data_frame is None:
+                flag = True
+                if ~ df_clean.empty:
+                    self.logger.info("Clean Dataframe appended")
+                    global_clean_data_frame = df_clean
 
-            global_data_frame = pd.concat([global_data_frame, out_data_frame])
+            if global_missing_data_frame is None:
+                flag = True
+                if ~ df_missing.empty:
+                    self.logger.info("Missing Dataframe appended")
+                    global_missing_data_frame = df_missing
 
-        return global_data_frame
+
+            if (not (df_clean.empty ))and flag is False:
+                global_clean_data_frame = pd.concat([global_clean_data_frame, df_clean])
+                flag = False
+            if (not (df_missing.empty )) and flag is False:
+                global_missing_data_frame = pd.concat([global_missing_data_frame, df_missing])
+                flag = False
+
+        return global_clean_data_frame,global_missing_data_frame
 
     def check_extension_of_sheet(self):
         """

@@ -5,6 +5,7 @@ This file contains class for applying whole logic on a single sheet of workbook
 from src import Stage_1_data_cleaning_and_link_extraction
 from src import Stage_2_probability_calculation
 from src import Stage_3_post_processing
+import pandas as pd
 
 class ExtractFromSingleSheet:
     """
@@ -55,11 +56,13 @@ class ExtractFromSingleSheet:
         processor = Stage_1_data_cleaning_and_link_extraction.CleanDataAndExtractLink(
                     self.data_frame, self.work_sheet, self.logger)
         df_cleaned, link_columns_name = processor.process()
+        self.logger.info("----------- Stage 1 completed -----------")
         # It is possible that initially sheet is not empty but
         # after cleaning sheet gets empty so we return the empty
         # dataframe from here
         if len(df_cleaned.columns) == 0:
-            return df_cleaned
+            self.logger.info("No columns found")
+            return df_cleaned,df_cleaned
 
         # ==== Stage 2 process the data (probability calculation) ======
         count_of_rows = df_cleaned.shape[0]
@@ -69,7 +72,7 @@ class ExtractFromSingleSheet:
                     count_of_rows, self.date, self.test_file_name)
         df_pre_processed, report_no_from_link, magic_numbers, prob_dict, \
         remaining_columns_df, target_columns = processor.Probability_Based_DataExtraction()
-
+        self.logger.info("----------- Stage 2 completed -----------")
         #  ====== Stage 3 post-process the data =========
         processor = Stage_3_post_processing.PostProcessingData(
                              df_pre_processed, df_cleaned, report_no_from_link, magic_numbers,
@@ -78,6 +81,12 @@ class ExtractFromSingleSheet:
                              self.logger)
 
         df_processed,missing_target_colums = processor.process_data()
+        self.logger.info("----------- Stage 3 completed -----------")
+        
+        if df_processed is None and missing_target_colums is None:
+            print("Returned None, hence unwanted sheet")
+            return pd.DataFrame(),pd.DataFrame()
+
         column_names_map = {"reportNo":"report_no","rapRate":"raprate","rapPriceTotal":"rap price total",
         "pricePerCarat":"price per carat","GeneratedReportNo":"generated_report_no","ExtraColumn":"Extra Column",
         "Depth %":"depth %","Ratio":"ratio"}

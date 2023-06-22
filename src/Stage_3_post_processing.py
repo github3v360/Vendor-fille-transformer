@@ -195,7 +195,6 @@ class PostProcessingData:
         missing_target_colums = self.log_missing_target_columns(
             transformed_dataframe, self.target_columns
         )
-
         transformed_dataframe_with_link_column = self.add_links_and_extra_columns(
             transformed_dataframe, self.link_columns_name
         )
@@ -207,4 +206,10 @@ class PostProcessingData:
         self.logger.info("-" * 75)
         self.logger.info(dataframe_post_processed.head(5))
         self.logger.info("-" * 75)
+
+        if len(missing_target_colums) >6:
+            print(len(missing_target_colums))
+            self.logger.info(f"=========== Unwanted Data ===========")
+            return None,None
+            
         return dataframe_post_processed,missing_target_colums
