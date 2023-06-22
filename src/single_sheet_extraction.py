@@ -56,7 +56,7 @@ class ExtractFromSingleSheet:
         processor = Stage_1_data_cleaning_and_link_extraction.CleanDataAndExtractLink(
                     self.data_frame, self.work_sheet, self.logger)
         df_cleaned, link_columns_name = processor.process()
-        self.logger.info("----------- Stage 1 completed -----------")
+
         # It is possible that initially sheet is not empty but
         # after cleaning sheet gets empty so we return the empty
         # dataframe from here
@@ -72,7 +72,7 @@ class ExtractFromSingleSheet:
                     count_of_rows, self.date, self.test_file_name)
         df_pre_processed, report_no_from_link, magic_numbers, prob_dict, \
         remaining_columns_df, target_columns = processor.Probability_Based_DataExtraction()
-        self.logger.info("----------- Stage 2 completed -----------")
+
         #  ====== Stage 3 post-process the data =========
         processor = Stage_3_post_processing.PostProcessingData(
                              df_pre_processed, df_cleaned, report_no_from_link, magic_numbers,
@@ -81,7 +81,7 @@ class ExtractFromSingleSheet:
                              self.logger)
 
         df_processed,missing_target_colums = processor.process_data()
-        self.logger.info("----------- Stage 3 completed -----------")
+        
         
         if df_processed is None and missing_target_colums is None:
             print("Returned None, hence unwanted sheet")

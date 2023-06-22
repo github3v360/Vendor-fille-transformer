@@ -46,7 +46,7 @@ class EntireFileExtractor:
 
         # Iterating through all the sheet
         for sheet_name in sheet_names:
-            self.logger.info("\nNew Sheet\n")
+            self.logger.info("New Sheet")
             if is_excel:
                 # Fetching and storing the sheet
                 data_frame = work_book[sheet_name]
@@ -65,19 +65,19 @@ class EntireFileExtractor:
                         cur_work_book_xl, self.debug, self.logger, self.date, self.vendor_name)
             
             df_clean, df_missing = extractor.process()
-            self.logger.info("Process Completed for this sheet")
+            self.logger.info("------------------------ Process Completed for this sheet ------------------------")
 
             # Concatenation of global dataframe with out_data_frame
             if global_clean_data_frame is None:
                 flag = True
                 if ~ df_clean.empty:
-                    self.logger.info("Clean Dataframe appended")
+                    self.logger.info("------------------------ Clean Dataframe appended ------------------------")
                     global_clean_data_frame = df_clean
 
             if global_missing_data_frame is None:
                 flag = True
                 if ~ df_missing.empty:
-                    self.logger.info("Missing Dataframe appended")
+                    self.logger.info("------------------------ Missing Dataframe appended ------------------------")
                     global_missing_data_frame = df_missing
 
 
