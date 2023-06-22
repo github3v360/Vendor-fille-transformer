@@ -2,7 +2,6 @@
 This file contains the class 'DataProcessor' 
 which will perform all the stage 2 tasks
 '''
-
 import pandas as pd
 from src.utils import (
     common_utils,
@@ -44,7 +43,7 @@ class DataProcessor:
         self.vendor_name = vendor_name
 
         self.target_columns = [
-            "reportNo",
+            "report_no",
             "shape",
             "carat",
             "color",
@@ -53,16 +52,16 @@ class DataProcessor:
             "polish",
             "symmetry",
             "fluorescent",
-            "rapRate",
+            "raprate",
             "discount",
-            "rapPriceTotal",
-            "pricePerCarat",
+            "rap price total",
+            "price per carat",
             "total",
             "table",
             "length",
             "width",
             "depth",
-            "comments",
+            "comments"
         ]
         
         self.prob_dict = common_utils.initialize_prob_dict(self.target_columns)
@@ -154,7 +153,7 @@ class DataProcessor:
                 d[col] = row[col]
             list_of_dicts.append(d)
 
-        self.remaining_columns_dataframe["ExtraColumn"] = list_of_dicts
+        self.remaining_columns_dataframe["Extra Column"] = list_of_dicts
         return self.remaining_columns_dataframe
 
     def get_current_column_unique_values(self, dataframe_cleaned, cur_dataframe_cleaned_column_name):

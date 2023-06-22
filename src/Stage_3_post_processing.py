@@ -89,7 +89,7 @@ class PostProcessingData:
 
         """
         dataframe["report_no_from_link"] = self.report_no_from_link
-        dataframe["reportNo"] = dataframe["reportNo"] if "reportNo" in dataframe else None
+        dataframe["report_no"] = dataframe["report_no"] if "report_no" in dataframe else None
         return dataframe
 
     def transform_values(self, dataframe):
@@ -127,9 +127,10 @@ class PostProcessingData:
             dataframe (pandas dataframe): Input dataframe
             target_columns (list): A list of name of target columns
         '''
-        target_columns += ["Ratio", "Depth %"]
+        target_columns += ["ratio", "depth %"]
         self.logger.info("-" * 75)
         self.logger.info(f"Not able to detect {set(target_columns) - set(dataframe.columns)}")
+        return set(target_columns) - set(dataframe.columns)
 
     def add_links_and_extra_columns(self, dataframe, link_columns_name):
         """
@@ -158,9 +159,9 @@ class PostProcessingData:
             dataframe (pandas dataframe): Input DataFrame with report_no
             column
         '''
-        if "reportNo" in dataframe.columns:
+        if "report_no" in dataframe.columns:
             self.logger.info(
-            f"The total number of columns without a report number is {dataframe['reportNo'].isna().sum()}."
+            f"The total number of columns without a report number is {dataframe['report_no'].isna().sum()}."
             )
 
     def add_date_and_vendor(self, dataframe):
@@ -191,7 +192,7 @@ class PostProcessingData:
 
         transformed_dataframe = self.transform_values(datframe_processed_with_report_number)
 
-        self.log_missing_target_columns(
+        missing_target_colums = self.log_missing_target_columns(
             transformed_dataframe, self.target_columns
         )
 
@@ -206,4 +207,4 @@ class PostProcessingData:
         self.logger.info("-" * 75)
         self.logger.info(dataframe_post_processed.head(5))
         self.logger.info("-" * 75)
-        return dataframe_post_processed
+        return dataframe_post_processed,missing_target_colums

@@ -80,10 +80,10 @@ class PostProcessing:
             )
 
             # Calculate the ratio and depth column
-            self.df_pre_processed["Ratio"] = round(
+            self.df_pre_processed["ratio"] = round(
                 self.df_pre_processed["length"] / self.df_pre_processed["width"], 2
             )
-            self.df_pre_processed["Depth %"] = round(
+            self.df_pre_processed["depth %"] = round(
                 (self.df_pre_processed["depth"] / self.df_pre_processed["width"]) * 100,
                 2,
             )
@@ -115,20 +115,20 @@ class PostProcessing:
             post-processed DataFrame with additional price columns 
             
         """
-        price_columns = ["carat", "rapRate", "pricePerCarat", "discount", "total"]
+        price_columns = ["carat", "raprate", "price per carat", "discount", "total"]
 
         if set(price_columns[:2]).issubset(set(self.fetched_columns)) and any(
             [item in self.fetched_columns for item in price_columns[2:]]
         ):
             # Now Calculating and correcting the price related column
             price_list = price_columns[2:]
-            self.df_pre_processed.dropna(subset=['rapRate'], inplace=True)
-            self.df_pre_processed["rapRate"] = self.df_pre_processed["rapRate"].apply(self.convert_to_integer)
+            self.df_pre_processed.dropna(subset=['raprate'], inplace=True)
+            self.df_pre_processed["raprate"] = self.df_pre_processed["raprate"].apply(self.convert_to_integer)
             self.df_pre_processed["carat"] = self.df_pre_processed["carat"].astype(
                 float
             )
-            self.df_pre_processed["rapPriceTotal"] = (
-                self.df_pre_processed["rapRate"] * self.df_pre_processed["carat"]
+            self.df_pre_processed["rap price total"] = (
+                self.df_pre_processed["raprate"] * self.df_pre_processed["carat"]
             ).astype(int)
 
             max_prob = -1
@@ -147,35 +147,35 @@ class PostProcessing:
                 self.df_pre_processed["discount"] = self.df_pre_processed[
                     "discount"
                 ].apply(post_processing_utils.transform_discount_column)
-                self.df_pre_processed["pricePerCarat"] = (
-                    self.df_pre_processed["rapRate"] * 
+                self.df_pre_processed["price per carat"] = (
+                    self.df_pre_processed["raprate"] * 
                     (1 - (self.df_pre_processed["discount"] / 100))).astype(int)
 
                 self.df_pre_processed["total"] = (
-                    self.df_pre_processed["pricePerCarat"]
+                    self.df_pre_processed["price per carat"]
                     * self.df_pre_processed["carat"]
                 ).astype(int)
-            elif price_name == "pricePerCarat":
+            elif price_name == "price per carat":
                 self.df_pre_processed["discount"] = ((
                     1
                     - (
-                        self.df_pre_processed["pricePerCarat"]
-                        / self.df_pre_processed["rapRate"]
+                        self.df_pre_processed["price per carat"]
+                        / self.df_pre_processed["raprate"]
                     )
                 ) * 100).astype(int)
                 self.df_pre_processed["total"] = (
-                    self.df_pre_processed["pricePerCarat"]
+                    self.df_pre_processed["price per carat"]
                     * self.df_pre_processed["carat"]
                 ).astype(int)
             else:
-                self.df_pre_processed["pricePerCarat"] = (
+                self.df_pre_processed["price per carat"] = (
                     self.df_pre_processed["total"] / self.df_pre_processed["carat"]
                 ).astype(int)
                 self.df_pre_processed["discount"] = (
                     1
                     - (
-                        self.df_pre_processed["pricePerCarat"]
-                        / self.df_pre_processed["rapRate"]
+                        self.df_pre_processed["price per carat"]
+                        / self.df_pre_processed["raprate"]
                     )
                 ) * 100
         return self.df_pre_processed
@@ -216,7 +216,7 @@ class PostProcessing:
             target_column_dict= common_utils.load_pickle_files_for_single_column("cut")
             self.df_pre_processed["cut"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["cut"], self.magic_numbers, "cut", target_column_dict, "EX"),
+                    x["cut"], self.magic_numbers, "cut", target_column_dict, "ex"),
                 axis=1,
             )
         
@@ -254,9 +254,9 @@ class PostProcessing:
 
         self.df_pre_processed = self.cal_price_columns()
 
-        self.df_pre_processed["reportNo"] = self.df_pre_processed.apply(
+        self.df_pre_processed["report_no"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.transform_report_no_column(
-                x["reportNo"], x["report_no_from_link"]
+                x["report_no"], x["report_no_from_link"]
             ),
             axis=1,
         )
@@ -291,7 +291,7 @@ class PostProcessing:
                 symmetry_map = dictionary['symmetry']
             
         start_time_to_generate_report_no = time.time()
-        required_column = ["reportNo","clarity","color","fluorescent","shape","carat","cut","polish","symmetry"]
+        required_column = ["report_no","clarity","color","fluorescent","shape","carat","cut","polish","symmetry"]
         temporary_columns = []
         for col in required_column:
             if col not in self.df_pre_processed.columns:
@@ -300,7 +300,7 @@ class PostProcessing:
 
         self.df_pre_processed["GeneratedReportNo"] = self.df_pre_processed.apply(
             lambda x: post_processing_utils.generate_report_no_column(
-                x["reportNo"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
+                x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
                 clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map
             ),
             axis=1,

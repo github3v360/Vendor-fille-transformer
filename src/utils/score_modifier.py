@@ -24,7 +24,7 @@ def merge_similarity_score(sim_score_name, sim_score_val, target_name, magic_num
         "color": "color_normalizing_factor_for_col_name",
         "shape": "shape_normalizing_factor_for_col_name",
         "fluorescent": "fluor_normalizing_factor_for_col_name",
-        "rapRate": "raprate_normalizing_factor_for_col_name",
+        "raprate": "raprate_normalizing_factor_for_col_name",
         "length": "measurement_normalizing_factor_for_col_name",
         "width": "measurement_normalizing_factor_for_col_name",
         "depth": "measurement_normalizing_factor_for_col_name",
@@ -33,12 +33,12 @@ def merge_similarity_score(sim_score_name, sim_score_val, target_name, magic_num
         "symmetry": "sym_normalizing_factor_for_col_name",
         "table": "table_normalizing_factor_for_col_name",
         "comments": "comments_normalizing_factor_for_col_name",
-        "pricePerCarat": "ppc_normalizing_factor_for_col_name",
+        "price per carat": "ppc_normalizing_factor_for_col_name",
         "discount": "disc_normalizing_factor_for_col_name",
         "total": "amt_normalizing_factor_for_col_name",
-        "rapPriceTotal": "raptotal_normalizing_factor_for_col_name",
-        "stockRef": "stockref_normalizing_factor_for_col_name",
-        "reportNo": "report_normalizing_factor_for_col_name"
+        "rap price total": "raptotal_normalizing_factor_for_col_name",
+        "stockref": "stockref_normalizing_factor_for_col_name",
+        "report_no": "report_normalizing_factor_for_col_name"
     }
 
     normalizing_factors_for_col_value = {
@@ -47,7 +47,7 @@ def merge_similarity_score(sim_score_name, sim_score_val, target_name, magic_num
         "color": "color_normalizing_factor_for_col_value",
         "shape": "shape_normalizing_factor_for_col_value",
         "fluorescent": "fluor_normalizing_factor_for_col_value",
-        "rapRate": "raprate_normalizing_factor_for_col_value",
+        "raprate": "raprate_normalizing_factor_for_col_value",
         "length": "measurement_normalizing_factor_for_col_value",
         "width": "measurement_normalizing_factor_for_col_value",
         "depth": "measurement_normalizing_factor_for_col_value",
@@ -56,12 +56,12 @@ def merge_similarity_score(sim_score_name, sim_score_val, target_name, magic_num
         "symmetry": "sym_normalizing_factor_for_col_value",
         "table": "table_normalizing_factor_for_col_value",
         "comments": "comments_normalizing_factor_for_col_value",
-        "pricePerCarat": "ppc_normalizing_factor_for_col_value",
+        "price per carat": "ppc_normalizing_factor_for_col_value",
         "discount": "disc_normalizing_factor_for_col_value",
         "total": "amt_normalizing_factor_for_col_value",
-        "rapPriceTotal": "raptotal_normalizing_factor_for_col_value",
-        "stockRef": "stockref_normalizing_factor_for_col_value",
-        "reportNo": "report_normalizing_factor_for_col_value"
+        "rap price total": "raptotal_normalizing_factor_for_col_value",
+        "stockref": "stockref_normalizing_factor_for_col_value",
+        "report_no": "report_normalizing_factor_for_col_value"
     }
 
     if target_name not in normalizing_factors_for_col_name:

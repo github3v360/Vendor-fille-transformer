@@ -77,10 +77,41 @@ class ExtractFromSingleSheet:
                              target_columns, self.date, self.test_file_name,
                              self.logger)
 
-        df_processed = processor.process_data()
+        df_processed,missing_target_colums = processor.process_data()
         column_names_map = {"reportNo":"report_no","rapRate":"raprate","rapPriceTotal":"rap price total",
         "pricePerCarat":"price per carat","GeneratedReportNo":"generated_report_no","ExtraColumn":"Extra Column",
         "Depth %":"depth %","Ratio":"ratio"}
         # Rename the columns using the dictionary
         df_processed.rename(columns=column_names_map, inplace=True)
-        return df_processed
+        first_columns = ["report_no","shape", "carat", "color", "clarity", "cut", "polish", "symmetry", "fluorescent", "raprate", 
+        "discount", "rap price total", "price per carat", "total","table", "length", "width","ratio", "depth %","comments","Extra Column",
+        "generated_report_no"]
+
+        df_processed = self.reorder_columns(df_processed, first_columns,missing_target_colums)
+        df_clean, df_missing =self.get_filtered_values(df_processed)
+        return df_clean, df_missing
+
+    def reorder_columns(self,df, first_columns,missing_target_colums):
+        # Get the remaining columns
+        first_columns=[x for x in first_columns if x not in missing_target_colums]
+        remaining_columns = [col for col in df.columns if col not in first_columns]
+
+        # Reorder the columns
+        new_columns = first_columns + remaining_columns
+        new_df = df[new_columns]
+        return new_df
+
+    def get_filtered_values(self, df):
+        required_columns = ['clarity', 'color', 'fluorescent', 'shape', 'carat', 'cut', 'polish', 'symmetry']
+        
+        # Check if each required column exists in the DataFrame
+        existing_columns = [col for col in required_columns if col in df.columns]
+        
+        condition = df[existing_columns].isnull().any(axis=1)
+        df_missing = df[condition]
+        df_clean = df[~condition]
+        
+        return df_clean, df_missing
+
+
+

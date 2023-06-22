@@ -114,14 +114,14 @@ def get_report_no_extracted_from_link(df_cleaned, logger,link_columns_name):
                             the "report_no" column (List)
 
     '''
-    if 'reportNo' not in df_cleaned.columns:
+    if 'report_no' not in df_cleaned.columns:
         logger.info("Report No. not found in Link")
         report_no_from_link = None
     else:
-        report_no_from_link = df_cleaned['reportNo']
-        df_cleaned.drop("reportNo", axis=1, inplace=True)
-        if "reportNo" in link_columns_name:
-            link_columns_name.remove('reportNo')
+        report_no_from_link = df_cleaned['report_no']
+        df_cleaned.drop("report_no", axis=1, inplace=True)
+        if "report_no" in link_columns_name:
+            link_columns_name.remove('report_no')
         logger.info("Report No. discovered in the link")
 
     return report_no_from_link,link_columns_name

@@ -16,7 +16,8 @@ def correct_df_headers(input_df):
 
     # Possible Correct names of headers (More can be added in future)
     col_names = ['srno', 'color', 'cut', 'shape', 'clarity', 'purity',
-                 'carat', 'size', 'cts', 'crtwt', 'fluor', 'flour']
+                 'carat', 'size', 'cts', 'crtwt', 'fluor', 'flour','polish','raprate',
+                 'total']
     
     # Dropping the empty columns
     input_df = input_df.dropna(how="all",axis=1)
@@ -34,7 +35,7 @@ def correct_df_headers(input_df):
 
     # If there is lot of empty columns
     # Then current header is not header row
-    if cur_columns.isna().sum() <= 10:
+    if cur_columns.isna().sum() <= 15:
 
         # This for loop will check if the DataFrame is already in the correct format or not
         for cur_column in cur_columns:

@@ -40,8 +40,8 @@ def extract_report_number(url):
 
     parsed_url = urllib.parse.urlparse(url)
     query = urllib.parse.parse_qs(parsed_url.query)
-    if 'reportno' in query:
-        report_no = query['reportno'][0]
+    if 'report_no' in query:
+        report_no = query['report_no'][0]
         return report_no
     else:
         match = re.search(r"([\w\.]+)\.pdf$", parsed_url.path)
