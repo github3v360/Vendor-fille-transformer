@@ -86,6 +86,7 @@ def list_files_in_directory(bucket_name, directory_path):
 
 
 def convert_to_common_format(request):
+    print("In the function")
     headers = {
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Origin,crossDomain',        
