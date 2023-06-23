@@ -110,6 +110,8 @@ def convert_to_common_format(request):
 
         file_paths = list_files_in_directory(inventory_bucket_name, directory_path)
 
+        nonParsedFiles = []
+
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
 
@@ -144,11 +146,12 @@ def convert_to_common_format(request):
             out_df = extractor.extract()
             try:
                 df_clean, df_missing = out_df
+                
                 if df_clean.empty and df_missing.empty:
                     continue
                 print("Clean file generated"+str(len(df_clean)))
                 df_clean = df_clean.drop(columns=['index'])
-                out_df.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
+                df_clean.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
                 if file_path.endswith(".csv"):
                     file_path_for_summary_bucket = file_path[:-4]+ "_output" + ".xlsx"
@@ -172,6 +175,9 @@ def convert_to_common_format(request):
                         file_path_for_summary_bucket = file_path[:-5] + "_nonparsed" + ".xlsx"
                     #delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
                     #print("deleted old files from bucket since we need to replace it with new file")
+
+
+                    nonParsedFiles.append(file_path_for_summary_bucket)
                     uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary1.xlsx'))
                     print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
                     os.remove(os.path.join(tempdir, 'summary1.xlsx'))
@@ -186,6 +192,6 @@ def convert_to_common_format(request):
             print("Converted to common format")
         end = time.time()
         print("Total time taken in converting all "+ len(file_paths) +" files : " +str({end - start}))
-        return ("converted",200,headers)
+        return ({"nonParsedFilePaths" : nonParsedFiles},200,headers)
     except Exception as e:
         return (str(e),200,headers)
