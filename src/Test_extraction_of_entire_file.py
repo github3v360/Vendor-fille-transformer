@@ -22,7 +22,8 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 def main():
 
-    test_data_dir = "artifacts/NewFiles"
+    test_data_dir = "artifacts/2306Files2"
+    # test_data_dir = "artifacts/2306Files1"
     test_file_names = os.listdir(test_data_dir)
     out_dir = "artifacts/output_generated"
 
@@ -81,9 +82,9 @@ def main():
             df_clean.to_csv(out_file_path,index=False)
             if not df_missing.empty:
                 print("Missing file generated"+str(len(df_missing)))
-                missing_file_name = test_file_name[:test_file_name.index(".x")] + "_nonparsed" +".csv" 
-                missing_file_path = os.path.join(out_dir,missing_file_name)
-                df_missing.to_csv(missing_file_path,index=False)
+                # missing_file_name = test_file_name[:test_file_name.index(".x")] + "_nonparsed" +".csv" 
+                # missing_file_path = os.path.join(out_dir,missing_file_name)
+                # df_missing.to_csv(missing_file_path,index=False)
 
         except:
             logger.exception('Failed Due to: ')
