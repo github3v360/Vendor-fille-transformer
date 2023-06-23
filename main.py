@@ -15,6 +15,9 @@ from pathlib import Path
 tempdir = tempfile.gettempdir()
 tempdir = tempfile.mkdtemp()
 
+tempdir1 = tempfile.gettempdir()
+tempdir1 = tempfile.mkdtemp()
+
 client = storage.Client(project="friendlychat-bb9ff")
 
 inventory_bucket_name = "business-inventory-files"
@@ -183,7 +186,7 @@ def convert_to_common_format(request):
                 if not df_missing.empty:
                     print("Missing file generated"+str(len(df_missing)))
                     df_missing = df_missing.drop(columns=['index'])
-                    df_missing.to_excel(os.path.join(tempdir, 'summary1.xlsx'), index = False)
+                    df_missing.to_excel(os.path.join(tempdir1, 'summary1.xlsx'), index = False)
 
                     file_dir_for_summary_bucket = os.path.join(*file_path_splitted[:-2],f"/Vendor_files/{vendor_name}","")
                     file_path_for_summary_bucket = os.path.join(*file_path_splitted[:-2],f"/Vendor_files/{vendor_name}/",file_path_splitted[-1])
@@ -198,7 +201,7 @@ def convert_to_common_format(request):
                     nonParsedFiles.append(file_path_for_summary_bucket)
 
                     print(f"File path for summary bucket is {file_path_for_summary_bucket}")
-                    uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary1.xlsx'))     
+                    uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir1, 'summary1.xlsx'))     
             
             except:
                 logger.exception('Failed Due to: ')
