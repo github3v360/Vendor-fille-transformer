@@ -90,7 +90,7 @@ def convert_to_common_format(request):
         }
     if request.method == 'OPTIONS':
         # Handle OPTIONS request
-        return ('', 204, headers)
+        return ('', 200, headers)
     try:
         start = time.time()
         """Responds to any HTTP request.
