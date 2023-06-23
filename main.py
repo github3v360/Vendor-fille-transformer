@@ -88,9 +88,7 @@ def convert_to_common_format(request):
         'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Origin,crossDomain',        
         'Access-Control-Allow-Origin': '*'
         }
-    if request.method == 'OPTIONS':
-        # Handle OPTIONS request
-        return ('', 200, headers)
+    
     try:
         start = time.time()
         """Responds to any HTTP request.
@@ -102,9 +100,14 @@ def convert_to_common_format(request):
             `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
         """
         # Retrieve the parameters from the request
+
+        if request.method == 'OPTIONS':
+            # Handle OPTIONS request
+            print("Options Request Received")
+            return ('', 200, headers)
         userId = request.args.get('userId')
         date = request.args.get('date')
-        
+        print("called with ",userId,date)
 
         directory_path = os.path.join(*[userId,date,"User_files"])
 
