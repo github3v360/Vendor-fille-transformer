@@ -88,10 +88,11 @@ def convert_to_common_format(request):
         'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Origin,crossDomain',        
         'Access-Control-Allow-Origin': '*'
         }
+    print("request Received")
     if request.method == 'OPTIONS':
         # Handle OPTIONS request
         # print("Options Request Received")
-        return ('', 204, headers)
+        return ('', 200, headers)
     try:
         start = time.time()
         """Responds to any HTTP request.
