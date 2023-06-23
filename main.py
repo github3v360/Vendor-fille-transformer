@@ -117,7 +117,7 @@ def convert_to_common_format(request):
         }
 
     if request.method == 'OPTIONS':
-        return ('', 204, headers)
+        return ('', 200, headers)
     try:
         # Retrieve the parameters from the request
         userId = request.args.get('userId')
