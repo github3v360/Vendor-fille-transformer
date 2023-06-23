@@ -156,6 +156,7 @@ def convert_to_common_format(request):
                 if df_clean.empty and df_missing.empty:
                     continue
                 print("Clean file generated"+str(len(df_clean)))
+                df_clean = df_clean.reset_index()
                 df_clean = df_clean.drop(columns=['index'])
                 df_clean.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
@@ -172,6 +173,7 @@ def convert_to_common_format(request):
 
                 if not df_missing.empty:
                     print("Missing file generated"+str(len(df_missing)))
+                    df_missing = df_missing.reset_index()
                     df_missing = df_missing.drop(columns=['index'])
                     df_missing.to_excel(os.path.join(tempdir1, 'summary1.xlsx'), index = False)
 
@@ -187,14 +189,15 @@ def convert_to_common_format(request):
                     uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir1, 'summary1.xlsx'))
                     print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
                     os.remove(os.path.join(tempdir1, 'summary1.xlsx'))
-
-                os.remove(file_path_download_to_tempdir)
+                
                     
             except:
                 logger.exception('Failed Due to: ')
                 logger.info(f"Logic Failed for {test_file_name} file")
                 logger.info("-" *50)
                 continue
+
+            os.remove(file_path_download_to_tempdir)
             print("Converted to common format")
         end = time.time()
         print("Total time taken in converting all "+ len(file_paths) +" files : " +str({end - start}))
