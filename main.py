@@ -87,14 +87,10 @@ def list_files_in_directory(bucket_name, directory_path):
 
 def convert_to_common_format(request):
     print("In the function")
-    headers = {
-        'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': '*',        
-        'Access-Control-Allow-Origin': '*'
-        }
-
+    headers = {'Access-Control-Allow-Origin': '*','Access-Control-Allow-Methods': 'POST, PUT, PATCH, GET, DELETE, OPTIONS','Access-Control-Allow-Headers': 'Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization'}
+    
     if request.method == 'OPTIONS':
-        return ('', 200, headers)
+        return ('', 204, headers)
     try:
         start = time.time()
         """Responds to any HTTP request.
