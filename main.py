@@ -13,6 +13,9 @@ from google.cloud import storage
 tempdir = tempfile.gettempdir()
 tempdir = tempfile.mkdtemp()
 
+tempdir1 = tempfile.gettempdir()
+tempdir1 = tempfile.mkdtemp()
+
 client = storage.Client(project="friendlychat-bb9ff")
 
 inventory_bucket_name = "business-inventory-files"
@@ -171,7 +174,7 @@ def convert_to_common_format(request):
                 if not df_missing.empty:
                     print("Missing file generated"+str(len(df_missing)))
                     df_missing = df_missing.drop(columns=['index'])
-                    df_missing.to_excel(os.path.join(tempdir, 'summary1.xlsx'), index = False)
+                    df_missing.to_excel(os.path.join(tempdir1, 'summary1.xlsx'), index = False)
 
                     if file_path.endswith(".csv"):
                         file_path_for_summary_bucket = file_path[:-4]+ "_nonparsed" + ".xlsx"
@@ -182,9 +185,9 @@ def convert_to_common_format(request):
 
 
                     nonParsedFiles.append(file_path_for_summary_bucket)
-                    uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary1.xlsx'))
+                    uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir1, 'summary1.xlsx'))
                     print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
-                    os.remove(os.path.join(tempdir, 'summary1.xlsx'))
+                    os.remove(os.path.join(tempdir1, 'summary1.xlsx'))
 
                 os.remove(file_path_download_to_tempdir)
                     
