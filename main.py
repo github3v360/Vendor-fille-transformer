@@ -89,7 +89,7 @@ def convert_to_common_format(request):
     print("In the function")
     headers = {
         'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token, Access-Control-Allow-Origin, crossDomain',        
+        'Access-Control-Allow-Headers': '*',        
         'Access-Control-Allow-Origin': '*'
         }
 
