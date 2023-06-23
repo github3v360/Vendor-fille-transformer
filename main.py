@@ -115,6 +115,7 @@ def convert_to_common_format(request):
         'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Origin,crossDomain',        
         'Access-Control-Allow-Origin': '*'
         }
+
     if request.method == 'OPTIONS':
         return ('', 204, headers)
     try:
@@ -130,6 +131,8 @@ def convert_to_common_format(request):
         # print(str(len(file_paths)))
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
+
+        nonParsedFiles = []
 
         for file_path in file_paths:
 
@@ -192,6 +195,8 @@ def convert_to_common_format(request):
                     elif file_path.endswith(".xlsx"):
                         file_path_for_summary_bucket = file_path[:-5] + "_nonparsed" + ".xlsx"
 
+                    nonParsedFiles.append(file_path_for_summary_bucket)
+
                     print(f"File path for summary bucket is {file_path_for_summary_bucket}")
                     uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary1.xlsx'))     
             
@@ -204,6 +209,6 @@ def convert_to_common_format(request):
             
         os.remove(file_path_download_to_tempdir)
         os.remove(os.path.join(tempdir, 'summary.xlsx'))
-        return ("converted all files",200,headers)
+        return ({"nonParsedFilePaths":nonParsedFiles},200,headers)
     except Exception as e:
         return (str(e),300,headers)
