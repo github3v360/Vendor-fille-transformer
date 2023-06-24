@@ -11,8 +11,6 @@ from flask_cors import cross_origin
 from google.cloud import storage
 
 
-@cross_origin()
-@json
 
 # Bucket Realted parameters and functions
 
@@ -90,7 +88,8 @@ def list_files_in_directory(bucket_name, directory_path):
             file_paths.append(blob.name)
     return file_paths
 
-
+@cross_origin()
+@json
 def convert_to_common_format(request):
     print("In the function")
     headers = {
