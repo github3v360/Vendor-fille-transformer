@@ -24,14 +24,16 @@ def transform_column(cur_val, magic_numbers, target_column_name, target_column_d
 
     # Loading dictionary for the current target column
 
-    if cur_val == "" or cur_val == "-" or cur_val is None or (type(cur_val) != str):
+    if cur_val == "" or cur_val == '-' or cur_val is None or (type(cur_val) != str):
+        print(cur_val)
         return str(default_value).lower()
     
     cur_val = cur_val.replace("+","").replace("-","").replace(" ","").lower()
-
+    # print(cur_val)
     try:
         # Fetching the correct transformed value using the target_column_dict
         transformed = target_column_dict[cur_val]
+        print(cur_val,target_column_name)
         return str(transformed).lower()
 
     # If we are not able to fetch the correct transformed value from target_column_dict

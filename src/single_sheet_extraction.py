@@ -87,9 +87,7 @@ class ExtractFromSingleSheet:
             print("Returned None, hence unwanted sheet")
             return pd.DataFrame(),pd.DataFrame()
 
-        column_names_map = {"reportNo":"report_no","rapRate":"raprate","rapPriceTotal":"rap price total",
-        "pricePerCarat":"price per carat","GeneratedReportNo":"generated_report_no","ExtraColumn":"Extra Column",
-        "Depth %":"depth %","Ratio":"ratio"}
+        column_names_map = {"GeneratedReportNo":"generated_report_no","ExtraColumn":"Extra Column"}
         # Rename the columns using the dictionary
         df_processed.rename(columns=column_names_map, inplace=True)
         first_columns = ["report_no","shape", "carat", "color", "clarity", "cut", "polish", "symmetry", "fluorescent", "raprate", 

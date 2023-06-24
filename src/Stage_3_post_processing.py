@@ -191,7 +191,9 @@ class PostProcessingData:
         datframe_processed_with_report_number = self.add_report_number(self.dataframe_pre_processed)
 
         transformed_dataframe = self.transform_values(datframe_processed_with_report_number)
-
+        if 'cut' not in transformed_dataframe.columns:
+            # Create the 'cut' column and set its value to 'ex' for each row
+            transformed_dataframe['cut'] = 'ex'
         missing_target_colums = self.log_missing_target_columns(
             transformed_dataframe, self.target_columns
         )
