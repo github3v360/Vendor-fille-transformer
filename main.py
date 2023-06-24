@@ -6,7 +6,13 @@ import io
 import tempfile
 import os
 import time
+from flask_cors import cross_origin
+
 from google.cloud import storage
+
+
+@cross_origin()
+@json
 
 # Bucket Realted parameters and functions
 
@@ -89,7 +95,7 @@ def convert_to_common_format(request):
     print("In the function")
     headers = {
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Origin,crossDomain',        
+        'Access-Control-Allow-Headers': 'Content-Type, Access-Control-Allow-Origin, crossDomain',        
         'Access-Control-Allow-Origin': '*'
     }
     
