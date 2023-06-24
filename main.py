@@ -89,7 +89,6 @@ def list_files_in_directory(bucket_name, directory_path):
     return file_paths
 
 @cross_origin()
-@json
 def convert_to_common_format(request):
     print("In the function")
     headers = {
