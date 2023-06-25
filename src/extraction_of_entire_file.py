@@ -98,8 +98,8 @@ class EntireFileExtractor:
         is_excel = False
         print("Checking extension")
         # Load the Pandas Data Frame with all sheets
-        print(self)
-        print(self,self.file_path.endswith('.xlsx'),self.file_path.endswith('.xls'))
+        print(self.file_path)
+        # print(self,self.file_path.endswith('.xlsx'),self.file_path.endswith('.xls'))
         
         if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
             work_book = pd.read_excel(self.file_path, sheet_name = None, header = None)
