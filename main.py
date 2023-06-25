@@ -66,8 +66,6 @@ def delete_file_from_bucket(bucket_name, file_path):
     if blob.exists():
         blob.delete()
 
-from google.cloud import storage
-import os
 
 def list_files_in_directory(bucket_name, directory_path):
 
@@ -154,6 +152,7 @@ def convert_to_common_format(request):
             extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logging,date,cur_vendor_name)
             print("Started Converting to common format")
             out_df = extractor.extract()
+            print("File Converted")
             try:
                 df_clean, df_missing = out_df
                 print(df_clean,df_missing,df_clean.empty,df_missing.empty)

@@ -46,7 +46,7 @@ class EntireFileExtractor:
 
         # Iterating through all the sheet
         for sheet_name in sheet_names:
-            self.logger.info("New Sheet")
+            self.logger.info("New Sheet Started")
             if is_excel:
                 # Fetching and storing the sheet
                 data_frame = work_book[sheet_name]
@@ -100,7 +100,7 @@ class EntireFileExtractor:
         # Load the Pandas Data Frame with all sheets
         if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
             work_book = pd.read_excel(self.file_path, sheet_name = None, header = None)
-
+            print("This is xlsx file")
             # Fetching all sheet names
             sheet_names = list(work_book.keys())
             # setting is_excel flag to True
@@ -116,6 +116,7 @@ class EntireFileExtractor:
 
             # Reading a csv file
             work_book = pd.read_csv(self.file_path)
+            print("This is csv file")
             # Since csv files do not have multiple sheets
             # we will assign a random name
             sheet_names = ['random_sheet']
