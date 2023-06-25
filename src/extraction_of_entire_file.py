@@ -37,7 +37,7 @@ class EntireFileExtractor:
 
         Concatenate all the outputs to final excel sheet
         """
-
+        print("In EXTRACT Method")
         # this is flag which will tell whether the file is excel or not
         sheet_names,is_excel,work_book,work_book_xl = self.check_extension_of_sheet()
         # Initializing Global DataFrame which will store all the processed sheet
