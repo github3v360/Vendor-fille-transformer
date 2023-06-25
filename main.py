@@ -170,7 +170,7 @@ def convert_to_common_format(request):
                     file_path_for_summary_bucket = file_path[:-5] + "_output" + ".xlsx"
 
                 #delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
-                #print("deleted old files from bucket since we need to replace it with new file")
+                print("deleted old files from bucket since we need to replace it with new file")
                 uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
                 print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
                 os.remove(os.path.join(tempdir, 'summary.xlsx'))
