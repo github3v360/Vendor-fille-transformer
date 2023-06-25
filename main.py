@@ -68,23 +68,27 @@ def delete_file_from_bucket(bucket_name, file_path):
 
 
 def list_files_in_directory(bucket_name, directory_path):
-
+    print("bucket name : ",bucket_name)
+    print("dr_path:",directory_path)
     # Get a reference to your bucket
     bucket = client.bucket(bucket_name)
-
+    print("Bucket : ",bucket)
+    
     # Get a list of all blobs in the bucket
     blobs = bucket.list_blobs()
-
+    print("Blobs : ",blobs)
     # Create an empty list to store the file paths
     file_paths = []
 
     # Loop through all the blobs in the bucket
     for blob in blobs:
         # Check if the blob is a file and is in the specified directory
+        print("Blob name : ",blob.name)
         if not blob.name.endswith('/') and blob.name.startswith(directory_path):
             # Add the file path to the list
             file_paths.append(blob.name)
             print(blob.name)
+    print("File Paths ",file_paths)
     return file_paths
 
 @cross_origin()
