@@ -156,7 +156,7 @@ def convert_to_common_format(request):
             out_df = extractor.extract()
             try:
                 df_clean, df_missing = out_df
-                
+                print(df_clean,df_missing,df_clean.empty,df_missing.empty)
                 if df_clean.empty and df_missing.empty:
                     continue
                 print("Clean file generated"+str(len(df_clean)))
