@@ -7,10 +7,7 @@ import tempfile
 import os
 import time
 from flask_cors import cross_origin
-
 from google.cloud import storage
-
-
 
 # Bucket Realted parameters and functions
 
@@ -24,6 +21,9 @@ client = storage.Client(project="friendlychat-bb9ff")
 
 inventory_bucket_name = "business-inventory-files"
 summary_bucket_name = "business-summary-files"
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 def downloadFromBucket(bucketName, path, filepath):
     bucket = client.get_bucket(bucketName)
@@ -149,10 +149,16 @@ def convert_to_common_format(request):
             
             downloadFromBucket(inventory_bucket_name, file_path, file_path_download_to_tempdir)
             print("downloaded from bucket")
-            extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logging,date,cur_vendor_name)
-            print("Started Converting to common format")
-            out_df = extractor.extract()
-            print("File Converted")
+            try:
+                extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logging,date,cur_vendor_name)
+                print("Started Converting to common format")
+                out_df = extractor.extract()
+                print("File Converted")
+            except:
+                print('Failed Due to: ')
+                print(f"Logic Failed for {cur_file_name} file")
+                print("-" *50)
+                continue
             try:
                 df_clean, df_missing = out_df
                 print(df_clean,df_missing,df_clean.empty,df_missing.empty)
@@ -172,7 +178,7 @@ def convert_to_common_format(request):
                 print("deleted old files from bucket since we need to replace it with new file")
                 uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
                 print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
-                os.remove(os.path.join(tempdir, 'summary.xlsx'))
+                # os.remove(os.path.join(tempdir, 'summary.xlsx'))
 
                 if not df_missing.empty:
                     print("Missing file generated"+str(len(df_missing)))
@@ -191,13 +197,13 @@ def convert_to_common_format(request):
                     nonParsedFiles.append(file_path_for_summary_bucket)
                     uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir1, 'summary1.xlsx'))
                     print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
-                    os.remove(os.path.join(tempdir1, 'summary1.xlsx'))
+                    # os.remove(os.path.join(tempdir1, 'summary1.xlsx'))
                 
                     
             except:
-                logger.exception('Failed Due to: ')
-                logger.info(f"Logic Failed for {test_file_name} file")
-                logger.info("-" *50)
+                print('Failed Due to: ')
+                print(f"Logic Failed for {cur_file_name} file")
+                print("-" *50)
                 continue
 
             os.remove(file_path_download_to_tempdir)
