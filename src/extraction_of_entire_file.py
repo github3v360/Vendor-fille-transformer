@@ -96,7 +96,7 @@ class EntireFileExtractor:
         It accepts xlxs and csv extensions only.
         """
         is_excel = False
-
+        print("Checking extension")
         # Load the Pandas Data Frame with all sheets
         if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
             work_book = pd.read_excel(self.file_path, sheet_name = None, header = None)
@@ -124,5 +124,6 @@ class EntireFileExtractor:
 
         else:
             self.logger.exception("This file format is not supported")
-
+            
+        print(sheet_names,is_excel,work_book,work_book_xl)
         return sheet_names,is_excel,work_book,work_book_xl
