@@ -155,6 +155,7 @@ def convert_to_common_format(request):
             downloadFromBucket(inventory_bucket_name, file_path, file_path_download_to_tempdir)
             print("downloaded from bucket")
             try:
+                print(file_path_download_to_tempdir)
                 extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logging,date,cur_vendor_name)
                 print("Started Converting to common format")
                 out_df = extractor.extract()
