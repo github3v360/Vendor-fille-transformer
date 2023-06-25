@@ -102,6 +102,7 @@ class EntireFileExtractor:
         # print(self,self.file_path.endswith('.xlsx'),self.file_path.endswith('.xls'))
         
         if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
+            print(self.file_path+" in if")
             work_book = pd.read_excel(self.file_path, sheet_name = None, header = None)
             print("This is xlsx file",work_book)
             # Fetching all sheet names
