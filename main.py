@@ -190,24 +190,24 @@ def convert_to_common_format(request):
                 print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
                 # os.remove(os.path.join(tempdir, 'summary.xlsx'))
 
-                if not df_missing.empty:
-                    print("Missing file generated"+str(len(df_missing)))
-                    df_missing = df_missing.reset_index()
-                    df_missing = df_missing.drop(columns=['index'])
-                    df_missing.to_excel(os.path.join(tempdir, 'summary1.xlsx'), index = False)
+                # if not df_missing.empty:
+                #     print("Missing file generated"+str(len(df_missing)))
+                #     df_missing = df_missing.reset_index()
+                #     df_missing = df_missing.drop(columns=['index'])
+                #     df_missing.to_excel(os.path.join(tempdir, 'summary1.xlsx'), index = False)
 
-                    if file_path.endswith(".csv"):
-                        file_path_for_summary_bucket = file_path[:-4]+ "_nonparsed" + ".xlsx"
-                    elif file_path.endswith(".xlsx"):
-                        file_path_for_summary_bucket = file_path[:-5] + "_nonparsed" + ".xlsx"
-                    #delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
-                    #print("deleted old files from bucket since we need to replace it with new file")
+                #     if file_path.endswith(".csv"):
+                #         file_path_for_summary_bucket = file_path[:-4]+ "_nonparsed" + ".xlsx"
+                #     elif file_path.endswith(".xlsx"):
+                #         file_path_for_summary_bucket = file_path[:-5] + "_nonparsed" + ".xlsx"
+                #     #delete_file_from_bucket(summary_bucket_name,file_path_for_summary_bucket)
+                #     #print("deleted old files from bucket since we need to replace it with new file")
 
 
-                    nonParsedFiles.append(file_path_for_summary_bucket)
-                    uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary1.xlsx'))
-                    print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
-                    # os.remove(os.path.join(tempdir1, 'summary1.xlsx'))
+                #     nonParsedFiles.append(file_path_for_summary_bucket)
+                #     uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary1.xlsx'))
+                #     print(f"uploaded to bucket with filepath as: {file_path_for_summary_bucket}")
+                #     # os.remove(os.path.join(tempdir1, 'summary1.xlsx'))
                 
                     
             except Exception as e:
