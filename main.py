@@ -166,6 +166,8 @@ def convert_to_common_format(request):
                 print('Failed Due to: ')
                 print(f"Logic Failed for {cur_file_name} file")
                 print("-" *50)
+                print("Traceback for file  "+cur_file_name)
+                traceback.print_exc()
                 continue
             try:
                 df_clean, df_missing = out_df
