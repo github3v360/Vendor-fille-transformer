@@ -26,7 +26,7 @@ def get_target_column_unique_values(target_name, logger):
         "width": (["*", "x", "X", "+", "-"], False),
         "depth": (["*", "x", "X", "+", "-"], False),
         "comments": ([",", "additional"], True),
-        "cut": (["I", "EX", "VG", "G", "F", "P", "EX+", "EX +"], True),
+        "cut": (["I", "EX", "VG", "G", "F", "P", "EX+", "EX +","3EX"], True),
         "polish": (["I", "EX", "VG", "G", "F", "P", "VG-EX", "G-VG", "F-G"], True),
         "symmetry": (["I", "EX", "VG", "G", "F", "P", "VG-EX", "G-VG", "F-G"], True),
         "table": (
