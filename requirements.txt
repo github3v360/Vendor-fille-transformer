@@ -29,7 +29,6 @@ xlrd == 1.2.0
 validators == 0.18.2
 regex == 2022.1.18
 DateTime == 4.4
-traceback == 3.11.4
 numpy 
 python-math 
 python-time 
