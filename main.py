@@ -163,7 +163,7 @@ def convert_to_common_format(request):
             os.remove(os.path.join(tempdir, 'summary.xlsx'))
 
         end = time.time()
-        print("Total time taken in converting all "+ len(file_paths) +" files : " +str({end - start}))
+        print("Total time taken in converting all "+ str(len(file_paths)) +" files : " +str({end - start}))
         return ("converted",200,headers)
     except Exception as e:
         return (str(e),201,headers)
