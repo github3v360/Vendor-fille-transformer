@@ -32,8 +32,10 @@ def downloadFromBucket(bucketName, path, filepath):
     doesFileExist = blob.exists()
     if not doesFileExist:
         raise Exception('remote file not present')
-    
+    print("before download to file name",blob)
     blob.download_to_filename(filepath)
+    print("after download to file name")
+
 
 
 def uploadToBucket(bucketName, path, filepath):
@@ -152,6 +154,7 @@ def convert_to_common_format(request):
             
 
             file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name,cur_file_name])
+            print("file_path_download_to_tempdir : "+file_path_download_to_tempdir)
             
             downloadFromBucket(inventory_bucket_name, file_path, file_path_download_to_tempdir)
             print("downloaded from bucket")
