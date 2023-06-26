@@ -5,7 +5,6 @@ import logging
 import io
 import tempfile
 import os
-import sys
 import time
 from flask_cors import cross_origin
 from google.cloud import storage
@@ -221,10 +220,10 @@ def convert_to_common_format(request):
         print("Total time taken in converting all "+ len(file_paths) +" files : " +str({end - start}))
         return ({"nonParsedFilePaths" : nonParsedFiles},200,headers)
     except Exception as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print("sys exception info :")
-        print(exc_type, fname, exc_tb.tb_lineno)
+        # exc_type, exc_obj, exc_tb = sys.exc_info()
+        # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        # print("sys exception info :")
+        # print(exc_type, fname, exc_tb.tb_lineno)
         print("Traceback")
         traceback.print_exc()
         print("printed Exception")
