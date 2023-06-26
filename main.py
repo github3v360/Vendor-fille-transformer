@@ -208,16 +208,18 @@ def convert_to_common_format(request):
                     # os.remove(os.path.join(tempdir1, 'summary1.xlsx'))
                 
                     
-            except:
+            except Exception as e:
                 print('Failed Due to: ')
                 print(f"Logic Failed for {cur_file_name} file")
                 print("-" *50)
+                print("Traceback for file  "+cur_file_name)
+                traceback.print_exc()
                 continue
 
             os.remove(file_path_download_to_tempdir)
             print("Converted to common format")
         end = time.time()
-        print("Total time taken in converting all "+ len(file_paths) +" files : " +str({end - start}))
+        # print("Total time taken in converting all "+ len(file_paths) +" files : " +str({end - start}))
         return ({"nonParsedFilePaths" : nonParsedFiles},200,headers)
     except Exception as e:
         # exc_type, exc_obj, exc_tb = sys.exc_info()
