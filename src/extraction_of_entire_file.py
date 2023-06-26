@@ -6,6 +6,9 @@ import random
 import pandas as pd
 
 from openpyxl import load_workbook
+import xlrd
+
+
 from src import single_sheet_extraction
 
 class EntireFileExtractor:
@@ -101,9 +104,25 @@ class EntireFileExtractor:
         print(self.file_path)
         # print(self,self.file_path.endswith('.xlsx'),self.file_path.endswith('.xls'))
         
-        if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
-            print(self.file_path+" in if")
+        if self.file_path.endswith('.xls'):
+            print(self.file_path+" in xls")
             work_book = pd.read_excel(self.file_path, sheet_name = None, header = None, engine='xlrd')
+            print("This is xlsx file",work_book)
+            # Fetching all sheet names
+            sheet_names = list(work_book.keys())
+            # setting is_excel flag to True
+            is_excel = True
+
+            try:
+                # Read Data file with oxlrd
+                work_book_xl = xlrd.open_workbook(self.file_path)
+                
+            except:
+                work_book_xl = None
+
+        elif self.file_path.endswith('.xlsx'):
+            print(self.file_path+" in xlsx")
+            work_book = pd.read_excel(self.file_path, sheet_name = None, header = None, engine='openpyxl')
             print("This is xlsx file",work_book)
             # Fetching all sheet names
             sheet_names = list(work_book.keys())
@@ -115,6 +134,7 @@ class EntireFileExtractor:
                 work_book_xl = load_workbook(self.file_path)
             except:
                 work_book_xl = None
+
 
         elif self.file_path.endswith('.csv'):
 
