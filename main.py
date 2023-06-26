@@ -119,7 +119,8 @@ def convert_to_common_format(request):
         date = request.args.get('date')
         # print("called with ",userId,date)
 
-        directory_path = os.path.join(*["ewTMxJQbjlQBX3QCcGtk9tjVukB3","20230625","User_files"])
+        directory_path = os.path.join(*[userId,date,"User_files"])
+        # directory_path = os.path.join(*["ewTMxJQbjlQBX3QCcGtk9tjVukB3","20230625","User_files"])
 
         file_paths = list_files_in_directory(inventory_bucket_name, directory_path)
 
