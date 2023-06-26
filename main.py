@@ -13,10 +13,11 @@ from google.cloud import storage
 tempdir = tempfile.gettempdir()
 tempdir = tempfile.mkdtemp()
 
-client = storage.Client(project="friendlychat-bb9ff")
+client = storage.Client(project="d360-assist-dev")
 
-inventory_bucket_name = "business-inventory-files"
-summary_bucket_name = "business-summary-files"
+inventory_bucket_name = "assist-dev-inventory-bucket"
+summary_bucket_name = "assist-dev-summary-bucket"
+
 
 def downloadFromBucket(bucketName, path, filepath):
     bucket = client.get_bucket(bucketName)
