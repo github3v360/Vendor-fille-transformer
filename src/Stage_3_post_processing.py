@@ -191,7 +191,7 @@ class PostProcessingData:
 
         transformed_dataframe = self.transform_values(datframe_processed_with_report_number)
 
-         if 'cut' not in transformed_dataframe.columns:
+        if 'cut' not in transformed_dataframe.columns:
             # Create the 'cut' column and set its value to 'ex' for each row
             transformed_dataframe['cut'] = 'ex'
 
