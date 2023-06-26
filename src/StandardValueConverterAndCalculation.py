@@ -80,10 +80,10 @@ class PostProcessing:
             )
 
             # Calculate the ratio and depth column
-            self.df_pre_processed["Ratio"] = round(
+            self.df_pre_processed["ratio"] = round(
                 self.df_pre_processed["length"] / self.df_pre_processed["width"], 2
             )
-            self.df_pre_processed["Depth %"] = round(
+            self.df_pre_processed["depth %"] = round(
                 (self.df_pre_processed["depth"] / self.df_pre_processed["width"]) * 100,
                 2,
             )
@@ -216,7 +216,7 @@ class PostProcessing:
             target_column_dict= common_utils.load_pickle_files_for_single_column("cut")
             self.df_pre_processed["cut"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["cut"], self.magic_numbers, "cut", target_column_dict, "EX"),
+                    x["cut"], self.magic_numbers, "cut", target_column_dict, "ex"),
                 axis=1,
             )
         

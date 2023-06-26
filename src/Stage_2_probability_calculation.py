@@ -154,7 +154,7 @@ class DataProcessor:
                 d[col] = row[col]
             list_of_dicts.append(d)
 
-        self.remaining_columns_dataframe["ExtraColumn"] = list_of_dicts
+        self.remaining_columns_dataframe["Extra Column"] = list_of_dicts
         return self.remaining_columns_dataframe
 
     def get_current_column_unique_values(self, dataframe_cleaned, cur_dataframe_cleaned_column_name):
