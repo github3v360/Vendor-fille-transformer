@@ -110,7 +110,6 @@ def list_files_in_directory(bucket_name, directory_path):
     print("File Paths ",file_paths)
     return file_paths
 
-@cross_origin()
 def convert_to_common_format(request):
     print("In the function")
 
@@ -161,13 +160,24 @@ def convert_to_common_format(request):
             downloadFromBucket(inventory_bucket_name, file_path, file_path_download_to_tempdir)
 
             extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logger,date,cur_vendor_name)
-
-            out_df = extractor.extract()
+            try:
+                print(file_path_download_to_tempdir)
+                print("Started Converting to common format")
+                out_df = extractor.extract()
+                print("File Converted")
+            except:
+                print('Failed Due to: ')
+                print(f"Logic Failed for {cur_file_name} file")
+                print("-" *50)
+                print("Traceback for file  "+cur_file_name)
+                traceback.print_exc()
+                continue
             try:
                 df_clean, df_missing = out_df
                 if df_clean.empty and df_missing.empty:
                     continue
                 print("Clean file generated"+str(len(df_clean)))
+                df_clean = df_clean.reset_index()
                 df_clean = df_clean.drop(columns=['index'])
                 df_clean.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
@@ -213,8 +223,9 @@ def convert_to_common_format(request):
                 continue
 
             
-        os.remove(file_path_download_to_tempdir)
-        os.remove(os.path.join(tempdir, 'summary.xlsx'))
+            os.remove(file_path_download_to_tempdir)
+            os.remove(os.path.join(tempdir, 'summary.xlsx'))
+        print("Converted to common format")
         # return ({"nonParsedFilePaths":nonParsedFiles},200,headers)
         return ("converted",200,headers)
     except Exception as e:
@@ -227,4 +238,4 @@ def convert_to_common_format(request):
         print("printed Exception")
         print(str(e))
         print(e)
-        return (str(e),200,headers)
+        return (str(e),201,headers)
