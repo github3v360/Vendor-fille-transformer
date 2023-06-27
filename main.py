@@ -15,10 +15,10 @@ import traceback
 tempdir = tempfile.gettempdir()
 tempdir = tempfile.mkdtemp()
 
-client = storage.Client(project="friendlychat-bb9ff")
+client = storage.Client(project="d360-assist-dev")
 
-inventory_bucket_name = "business-inventory-files"
-summary_bucket_name = "business-summary-files"
+inventory_bucket_name = "assist-dev-inventory-bucket"
+summary_bucket_name = "assist-dev-summary-bucket"
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -158,7 +158,7 @@ def convert_to_common_format(request):
             print("downloaded from bucket")
             try:
                 print(file_path_download_to_tempdir)
-                extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logging,date,cur_vendor_name)
+                extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logger,date,cur_vendor_name)
                 print("Started Converting to common format")
                 out_df = extractor.extract()
                 print("File Converted")
