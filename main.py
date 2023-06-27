@@ -186,7 +186,7 @@ def convert_to_common_format(request):
 
                 print(f"File path for summary bucket is {file_path_for_summary_bucket}")
 
-                if if file_path.endswith(".csv") or file_path.endswith(".xls")::
+                if file_path.endswith(".csv") or file_path.endswith(".xls")::
                     file_path_for_summary_bucket = file_path[:-4]+ "_output" + ".xlsx"
                 elif file_path.endswith(".xlsx"):
                     file_path_for_summary_bucket = file_path[:-5] + "_output" + ".xlsx"
