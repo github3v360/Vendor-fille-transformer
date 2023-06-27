@@ -155,7 +155,7 @@ def convert_to_common_format(request):
             # cur_vendor_name = vendor_name
             print(f"Current file name: {cur_file_name}")
 
-            file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "/" + cur_file_name])
+            file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "_" + cur_file_name])
             
 
             downloadFromBucket(inventory_bucket_name, file_path, file_path_download_to_tempdir)
