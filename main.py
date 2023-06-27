@@ -15,24 +15,24 @@ from pathlib import Path
 tempdir = tempfile.gettempdir()
 tempdir = tempfile.mkdtemp()
 
-tempdir1 = tempfile.gettempdir()
-tempdir1 = tempfile.mkdtemp()
+client = storage.Client(project="d360-assist-dev")
 
-client = storage.Client(project="friendlychat-bb9ff")
+inventory_bucket_name = "assist-dev-inventory-bucket"
+summary_bucket_name = "assist-dev-summary-bucket"
 
-inventory_bucket_name = "business-inventory-files"
-summary_bucket_name = "business-summary-files"
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 def downloadFromBucket(bucketName, path, filepath):
     bucket = client.get_bucket(bucketName)
 
     blob = bucket.blob(path)
     doesFileExist = blob.exists()
-    print("download",filepath,path,bucketName)
     if not doesFileExist:
         raise Exception('remote file not present')
-    
+    print("before download to file name",blob)
     blob.download_to_filename(filepath)
+    print("after download to file name")
 
 
 def uploadToBucket(bucketName, path, filepath):
@@ -84,32 +84,30 @@ def get_file_paths(bucket_name, directory_path):
     return file_paths
 
 def list_files_in_directory(bucket_name, directory_path):
-
+    print("bucket name : ",bucket_name)
+    print("dr_path:",directory_path)
     # Get a reference to your bucket
     bucket = client.bucket(bucket_name)
-
+    print("Bucket : ",bucket)
+    
     # Get a list of all blobs in the bucket
     blobs = bucket.list_blobs()
-
+    print("Blobs : ",blobs)
     # Create an empty list to store the file paths
     file_paths = []
 
     # Loop through all the blobs in the bucket
     for blob in blobs:
         # Check if the blob is a file and is in the specified directory
+        print("Blob name : ",blob.name)
         if not blob.name.endswith('/') and blob.name.startswith(directory_path):
-            # Get the file path relative to the directory
-            relative_path = os.path.relpath(blob.name, directory_path)
-
-            folder_name = relative_path.split("/")[0]
-
-            if folder_name in folder_names_to_avoid:continue
-
             # Add the file path to the list
             file_paths.append(blob.name)
+            print(blob.name)
+    print("File Paths ",file_paths)
     return file_paths
 
-
+@cross_origin()
 def convert_to_common_format(request):
     print("In the function")
 
@@ -120,7 +118,7 @@ def convert_to_common_format(request):
         }
 
     if request.method == 'OPTIONS':
-        return ('', 200, headers)
+        return ('', 204, headers)
     try:
         # Retrieve the parameters from the request
         userId = request.args.get('userId')
@@ -154,12 +152,12 @@ def convert_to_common_format(request):
             # cur_vendor_name = vendor_name
             print(f"Current file name: {cur_file_name}")
 
-            file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "_" + cur_file_name])
+            file_path_download_to_tempdir = os.path.join(*[tempdir,cur_vendor_name + "/" + cur_file_name])
             
 
             downloadFromBucket(inventory_bucket_name, file_path, file_path_download_to_tempdir)
 
-            extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logging,date,cur_vendor_name)
+            extractor = extraction_of_entire_file.EntireFileExtractor(file_path_download_to_tempdir,False,logger,date,cur_vendor_name)
 
             out_df = extractor.extract()
             try:
@@ -183,35 +181,47 @@ def convert_to_common_format(request):
                 print(f"File path for summary bucket is {file_path_for_summary_bucket}")
                 uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir, 'summary.xlsx'))
 
-                if not df_missing.empty:
-                    print("Missing file generated"+str(len(df_missing)))
-                    df_missing = df_missing.drop(columns=['index'])
-                    df_missing.to_excel(os.path.join(tempdir1, 'summary1.xlsx'), index = False)
+                # if not df_missing.empty:
+                #     print("Missing file generated"+str(len(df_missing)))
+                #     df_missing = df_missing.drop(columns=['index'])
+                #     df_missing.to_excel(os.path.join(tempdir1, 'summary1.xlsx'), index = False)
 
-                    file_dir_for_summary_bucket = os.path.join(*file_path_splitted[:-2],f"/Vendor_files/{vendor_name}","")
-                    file_path_for_summary_bucket = os.path.join(*file_path_splitted[:-2],f"/Vendor_files/{vendor_name}/",file_path_splitted[-1])
+                #     file_dir_for_summary_bucket = os.path.join(*file_path_splitted[:-2],f"/Vendor_files/{vendor_name}","")
+                #     file_path_for_summary_bucket = os.path.join(*file_path_splitted[:-2],f"/Vendor_files/{vendor_name}/",file_path_splitted[-1])
 
-                    print(f"File path for summary bucket is {file_path_for_summary_bucket}")
+                #     print(f"File path for summary bucket is {file_path_for_summary_bucket}")
 
-                    if file_path.endswith(".csv"):
-                        file_path_for_summary_bucket = file_path[:-4]+ "_nonparsed" + ".xlsx"
-                    elif file_path.endswith(".xlsx"):
-                        file_path_for_summary_bucket = file_path[:-5] + "_nonparsed" + ".xlsx"
+                #     if file_path.endswith(".csv"):
+                #         file_path_for_summary_bucket = file_path[:-4]+ "_nonparsed" + ".xlsx"
+                #     elif file_path.endswith(".xlsx"):
+                #         file_path_for_summary_bucket = file_path[:-5] + "_nonparsed" + ".xlsx"
 
-                    nonParsedFiles.append(file_path_for_summary_bucket)
+                #     nonParsedFiles.append(file_path_for_summary_bucket)
 
-                    print(f"File path for summary bucket is {file_path_for_summary_bucket}")
-                    uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir1, 'summary1.xlsx'))     
+                #     print(f"File path for summary bucket is {file_path_for_summary_bucket}")
+                #     uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir1, 'summary1.xlsx'))     
             
-            except:
-                logger.exception('Failed Due to: ')
-                logger.info(f"Logic Failed for {test_file_name} file")
-                logger.info("-" *50)
+            except Exception as e:
+                print('Failed Due to: ')
+                print(f"Logic Failed for {cur_file_name} file")
+                print("-" *50)
+                print("Traceback for file  "+cur_file_name)
+                traceback.print_exc()
                 continue
 
             
         os.remove(file_path_download_to_tempdir)
         os.remove(os.path.join(tempdir, 'summary.xlsx'))
-        return ({"nonParsedFilePaths":nonParsedFiles},200,headers)
+        # return ({"nonParsedFilePaths":nonParsedFiles},200,headers)
+        return ("converted",200,headers)
     except Exception as e:
-        return (str(e),300,headers)
+        # exc_type, exc_obj, exc_tb = sys.exc_info()
+        # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        # print("sys exception info :")
+        # print(exc_type, fname, exc_tb.tb_lineno)
+        print("Traceback")
+        traceback.print_exc()
+        print("printed Exception")
+        print(str(e))
+        print(e)
+        return (str(e),200,headers)
