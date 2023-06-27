@@ -6,7 +6,6 @@ import io
 import tempfile
 import os
 import time
-from flask_cors import cross_origin
 from google.cloud import storage
 import traceback
 
@@ -91,7 +90,6 @@ def list_files_in_directory(bucket_name, directory_path):
     print("File Paths ",file_paths)
     return file_paths
 
-@cross_origin()
 def convert_to_common_format(request):
     print("In the function")
     headers = {
@@ -234,4 +232,4 @@ def convert_to_common_format(request):
         print("printed Exception")
         print(str(e))
         print(e)
-        return (str(e),200,headers)
+        return (str(e),201,headers)

@@ -11,7 +11,6 @@ deprecation==2.1.0
 dialogflow==1.1.0
 firebase-admin==5.0.0
 Flask==2.0.1
-flask_cors==3.0.10
 functions-framework==2.2.1
 google-api-core==1.28.0
 google-api-python-client==2.7.0
