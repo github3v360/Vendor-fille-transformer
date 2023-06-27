@@ -99,31 +99,11 @@ class EntireFileExtractor:
         It accepts xlxs and csv extensions only.
         """
         is_excel = False
-        print("Checking extension")
+
         # Load the Pandas Data Frame with all sheets
-        print(self.file_path)
-        # print(self,self.file_path.endswith('.xlsx'),self.file_path.endswith('.xls'))
-        
-        if self.file_path.endswith('.xls'):
-            print(self.file_path+" in xls")
-            work_book = pd.read_excel(self.file_path, sheet_name = None, header = None, engine='xlrd')
-            print("This is xlsx file",work_book)
-            # Fetching all sheet names
-            sheet_names = list(work_book.keys())
-            # setting is_excel flag to True
-            is_excel = True
+        if self.file_path.endswith('.xlsx') or self.file_path.endswith('.xls'):
+            work_book = pd.read_excel(self.file_path, sheet_name = None, header = None)
 
-            try:
-                # Read Data file with oxlrd
-                work_book_xl = xlrd.open_workbook(self.file_path)
-                
-            except:
-                work_book_xl = None
-
-        elif self.file_path.endswith('.xlsx'):
-            print(self.file_path+" in xlsx")
-            work_book = pd.read_excel(self.file_path, sheet_name = None, header = None, engine='openpyxl')
-            print("This is xlsx file",work_book)
             # Fetching all sheet names
             sheet_names = list(work_book.keys())
             # setting is_excel flag to True
@@ -135,12 +115,10 @@ class EntireFileExtractor:
             except:
                 work_book_xl = None
 
-
         elif self.file_path.endswith('.csv'):
 
             # Reading a csv file
             work_book = pd.read_csv(self.file_path)
-            print("This is csv file")
             # Since csv files do not have multiple sheets
             # we will assign a random name
             sheet_names = ['random_sheet']
@@ -148,6 +126,6 @@ class EntireFileExtractor:
 
         else:
             self.logger.exception("This file format is not supported")
-            
-        print(sheet_names,is_excel,work_book,work_book_xl)
+
         return sheet_names,is_excel,work_book,work_book_xl
+
