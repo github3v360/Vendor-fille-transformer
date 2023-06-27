@@ -122,7 +122,7 @@ def convert_to_common_format(request):
 
         file_paths = list_files_in_directory(inventory_bucket_name, directory_path)
 
-        nonParsedFiles = []
+        FailedFiles = []
 
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
@@ -161,6 +161,7 @@ def convert_to_common_format(request):
                 out_df = extractor.extract()
                 print("File Converted")
             except:
+                FailedFiles.append(cur_file_name)
                 print('Failed Due to: ')
                 print(f"Logic Failed for {cur_file_name} file")
                 print("-" *50)
@@ -194,7 +195,7 @@ def convert_to_common_format(request):
                     # df_missing = df_missing.drop(columns=['index'])
                     # df_missing.to_excel(os.path.join(tempdir, 'summary1.xlsx'), index = False)
 
-                    # if if file_path.endswith(".csv") or file_path.endswith(".xls"):
+                    # if file_path.endswith(".csv") or file_path.endswith(".xls"):
                     #     file_path_for_summary_bucket = file_path[:-4]+ "_nonparsed" + ".xlsx"
                     # elif file_path.endswith(".xlsx"):
                     #     file_path_for_summary_bucket = file_path[:-5] + "_nonparsed" + ".xlsx"
@@ -209,6 +210,7 @@ def convert_to_common_format(request):
                 
                     
             except Exception as e:
+                FailedFiles.append(cur_file_name)
                 print('Failed Due to: ')
                 print(f"Logic Failed for {cur_file_name} file")
                 print("-" *50)
@@ -221,7 +223,10 @@ def convert_to_common_format(request):
         end = time.time()
         # print("Total time taken in converting all "+ len(file_paths) +" files : " +str({end - start}))
         # return ({"nonParsedFilePaths" : nonParsedFiles},200,headers)
-        return ("converted",200,headers)
+        if len(FailedFiles)>0:
+            return ({"failedfiles" : FailedFiles},210,headers)
+        else:
+            return ("converted",200,headers)
     except Exception as e:
         # exc_type, exc_obj, exc_tb = sys.exc_info()
         # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
