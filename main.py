@@ -178,7 +178,7 @@ def convert_to_common_format(request):
                     continue
                 print("Clean file generated"+str(len(df_clean)))
                 df_clean = df_clean.reset_index()
-                #df_clean = df_clean.drop(columns=['index'])
+                df_clean = df_clean.drop(columns=['index'])
                 df_clean.to_excel(os.path.join(tempdir, 'summary.xlsx'), index = False)
 
                 file_dir_for_summary_bucket = os.path.join(*file_path_splitted[:-2],f"/Vendor_files/{vendor_name}","")
