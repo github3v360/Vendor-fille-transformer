@@ -5,7 +5,10 @@ import logging
 import io
 import tempfile
 import os
+import time
+from flask_cors import cross_origin
 from google.cloud import storage
+import traceback
 
 from pathlib import Path
 
