@@ -224,7 +224,7 @@ def convert_to_common_format(request):
 
             
             os.remove(file_path_download_to_tempdir)
-            os.remove(os.path.join(tempdir, 'summary.xlsx'))
+            #os.remove(os.path.join(tempdir, 'summary.xlsx'))
         print("Converted to common format")
         # return ({"nonParsedFilePaths":nonParsedFiles},200,headers)
         return ("converted",200,headers)
