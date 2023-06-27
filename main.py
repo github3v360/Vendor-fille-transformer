@@ -172,6 +172,7 @@ def convert_to_common_format(request):
                 df_clean, df_missing = out_df
                 print(df_clean,df_missing,df_clean.empty,df_missing.empty)
                 if df_clean.empty and df_missing.empty:
+                    FailedFiles.append(cur_file_name)
                     continue
                 print("Clean file generated"+str(len(df_clean)))
                 df_clean = df_clean.reset_index()
