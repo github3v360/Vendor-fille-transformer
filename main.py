@@ -135,7 +135,7 @@ def convert_to_common_format(request):
         log_buffer = io.StringIO()
         logging.basicConfig(level=logging.INFO, stream=log_buffer)
 
-        nonParsedFiles = []
+        FailedFiles = []
 
         for file_path in file_paths:
 
@@ -166,6 +166,7 @@ def convert_to_common_format(request):
                 out_df = extractor.extract()
                 print("File Converted")
             except:
+                FailedFiles.append(cur_file_name)
                 print('Failed Due to: ')
                 print(f"Logic Failed for {cur_file_name} file")
                 print("-" *50)
@@ -215,6 +216,7 @@ def convert_to_common_format(request):
                 #     uploadToBucket(summary_bucket_name, file_path_for_summary_bucket, os.path.join(tempdir1, 'summary1.xlsx'))     
             
             except Exception as e:
+                FailedFiles.append(cur_file_name)
                 print('Failed Due to: ')
                 print(f"Logic Failed for {cur_file_name} file")
                 print("-" *50)
@@ -227,7 +229,10 @@ def convert_to_common_format(request):
             #os.remove(os.path.join(tempdir, 'summary.xlsx'))
         print("Converted to common format")
         # return ({"nonParsedFilePaths":nonParsedFiles},200,headers)
-        return ("converted",200,headers)
+        if len(FailedFiles)>0:
+            return ({"failedfiles" : FailedFiles},210,headers)
+        else:
+            return ("converted",200,headers)
     except Exception as e:
         # exc_type, exc_obj, exc_tb = sys.exc_info()
         # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
