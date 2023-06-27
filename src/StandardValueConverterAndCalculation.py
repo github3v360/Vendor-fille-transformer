@@ -6,6 +6,7 @@ import os
 from src.utils import post_processing_utils,common_utils
 import time
 import math
+import numpy as np
 
 class PostProcessing:
     """
@@ -147,14 +148,15 @@ class PostProcessing:
                 self.df_pre_processed["discount"] = self.df_pre_processed[
                     "discount"
                 ].apply(post_processing_utils.transform_discount_column)
+
                 self.df_pre_processed["price per carat"] = (
                     self.df_pre_processed["raprate"] * 
-                    (1 - (self.df_pre_processed["discount"] / 100))).astype(int)
+                    (1 - (self.df_pre_processed["discount"] / 100)))
 
                 self.df_pre_processed["total"] = (
                     self.df_pre_processed["price per carat"]
                     * self.df_pre_processed["carat"]
-                ).astype(int)
+                )
             elif price_name == "price per carat":
                 self.df_pre_processed["discount"] = ((
                     1
@@ -162,11 +164,11 @@ class PostProcessing:
                         self.df_pre_processed["price per carat"]
                         / self.df_pre_processed["raprate"]
                     )
-                ) * 100).astype(int)
+                ) * 100)
                 self.df_pre_processed["total"] = (
                     self.df_pre_processed["price per carat"]
                     * self.df_pre_processed["carat"]
-                ).astype(int)
+                )
             else:
                 self.df_pre_processed["price per carat"] = (
                     self.df_pre_processed["total"] / self.df_pre_processed["carat"]
@@ -178,6 +180,8 @@ class PostProcessing:
                         / self.df_pre_processed["raprate"]
                     )
                 ) * 100
+            self.df_pre_processed["price per carat"] = self.df_pre_processed["price per carat"].replace([np.inf, -np.inf], np.nan)
+            self.df_pre_processed["total"] = self.df_pre_processed["total"].replace([np.inf, -np.inf], np.nan)
         return self.df_pre_processed
 
     
