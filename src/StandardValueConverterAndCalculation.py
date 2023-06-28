@@ -130,7 +130,7 @@ class PostProcessing:
             )
             self.df_pre_processed["rap price total"] = (
                 self.df_pre_processed["raprate"] * self.df_pre_processed["carat"]
-            ).astype(int)
+            )
 
             max_prob = -1
             price_name = None
@@ -172,7 +172,7 @@ class PostProcessing:
             else:
                 self.df_pre_processed["price per carat"] = (
                     self.df_pre_processed["total"] / self.df_pre_processed["carat"]
-                ).astype(int)
+                )
                 self.df_pre_processed["discount"] = (
                     1
                     - (
@@ -182,6 +182,9 @@ class PostProcessing:
                 ) * 100
             self.df_pre_processed["price per carat"] = self.df_pre_processed["price per carat"].replace([np.inf, -np.inf], np.nan)
             self.df_pre_processed["total"] = self.df_pre_processed["total"].replace([np.inf, -np.inf], np.nan)
+            self.df_pre_processed["rap price total"] = self.df_pre_processed["rap price total"].replace([np.inf, -np.inf], np.nan)
+            self.df_pre_processed["price per carat"] = self.df_pre_processed["price per carat"].replace([np.inf, -np.inf], np.nan)
+
         return self.df_pre_processed
 
     
