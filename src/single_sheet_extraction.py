@@ -98,6 +98,7 @@ class ExtractFromSingleSheet:
 
         df_processed = self.reorder_columns(df_processed, first_columns,missing_target_colums)
         df_clean, df_missing =self.get_filtered_values(df_processed)
+        df_clean.loc[df_clean['shape'] != 'round', 'cut'] = None
         return df_clean, df_missing
 
     def reorder_columns(self,df, first_columns,missing_target_colums):

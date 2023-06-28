@@ -22,7 +22,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 def main():
 
-    test_data_dir = "artifacts/NewFiles"
+    test_data_dir = "artifacts/2301"
     test_file_names = os.listdir(test_data_dir)
     out_dir = "artifacts/output_generated"
 
@@ -51,7 +51,7 @@ def main():
     #         "Comments"])
 
     for test_file_name in test_file_names:
-        if test_file_name not in ["RSD FY.xls"]:
+        if test_file_name not in ["search_22_06_2023_08_29_20.xlsx"]:
            continue
         #"ParishiDiamond-atlantic1-15-06-2023 (1).xls","RSD BR.xls"
         logger.info(test_file_name)

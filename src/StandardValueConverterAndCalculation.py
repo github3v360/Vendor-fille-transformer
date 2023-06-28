@@ -223,7 +223,7 @@ class PostProcessing:
             target_column_dict= common_utils.load_pickle_files_for_single_column("cut")
             self.df_pre_processed["cut"] = self.df_pre_processed.apply(
                 lambda x: post_processing_utils.transform_column(
-                    x["cut"], self.magic_numbers, "cut", target_column_dict, "ex"),
+                    x["cut"], self.magic_numbers, "cut", target_column_dict, None),
                 axis=1,
             )
         
