@@ -132,6 +132,9 @@ class PostProcessing:
                 self.df_pre_processed["raprate"] * self.df_pre_processed["carat"]
             )
 
+            #new, converting to int
+            self.df_pre_processed["rap price total"] = self.df_pre_processed["rap price total"].apply(self.convert_to_integer)
+
             max_prob = -1
             price_name = None
 
@@ -184,6 +187,12 @@ class PostProcessing:
             self.df_pre_processed["total"] = self.df_pre_processed["total"].replace([np.inf, -np.inf], np.nan)
             self.df_pre_processed["rap price total"] = self.df_pre_processed["rap price total"].replace([np.inf, -np.inf], np.nan)
             self.df_pre_processed["price per carat"] = self.df_pre_processed["price per carat"].replace([np.inf, -np.inf], np.nan)
+
+
+            #new, converted to int
+            self.df_pre_processed["total"] = self.df_pre_processed["total"].apply(self.convert_to_integer)
+            self.df_pre_processed["price per carat"] = self.df_pre_processed["price per carat"].apply(self.convert_to_integer)
+
 
         return self.df_pre_processed
 
