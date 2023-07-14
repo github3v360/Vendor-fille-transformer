@@ -5,38 +5,38 @@ actual_shape_dict = {'ROUND':'RD',
           'OVAL':'OV',  'OV':'OV', 'OC':'OV',  'OVEL':'OV', 'OL':'OV',
           'EMERALD':'EM', 'EM':'EM', 'EMRD':'EM', 'EC':'EM',
           'CUSHION MODIFIED':'CU', 'CMB':'CU','CM':'CU', 'CS':'CU', 'CUSHIONMODIFIED':'CU',
-          'CUSHION':'CU', 'CUS':'CU','CU':'CU',
+          'CUSHION':'CU', 'CUS':'CU','CU':'CU','CUSHION-MOD':'CU',
           'PRINCESS':'PR','PR':'PR','PC':'PR',
           'PEAR':'PS','PAER':'PS', 'PER':'PS', 'PS':'PS',
           'RADIANT':'RA', 'RAD':'RA', 'RA':'RA',
           'MARQUISE':'MQ', 'MR':'MQ', 'MQ':'MQ', 'MAR':'MQ',
           'ASHCHER':'AS', 'AS':'AS', 'ASSCHER': 'AS',
           'HEART':'HS','HRT':'HS', 'LOVE':'HS', 'HS':'HS', 'HR':'HS', 'HC':'HS',
-          'TRIANGLE':'TR', 'TRI': 'TR', 'TR':'TR',
-          'TRAPEZOID':'TZ', 'RADIANT':'RAD', 'ASHCHER':'ASC',
-     'LOZENGE':'LZ', 'HEART':'HT', 'BRIOLETTE':'BRT', 'SQUARE EMERALD':'SE',
-     'CUSHIONSQ':'CS', 'EMERALD':'EM', 'EUROPEANCUT':'EC', 'BAGUETTE':'BG', 'TRIANGLE':'TR',
-     'CUSHION':'CUS', 'OVAL':'OV', 'SHIELD':'SH', 'TAPERED BULLET':'TB', 'SQUARE RADIANT':'SR',
-     'OLDMINER':'OM', 'TRILLIANT':'TL', 'PEAR':'PR', 'HALF MOON':'HM', 'EPAULETTE':'EP', 'PRINCESS':'PRN',
-     'CUSHIONBRSQ':'CSBQ', 'TAPERED BAGUETTE':'TBG', 'CUSHION-MOD':'CM', 'HEXAGONAL':'HX', 'CUSHIONB':'CSB',
-     'CUSHION BRILLIANT':'CB', 'CALF':'CF', 'BULLETS':'BLT', 'MARQ':'MRQ', 'KITE':'KT', 'PENTAGONAL':'PNT',
-     'CUSHIONBRLN':'CSBL', 'OTHER':'OTHER', 'CUSHION RADIANT':'CR', 'OCTAGONAL':'OCT', 'SQUARE':'SQR', 'STAR':'STR',
-     'ROSE':'RS', 'FLANDERS':'FLD', 'CUSHIONLN':'CSL'}
+          'TRIANGLE':'TR', 'TRI': 'TR', 'TR':'TR',      
+          'TRAPEZOID':'OTHER', 
+            'LOZENGE':'OTHER', 'BRIOLETTE':'OTHER', 'SQUARE EMERALD':'OTHER',
+            'CUSHIONSQ':'OTHER', 'EUROPEANCUT':'OTHER', 'BAGUETTE':'OTHER',
+            'SHIELD':'OTHER', 'TAPERED BULLET':'OTHER', 'SQUARE RADIANT':'OTHER',
+            'OLDMINER':'OTHER', 'TRILLIANT':'OTHER', 'HALF MOON':'OTHER', 'EPAULETTE':'OTHER',
+            'CUSHIONBRSQ':'OTHER', 'TAPERED BAGUETTE':'OTHER',  'HEXAGONAL':'OTHER', 'CUSHIONB':'OTHER',
+            'CUSHION BRILLIANT':'OTHER', 'CALF':'OTHER', 'BULLETS':'OTHER', 'MARQ':'OTHER', 'KITE':'OTHER', 'PENTAGONAL':'OTHER',
+            'CUSHIONBRLN':'OTHER', 'OTHER':'OTHER', 'CUSHION RADIANT':'OTHER', 'OCTAGONAL':'OTHER', 'SQUARE':'OTHER', 'STAR':'OTHER',
+            'ROSE':'OTHER', 'FLANDERS':'OTHER', 'CUSHIONLN':'OTHER'}
 
 actual_color_dict = {'D':'D', 'E':'E', 'F':'F', 'D-':'D', 'E-':'E', 'F-':'F','D+':'D', 'E+':'E', 'F+':'F',
                      'G':'G', 'H':'H', 'I':'I', 'G-':'G', 'H-':'H', 'I-':'I', 'G+':'G', 'H+':'H', 'I+':'I',
                      'J':'J', 'K':'K', 'L':'L', 'J-':'J', 'K-':'K', 'L-':'L', 'J+':'J', 'K+':'K', 'L+':'L',
                      'M':'M', 'N':'N', 'O':'O', 'M-':'M', 'N-':'N', 'O-':'O', 'M+':'M', 'N+':'N', 'O+':'O',
-                     'P':'P', 'Q':'Q', 'P-':'P', 'Q-':'Q', 'Q+':'Q', 'P+':'P',
+                     'P':'P', 'P-':'P', 'Q-':'Q', 'Q+':'Q', 'P+':'P',
                      'Q':'Q', 'R':'R', 'S':'S', 'T':'T', 'U':'U', 'V':'V',
-                     'W':'W', 'X':'X', 'Y':'Y', 'Z':'Z'}
+                     'W':'W', 'X':'X', 'Y':'Y', 'Z':'Z','OTHER':'OTHER'}
 
 actual_fluor_dict = {
     'NONE':'N', 'NON':'N', 'N':'N', 'NO':'N', 'NAN':'N',
-    'FAINT':'F','FNT':'F', 'FAINT':'F', 'F': 'F',
+    'FAINT':'F','FNT':'F', 'F': 'F',
     'MEDIUM':'M','MED':'M', 'M':'M', 'MEDIUMYELLOW': 'M',
     'STRONG':'S', 'STG':'S', 'S':'S', 'ST':'S', 'STRONGYELLOW':'S',
-    'VERY STRONG':'VS', 'VST':'VS', 'VSTG':'VS', 'VS':'VS', 'VERYSTRONG':'VS', 'VERYSTRONGBL': 'VS',
+    'VERY STRONG':'VS', 'VST':'VS', 'VSTG':'VS', 'VS':'VS', 'VERYSTRONG':'VS', 'VERYSTRONGBL': 'VS','OTHER':'OTHER',
     }
 
 
@@ -44,28 +44,30 @@ actual_clarity_dict = {
     'FL':'FL', 'IF':'IF', 'VVS1':'VVS1', 'VVS2':'VVS2', 'VS1':'VS1',
     'FL-':'IF', 'IF-':'IF', 'VVS1-':'VVS1', 'VVS2-':'VVS2', 'VS1-':'VS1',
     'FL+':'IF', 'IF+':'IF', 'VVS1+':'VVS1', 'VVS2+':'VVS2', 'VS1+':'VS1',
-    'VS2':'VS2', 'SI1':'SI1', 'SI2':'SI2', 'I1':'', 'I2':'', 'I3':'I3',
+    'VS2':'VS2', 'SI1':'SI1', 'SI2':'SI2', 'I1':'I1', 'I2':'I2', 'I3':'I3',
     'VS2-':'VS2', 'SI1-':'SI1', 'SI2-':'SI2', 'I1-':'I1', 'I2-':'I2', 'I3-':'I3',
-    'VS2+':'VS2', 'SI1+':'SI1', 'SI2+':'SI2', 'I1+':'I1', 'I2+':'I2', 'I3+':'I3'}
-
+    'VS2+':'VS2', 'SI1+':'SI1', 'SI2+':'SI2', 'I1+':'I1', 'I2+':'I2', 'I3+':'I3',
+    'P1': 'P1', 'P2': 'P2','P3': 'P3', 'LC': 'LC','SI3':'SI3','SI3+':'SI3','SI3-':'SI3','OTHER':'OTHER',}
 
 actual_cut_dict = {'EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
                    'EX-':'X', 'VG-':'VG', 'G-': 'G',
                    'EX+':'X', 'VG+':'VG', 'G+': 'G',
                    'EXCELLENT':'X', 'VERY GOOD': 'VG', 'VERYGOOD': 'VG', 'GOOD': 'G',
-                   'F':'F','FAIR':'F','P':'P','POOR':'P','3EX':'X',}
+                   'F':'F','FAIR':'F','P':'OTHER','POOR':'OTHER','3EX':'X','I':'X','IDEAL':'X','ID':'X'}
 
 actual_polish_dict = {'EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
                    'EX-':'X', 'VG-':'VG', 'G-': 'G',
                    'EX+':'X', 'VG+':'VG', 'G+': 'G',
                    'EXCELLENT':'X', 'VERY GOOD': 'VG', 'VERYGOOD': 'VG', 'GOOD': 'G',
-                   'F':'F','FAIR':'F','P':'P','POOR':'P','FAIR TO GOOD': 'FG','G-VG':'GVG','F-G':'FG'}
+                   'F':'F','FAIR':'F','P':'OTHER','POOR':'OTHER','FAIR TO GOOD': 'FG','G-VG':'GVG','F-G':'FG',
+                   'I':'X','IDEAL':'X','ID':'X'}
 
 actual_sym_dict = {'EX':'X', 'VG':'VG', 'G': 'G', 'X':'X',
                    'EX-':'X', 'VG-':'VG', 'G-': 'G',
                    'EX+':'X', 'VG+':'VG', 'G+': 'G',
                    'EXCELLENT':'X', 'VERY GOOD': 'VG', 'VERYGOOD': 'VG', 'GOOD': 'G',
-                   'F':'F','FAIR':'F','P':'P','POOR':'P',}
+                   'F':'F','FAIR':'F','P':'OTHER','POOR':'OTHER',
+                   'I':'X','IDEAL':'X','ID':'X'}
 
 shape_id_dict = {'RD': 0,
                  'OV': 1,
@@ -111,12 +113,30 @@ clarity_id_dict = {'FL': 0,
                    'SI2': 7,
                    'I1': 8,
                    'I2': 9,
-                   'I3': 10,}
+                   'I3': 10,
+                   'SI3':11,
+                   'P1':12,
+                   'P2':13,
+                   'P3':14}
 
 # Cut, Polish, Sym Count 3
 cps_id_dict = {'X': 0,
                'VG': 1,
-               'G': 2}
+               'G': 2,
+               'F':3,
+               'OTHER':5
+               }
+
+def decimal_to_base36(decimal_number):
+    base36_digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    if decimal_number == 0:
+        return '0'
+    base36_number = ''
+    while decimal_number > 0:
+        decimal_number, remainder = divmod(decimal_number, 36)
+        base36_digit = base36_digits[remainder]
+        base36_number = base36_digit + base36_number
+    return base36_number
 
 def generate_id(weight, shape, color, clarity, fluor, cut, polish, sym, mes1, mes2, mes3):
   shape_id = shape_id_dict[actual_shape_dict[shape.replace(' ', '').upper()]]

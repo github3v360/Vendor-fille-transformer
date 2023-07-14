@@ -3,7 +3,7 @@ This file contains class for performing post processing with column values in da
 '''
 import pickle
 import os
-from src.utils import post_processing_utils,common_utils
+from src.utils import post_processing_utils,common_utils,generate_report_number
 import time
 import math
 import numpy as np
@@ -281,28 +281,28 @@ class PostProcessing:
             file_destination_list.append(os.path.join(test_data_dir,test_file_name))
         
         # Load shape dictionary from pickle file
-        list_of_dictionaries = common_utils.load_pickle_files(file_destination_list)
-        clarity_map=  {}
-        color_map = {}
-        cut_map = {}
-        fluorescent_map = {}
-        shape_map = {}
+        # list_of_dictionaries = common_utils.load_pickle_files(file_destination_list)
+        # clarity_map=  {}
+        # color_map = {}
+        # cut_map = {}
+        # fluorescent_map = {}
+        # shape_map = {}
 
-        for dictionary in list_of_dictionaries:
-            if 'color' in dictionary:
-                color_map = dictionary['color']
-            elif 'shape' in dictionary:
-                shape_map = dictionary['shape']
-            elif 'clarity' in dictionary:
-                clarity_map = dictionary['clarity']
-            elif 'cut' in dictionary:
-                cut_map = dictionary['cut']
-            elif 'fluorescent' in dictionary:
-                fluorescent_map = dictionary['fluorescent']
-            elif 'polish' in dictionary:
-                polish_map = dictionary['polish']
-            elif 'symmetry' in dictionary:
-                symmetry_map = dictionary['symmetry']
+        # for dictionary in list_of_dictionaries:
+        #     if 'color' in dictionary:
+        #         color_map = dictionary['color']
+        #     elif 'shape' in dictionary:
+        #         shape_map = dictionary['shape']
+        #     elif 'clarity' in dictionary:
+        #         clarity_map = dictionary['clarity']
+        #     elif 'cut' in dictionary:
+        #         cut_map = dictionary['cut']
+        #     elif 'fluorescent' in dictionary:
+        #         fluorescent_map = dictionary['fluorescent']
+        #     elif 'polish' in dictionary:
+        #         polish_map = dictionary['polish']
+        #     elif 'symmetry' in dictionary:
+        #         symmetry_map = dictionary['symmetry']
             
         start_time_to_generate_report_no = time.time()
         required_column = ["report_no","clarity","color","fluorescent","shape","carat","cut","polish","symmetry"]
@@ -312,10 +312,19 @@ class PostProcessing:
                 self.df_pre_processed.loc[:,col] = 'OTHER'
                 temporary_columns.append(col)
 
+        # self.df_pre_processed["GeneratedReportNo"] = self.df_pre_processed.apply(
+        #     lambda x: post_processing_utils.generate_report_no_column(
+        #         x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
+        #         clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map
+        #     ),
+        #     axis=1,
+        # )weight, shape, color, clarity, fluor, cut, polish, sym, mes1, mes2, mes3
+
         self.df_pre_processed["GeneratedReportNo"] = self.df_pre_processed.apply(
-            lambda x: post_processing_utils.generate_report_no_column(
-                x["report_no"], x['clarity'], x['color'], x['fluorescent'], x['shape'],x['carat'],x['cut'],x['polish'],x['symmetry'],
-                clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map
+            lambda x: generate_report_number.generate_id(
+                x['carat'], x['shape'], x['color'], x['clarity'],x['fluorescent'],x['cut'],x['polish'],x['symmetry'],
+                x['length'],x['width'],x['depth']
+
             ),
             axis=1,
         )
