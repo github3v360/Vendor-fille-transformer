@@ -9,6 +9,19 @@ import time
 from google.cloud import storage
 import traceback
 
+projectConfigs = {
+    "d360-assist-dev":{
+        "inventory_bucket_name":"assist-dev-inventory-bucket",
+        "summary_bucket_name" : "assist-dev-summary-bucket",
+        "destination_bucket_name" : "d360-assist-chatapp"
+    },
+    "kp-assist":{
+        "inventory_bucket_name":"dinsight-inventory-files-test",
+        "summary_bucket_name" : "dinsight-summary-files-test",
+        "destination_bucket_name" : "kp-assist"
+    }
+}
+
 # Bucket Realted parameters and functions
 
 tempdir = tempfile.gettempdir()
@@ -115,6 +128,14 @@ def convert_to_common_format(request):
         
         userId = request.args.get('userId')
         date = request.args.get('date')
+        projectId = request.args.get('projectId')
+
+        if(projectId):
+            global client,inventory_bucket_name,summary_bucket_name
+            client = storage.Client(projectId)
+
+            inventory_bucket_name = projectConfigs[projectId]["inventory_bucket_name"]
+            summary_bucket_name = projectConfigs[projectId]["summary_bucket_name"]
         # print("called with ",userId,date)
 
         directory_path = os.path.join(*[userId,date,"User_files"])
