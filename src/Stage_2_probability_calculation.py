@@ -3,12 +3,16 @@ This file contains the class 'DataProcessor'
 which will perform all the stage 2 tasks
 '''
 import pandas as pd
+import traceback
 from src.utils import (
     common_utils,
     column_name_utils,
     column_value_utils,
     score_modifier,
 )
+
+
+
 
 class DataProcessor:
     '''
@@ -61,7 +65,8 @@ class DataProcessor:
             "length",
             "width",
             "depth",
-            "comments"
+            "comments",
+            # "cut_pol_sym"
         ]
         
         self.prob_dict = common_utils.initialize_prob_dict(self.target_columns)
@@ -194,6 +199,55 @@ class DataProcessor:
 
         return cur_dataframe_cleaned_column_unique_values, cur_dataframe_cleaned_column_name
 
+        #added by Sahaj 
+    def helper_for_sep(self, input_string):
+        
+        #given ex*vg*f, means cut = ex, polish = vg, symmetry = f
+        input_string = input_string.replace(" ", "") #remove whitespaces if any
+        input_string_splitted = input_string.split("-")
+        
+        return input_string_splitted
+
+    #for seperating a single column "Cut-Pol-Sym", into 3 values cut, polish, symmetry into their respective columns
+    def get_separate_values_cut_pol_sym(self, df_processed,df_clean,target_col):
+        #assuming that the target_col is the column we need to change from cut-polish-symmetry 
+        #to individual columns of cut, polish and symmetry
+        new_df_processed = df_processed.copy(deep=True)
+        try:
+            new_df_processed['cut'], new_df_processed['polish'], new_df_processed['symmetry'] = zip(*df_clean.apply(lambda x: self.helper_for_sep(x[target_col]), axis=1))
+        except Exception as e:
+            print("separation failed for Cut-Pol-Sym")
+            self.logger.exception('Failed Due to: ')
+            self.logger.info(f"Failed separating Cut-Pol-Sym {e}")
+            traceback.print_exc()
+            return df_processed
+
+        return new_df_processed
+
+    #for extraction of cut-pol-sym into their dedicated columns
+    def extract_Cut_Pol_Sym_From_Single_Column(self, dataframe_pre_processed):
+        if 'Cut-Pol-Sym' in self.dataframe_cleaned.columns:
+            print("hello!!!!!")
+
+            # try:
+            dataframe_pre_processed = self.get_separate_values_cut_pol_sym(dataframe_pre_processed,self.dataframe_cleaned, 'Cut-Pol-Sym')
+            self.dataframe_cleaned = self.dataframe_cleaned.drop(columns='Cut-Pol-Sym')
+                
+            # except Exception as e :
+            #     print("Exception:", e)
+
+            print("the columns remaining are: ", self.dataframe_cleaned.columns)
+            return dataframe_pre_processed
+
+        else: return dataframe_pre_processed
+
+
+
+       
+
+    
+        
+
     def Iterate_And_Get_Desired_Column_By_Probability(self):
         '''
         This function will iterate to each column in dataframe(given by stage 1) and
@@ -280,6 +334,12 @@ class DataProcessor:
                 if cur_target_column not in ["length", "width", "depth"]:
                     self.dataframe_cleaned = self.dataframe_cleaned.drop(columns=predicted_column)
 
+
+        #cut-pol-sym logic might be here before getting remaining columns into one column only >>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<
+        dataframe_pre_processed = self.extract_Cut_Pol_Sym_From_Single_Column(dataframe_pre_processed)
+
+        # print("is dataframe_pre_processed none=  ", dataframe_pre_processed is None)
+
         remaining_columns_dataframe = self.get_remaining_column()
 
         return dataframe_pre_processed, self.magic_numbers, remaining_columns_dataframe
@@ -306,7 +366,7 @@ class DataProcessor:
             target_columns(list): A list of the name of all the target columns
         """
 
-        # This will store the report umber whhich were extracted from the link in stage 1
+        # This will store the report number which were extracted from the link in stage 1
         # in to the list "self.report_no_from_link" and also upadate self.link_columns_name
         # accordingly
         (
