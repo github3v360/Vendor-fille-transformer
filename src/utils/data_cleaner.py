@@ -52,7 +52,7 @@ def correct_df_headers(input_df):
     # If DataFrame is not in Correct Format
     if not flag:
         # We will check the 10 row below the current header to get the row with correct header
-        for i in range(total_rows//4):
+        for i in range(total_rows//2):
             # Getting the row values of the next row
             cur_columns = input_df.iloc[i]
 

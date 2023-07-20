@@ -51,8 +51,8 @@ def main():
     #         "Comments"])
 
     for test_file_name in test_file_names:
-        if test_file_name not in ["search_22_06_2023_08_29_20.xlsx"]:
-           continue
+        #if test_file_name not in ["Sheetal FY.xlsx"]:
+        #   continue
         #"ParishiDiamond-atlantic1-15-06-2023 (1).xls","RSD BR.xls"
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
@@ -73,13 +73,14 @@ def main():
         logger.info(f"'Total time taken : ' {end - start}")
         try:
             df_clean, df_missing = out_df
-            if df_clean.empty and df_missing.empty:
+            if (df_clean is not None) and (df_missing is not None) and (df_clean.empty and df_missing.empty):
                 continue
-            print("Clean file generated"+str(len(df_clean)))
+            if (df_clean is not None):
+                print("Clean file generated"+str(len(df_clean)))
             out_file_name = test_file_name[:test_file_name.index(".x")] + "_output" +".csv"
             out_file_path = os.path.join(out_dir,out_file_name)
             df_clean.to_csv(out_file_path,index=False)
-            if not df_missing.empty:
+            if (df_missing is not None) and (not df_missing.empty):
                 print("Missing file generated"+str(len(df_missing)))
                 missing_file_name = test_file_name[:test_file_name.index(".x")] + "_nonparsed" +".csv" 
                 missing_file_path = os.path.join(out_dir,missing_file_name)

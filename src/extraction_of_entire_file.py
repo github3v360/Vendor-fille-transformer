@@ -50,6 +50,7 @@ class EntireFileExtractor:
         # Iterating through all the sheet
         for sheet_name in sheet_names:
             self.logger.info("New Sheet Started")
+            self.logger.info(sheet_name)
             if is_excel:
                 # Fetching and storing the sheet
                 data_frame = work_book[sheet_name]
@@ -69,28 +70,30 @@ class EntireFileExtractor:
             
             df_clean, df_missing = extractor.process()
             self.logger.info("------------------------ Process Completed for this sheet ------------------------")
-
+            #self.logger.info(f"Clean Length: {len(df_clean)}")
             # Concatenation of global dataframe with out_data_frame
-            if global_clean_data_frame is None:
+            if global_clean_data_frame is None :
                 flag = True
-                if ~ df_clean.empty:
+                if df_clean.empty == False:
                     self.logger.info("------------------------ Clean Dataframe appended ------------------------")
                     global_clean_data_frame = df_clean
+                    # self.logger.info("Global Clean:"+str(len(global_clean_data_frame)))
 
             if global_missing_data_frame is None:
                 flag = True
-                if ~ df_missing.empty:
+                if df_missing.empty == False:
                     self.logger.info("------------------------ Missing Dataframe appended ------------------------")
                     global_missing_data_frame = df_missing
 
 
-            if (not (df_clean.empty ))and flag is False:
+            if (not (df_clean.empty ))and flag == False:
                 global_clean_data_frame = pd.concat([global_clean_data_frame, df_clean])
                 flag = False
-            if (not (df_missing.empty )) and flag is False:
+            if (not (df_missing.empty )) and flag == False:
                 global_missing_data_frame = pd.concat([global_missing_data_frame, df_missing])
                 flag = False
-
+                
+        # self.logger.info("Global Length:"+str(len(global_clean_data_frame)))
         return global_clean_data_frame,global_missing_data_frame
 
     def check_extension_of_sheet(self):
