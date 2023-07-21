@@ -51,8 +51,8 @@ def main():
     #         "Comments"])
 
     for test_file_name in test_file_names:
-        #if test_file_name not in ["Sheetal FY.xlsx"]:
-        #   continue
+        # if test_file_name not in ["Sheetal FY.xlsx"]:
+        #    continue
         #"ParishiDiamond-atlantic1-15-06-2023 (1).xls","RSD BR.xls"
         logger.info(test_file_name)
         file_path = os.path.join(test_data_dir,test_file_name)
@@ -73,6 +73,9 @@ def main():
         logger.info(f"'Total time taken : ' {end - start}")
         try:
             df_clean, df_missing = out_df
+            if (df_clean is not None and isinstance(df_clean, pd.DataFrame)) == False:
+                print("DF CHECKEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+                continue
             if (df_clean is not None) and (df_missing is not None) and (df_clean.empty and df_missing.empty):
                 continue
             if (df_clean is not None):

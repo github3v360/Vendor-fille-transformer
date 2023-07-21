@@ -98,7 +98,8 @@ class ExtractFromSingleSheet:
 
         df_processed = self.reorder_columns(df_processed, first_columns,missing_target_colums)
         df_clean, df_missing =self.get_filtered_values(df_processed)
-        df_clean.loc[df_clean['shape'] != 'round', 'cut'] = None
+        if 'shape' in df_clean.columns:
+            df_clean.loc[df_clean['shape'] != 'round', 'cut'] = None
         return df_clean, df_missing
 
     def reorder_columns(self,df, first_columns,missing_target_colums):
@@ -112,7 +113,7 @@ class ExtractFromSingleSheet:
         return new_df
 
     def get_filtered_values(self, df):
-        required_columns = ['clarity', 'color', 'fluorescent', 'shape', 'carat', 'cut', 'polish', 'symmetry']
+        required_columns = ['clarity', 'color', 'fluorescent', 'shape', 'carat', 'cut', 'polish', 'symmetry','length','width','depth']
         
         # Check if each required column exists in the DataFrame
         existing_columns = [col for col in required_columns if col in df.columns]

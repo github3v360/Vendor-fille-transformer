@@ -305,11 +305,11 @@ class PostProcessing:
         #         symmetry_map = dictionary['symmetry']
             
         start_time_to_generate_report_no = time.time()
-        required_column = ["report_no","clarity","color","fluorescent","shape","carat","cut","polish","symmetry"]
+        required_column = ["report_no","clarity","color","fluorescent","shape","carat","cut","polish","symmetry","length","width","depth"]
         temporary_columns = []
         for col in required_column:
             if col not in self.df_pre_processed.columns:
-                self.df_pre_processed.loc[:,col] = 'OTHER'
+                self.df_pre_processed.loc[:,col] = 'NOT PRESENT'
                 temporary_columns.append(col)
 
         # self.df_pre_processed["GeneratedReportNo"] = self.df_pre_processed.apply(

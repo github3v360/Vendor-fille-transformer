@@ -227,7 +227,6 @@ class DataProcessor:
     #for extraction of cut-pol-sym into their dedicated columns
     def extract_Cut_Pol_Sym_From_Single_Column(self, dataframe_pre_processed):
         if 'Cut-Pol-Sym' in self.dataframe_cleaned.columns:
-            print("hello!!!!!")
 
             # try:
             dataframe_pre_processed = self.get_separate_values_cut_pol_sym(dataframe_pre_processed,self.dataframe_cleaned, 'Cut-Pol-Sym')
@@ -236,7 +235,7 @@ class DataProcessor:
             # except Exception as e :
             #     print("Exception:", e)
 
-            print("the columns remaining are: ", self.dataframe_cleaned.columns)
+            # print("the columns remaining are: ", self.dataframe_cleaned.columns)
             return dataframe_pre_processed
 
         else: return dataframe_pre_processed

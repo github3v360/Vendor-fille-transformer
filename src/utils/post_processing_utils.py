@@ -155,18 +155,18 @@ def format_number(num):
     return num_str
 
 
-def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,cut,polish,symmetry,clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map):
-    last_four = str(report_no)[-4:]
+# def generate_report_no_column(report_no,clarity,color,fluorescent,shape,carat,cut,polish,symmetry,clarity_map,color_map, shape_map, cut_map, fluorescent_map,polish_map,symmetry_map):
+#     last_four = str(report_no)[-4:]
 
-    clarity_num = str(clarity_map[clarity] ) if clarity in clarity_map else str(clarity_map[None])
-    color_num = str(color_map[color]) if color in color_map else str(color_map[None])
-    cut_num = str(cut_map[cut]) if cut in cut_map else str(cut_map[None])
-    polish_num = str(polish_map[polish]) if polish in cut_map else str(cut_map[None])
-    symmetry_num = str(symmetry_map[symmetry]) if symmetry in cut_map else str(cut_map[None])
-    fluorescent_num = str(fluorescent_map[fluorescent]) if fluorescent in fluorescent_map else str(fluorescent_map[None])
-    carat_num = str(format_number(carat))
-    shape_num = str(shape_map[shape]) if shape in shape_map else str(shape_map[None])
+#     clarity_num = str(clarity_map[clarity] ) if clarity in clarity_map else str(clarity_map[None])
+#     color_num = str(color_map[color]) if color in color_map else str(color_map[None])
+#     cut_num = str(cut_map[cut]) if cut in cut_map else str(cut_map[None])
+#     polish_num = str(polish_map[polish]) if polish in cut_map else str(cut_map[None])
+#     symmetry_num = str(symmetry_map[symmetry]) if symmetry in cut_map else str(cut_map[None])
+#     fluorescent_num = str(fluorescent_map[fluorescent]) if fluorescent in fluorescent_map else str(fluorescent_map[None])
+#     carat_num = str(format_number(carat))
+#     shape_num = str(shape_map[shape]) if shape in shape_map else str(shape_map[None])
     
-    new_reportno = fluorescent_num +shape_num + carat_num + color_num +  clarity_num + cut_num + polish_num + symmetry_num +  last_four
-    # print(new_reportno)
-    return new_reportno
+#     new_reportno = fluorescent_num +shape_num + carat_num + color_num +  clarity_num + cut_num + polish_num + symmetry_num +  last_four
+#     # print(new_reportno)
+#     return new_reportno
